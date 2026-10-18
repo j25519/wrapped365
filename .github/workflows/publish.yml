@@ -1,0 +1,92 @@
+name: Build and publish Docker image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Static checks and non-root smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: node --check app.js
+
+      - name: Build test container
+        run: docker build --tag wrapped365:ci .
+
+      - name: Verify runtime identity and HTTP response
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --detach --rm --name wrapped365-smoke \
+            --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
+            --publish 127.0.0.1:6967:6967 wrapped365:ci
+          trap 'docker logs wrapped365-smoke || true; docker stop wrapped365-smoke >/dev/null 2>&1 || true' EXIT
+          test "$(docker exec wrapped365-smoke id -u)" = "10001"
+          for attempt in {1..20}; do
+            if curl --fail --silent --show-error http://127.0.0.1:6967/ -o /tmp/wrapped365-index.html; then
+              grep -q 'Wrapped 365' /tmp/wrapped365-index.html
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'Wrapped 365 did not become healthy on port 6967' >&2
+          exit 1
+
+  publish:
+    name: Publish multi-architecture image to GHCR
+    if: github.event_name != 'pull_request'
+    needs: [test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image metadata and tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=tag
+            type=sha,prefix=sha-,format=short
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

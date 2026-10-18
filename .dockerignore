@@ -1,0 +1,11 @@
+.git
+.github
+.gitignore
+.env
+.env.*
+!.env.example
+*.zip
+*.log
+*.md
+!LICENSE-JSZIP.txt
+compose.yaml
