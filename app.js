@@ -572,8 +572,26 @@
     $('method-dialog').addEventListener('click', event => { if (event.target === $('method-dialog')) $('method-dialog').close(); });
   }
 
+  async function loadAppVersion() {
+    const target = $('app-version');
+    if (!target) return;
+
+    try {
+      const response = await fetch('./VERSION', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const version = (await response.text()).trim();
+      if (!version) throw new Error('Empty VERSION file');
+
+      target.textContent = ` · v${version}`;
+    } catch (error) {
+      console.warn('Unable to load Wrapped 365 version:', error);
+    }
+  }
+
   async function initialise() {
     attachEvents();
+    void loadAppVersion();
     try { state.owner = getOwner(); }
     catch { state.owner = 'local-session-only'; }
     try { state.db = await openDB(); }
