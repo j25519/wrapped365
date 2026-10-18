@@ -10,10 +10,10 @@ Then run:
 
 ```bash
 docker compose pull
-docker compose up -d
+docker compose up -d wrapped365
 ```
 
-Open **http://localhost:6967** on the Docker host. By default, the Compose file binds to `6967`, ready for a reverse proxy, and it will be available to all devices on your LAN. Change this to `127.0.0.1:6967:6967` to bind to localhost only - recommended if running behind a reverse proxy.
+Open **http://localhost:6967** on the Docker host. By default, the Compose file binds to `6967` and it will be available to all devices on your LAN. Change this to `127.0.0.1:6967` to bind to localhost only - recommended if running behind a reverse proxy.
 
 ## What is Wrapped 365?
 
