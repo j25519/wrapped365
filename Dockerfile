@@ -1,6 +1,15 @@
 # Wrapped 365 serves only static assets. No Node, API or application backend runs in the image.
 FROM caddy:2-alpine
 
+# The upstream Caddy binary carries CAP_NET_BIND_SERVICE=+ep for ports 80/443.
+# With --cap-drop ALL, that file capability can make execve fail with EPERM.
+# This app only binds to 6967, so remove the capability at build time and
+# retain the strict no-capabilities deployment. libcap is build-time only.
+RUN apk add --no-cache --virtual .remove-caddy-cap libcap \
+    && setcap -r /usr/bin/caddy \
+    && test -z "$(getcap /usr/bin/caddy)" \
+    && apk del .remove-caddy-cap
+
 # 6967 is unprivileged. Caddy's runtime files go into /tmp so its root filesystem
 # can be read-only with a writable tmpfs mounted at /tmp.
 ENV XDG_CONFIG_HOME=/tmp/caddy-config \

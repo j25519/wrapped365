@@ -1,12 +1,10 @@
 services:
   wrapped365:
-    image: ${WRAPPED365_IMAGE:?Set WRAPPED365_IMAGE in .env to your GHCR image, e.g. ghcr.io/owner/wrapped-365:latest}
+    image: ghcr.io/j25519/wrapped-365:latest
     container_name: wrapped365
     restart: unless-stopped
-    # Loopback-only: reverse proxy through your existing host Caddy installation.
-    # For direct LAN access, change to "6967:6967".
     ports:
-      - "127.0.0.1:6967:6967"
+      - "6967:6967"
     user: "10001:10001"
     read_only: true
     cap_drop:

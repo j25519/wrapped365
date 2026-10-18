@@ -29,21 +29,52 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          docker run --detach --rm --name wrapped365-smoke \
+
+          # Keep failed containers available long enough to inspect their logs.
+          # --rm would erase the evidence as soon as the process exits.
+          cleanup() {
+            exit_code=$?
+            if (( exit_code != 0 )); then
+              echo '::group::Wrapped 365 container diagnostics'
+              docker ps --all --filter name=wrapped365-smoke || true
+              docker inspect --format 'Status={{.State.Status}} ExitCode={{.State.ExitCode}} Error={{.State.Error}}' wrapped365-smoke || true
+              docker logs wrapped365-smoke || true
+              echo '::endgroup::'
+            fi
+            docker rm --force wrapped365-smoke >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          docker run --detach --name wrapped365-smoke \
             --read-only --cap-drop ALL --security-opt no-new-privileges \
             --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
             --publish 127.0.0.1:6967:6967 wrapped365:ci
-          trap 'docker logs wrapped365-smoke || true; docker stop wrapped365-smoke >/dev/null 2>&1 || true' EXIT
-          test "$(docker exec wrapped365-smoke id -u)" = "10001"
-          for attempt in {1..20}; do
-            if curl --fail --silent --show-error http://127.0.0.1:6967/ -o /tmp/wrapped365-index.html; then
-              grep -q 'Wrapped 365' /tmp/wrapped365-index.html
-              exit 0
+
+          # Wait for HTTP readiness before running docker exec, and detect a
+          # process that exits while starting rather than reporting a race.
+          ready=false
+          for attempt in {1..30}; do
+            state="$(docker inspect --format '{{.State.Status}}' wrapped365-smoke)"
+            if [[ "$state" != 'running' ]]; then
+              echo "Wrapped 365 exited during startup (state: $state)" >&2
+              exit 1
+            fi
+            if curl --fail --silent http://127.0.0.1:6967/ -o /tmp/wrapped365-index.html; then
+              ready=true
+              break
             fi
             sleep 1
           done
-          echo 'Wrapped 365 did not become healthy on port 6967' >&2
-          exit 1
+          if [[ "$ready" != true ]]; then
+            echo 'Wrapped 365 did not become healthy on port 6967' >&2
+            exit 1
+          fi
+
+          grep -q 'Wrapped 365' /tmp/wrapped365-index.html
+          test "$(docker exec wrapped365-smoke id -u)" = '10001'
+          test "$(docker exec wrapped365-smoke id -g)" = '10001'
+          test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' wrapped365-smoke)" = 'true'
+          echo 'Smoke test passed: HTTP 6967, UID/GID 10001, read-only root filesystem.'
 
   publish:
     name: Publish multi-architecture image to GHCR
