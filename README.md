@@ -1,5 +1,7 @@
 # Wrapped 365
 
+<img width="3208" height="1828" alt="image" src="https://github.com/user-attachments/assets/e0aeac7a-8bf9-470e-bfaa-b896b17bea34" />
+
 ## Deploy with Docker Compose
 
 Grab the [`compose.yaml`](compose.yaml) file and put it in a directory on your Docker host. No source checkout or local image build is needed.
