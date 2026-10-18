@@ -1,6 +1,6 @@
 services:
   wrapped365:
-    image: ghcr.io/j25519/wrapped-365:latest
+    image: ghcr.io/j25519/wrapped365:latest
     container_name: wrapped365
     restart: unless-stopped
     ports:
