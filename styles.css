@@ -12,3 +12,7 @@
 @media(max-width:900px) and (min-width:701px){.brand{font-size:0;margin:0;justify-content:center}.brand-name{display:none}}
 @media(max-width:700px){.brand{font-size:19px;margin:0;gap:5px}.brand-dot{font-size:14px}.brand-mark{flex-basis:26px}}
 @media(max-width:400px){.brand{font-size:16px}.brand-dot{font-size:12px}}
+
+.demo-randomise{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 13px;border:1px solid #396849;border-radius:10px;background:#1b3825;color:#a5f7bd;font-size:12px;font-weight:760;white-space:nowrap;transition:background .16s,border-color .16s}
+.demo-randomise:hover,.demo-randomise:focus-visible{background:#254e32;border-color:#58a66c;outline:none}.demo-randomise svg{flex-shrink:0}.demo-randomise:focus-visible{box-shadow:0 0 0 3px rgba(30,215,96,.18)}
+@media(max-width:700px){.demo-randomise{padding:9px;min-width:38px}.demo-randomise span{display:none}}

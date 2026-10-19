@@ -1,4 +1,4 @@
-/* Wrapped 365 — local-only Spotify listening history analytics. No HTTP requests. */
+/* Wrapped 365 — local-only Spotify listening history analytics. */
 (() => {
   'use strict';
 
@@ -36,9 +36,10 @@
     if (/android.?tv|google.?tv/.test(value)) return 'Android TV';
     if (/android/.test(value)) return 'Android';
     if (/iphone|ipad|ios/.test(value)) return 'iOS / iPadOS';
-    if (/macos|os x|mac os/.test(value)) return 'macOS';
+    if (/macos|os x|mac os|osx/.test(value)) return 'macOS';
     if (/windows/.test(value)) return 'Windows';
     if (/linux/.test(value)) return 'Linux';
+    if (/xbox/.test(value)) return 'Xbox';
     if (/apple.?tv|tvos/.test(value)) return 'Apple TV';
     if (/sonos/.test(value)) return 'Sonos';
     if (/alexa|echo/.test(value)) return 'Alexa / Echo';
@@ -336,6 +337,7 @@
     for (const nav of document.querySelectorAll('[data-nav]')) nav.classList.toggle('active', nav.dataset.nav === view);
     $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', patterns: 'Listening patterns', history: 'Saved reports' }[view];
     $('report-controls').classList.toggle('hidden', !state.report || view === 'history');
+    $('randomise-demo').classList.toggle('hidden', !state.report?.isDemo || view === 'home' || view === 'history');
     if (view === 'history') renderHistory();
     else if (view !== 'home') renderCurrent();
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -448,7 +450,7 @@
     $('heatmap').innerHTML = heatmap + '</div>';
     const platforms = p.platforms.slice(0, 8);
     const platformTotal = p.platforms.reduce((sum, row) => sum + row[1], 0);
-    $('platform-list').innerHTML = platforms.map(([name, ms], i) => `<div class="rank-row"><span class="rank-position">${i + 1}</span><div class="rank-art">▣</div><div class="rank-main"><span class="rank-title" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="rank-sub">${percent(ms, platformTotal)} of listening time</span></div><div class="rank-data"><span class="rank-number">${hours(ms)} h</span></div></div>`).join('') || emptyMessage();
+    $('platform-list').innerHTML = platforms.map(([name, ms], i) => `<div class="rank-row"><span class="rank-position">${i + 1}</span><div class="rank-art">▣</div><div class="rank-main"><span class="rank-title" title="${escapeHtml(platformGroup(name))}">${escapeHtml(platformGroup(name))}</span><span class="rank-sub">${percent(ms, platformTotal)} of listening time</span></div><div class="rank-data"><span class="rank-number">${hours(ms)} h</span></div></div>`).join('') || emptyMessage();
     const values = [
       ['Total listening days', `${number(p.activeDays)} days`],
       ['Average active-day listening', duration(p.activeDays ? p.ms / p.activeDays : 0)],
@@ -478,34 +480,238 @@
     root.innerHTML = reports.map(report => `<article class="history-card"><div class="history-card-head"><span class="history-icon">♫</span><span class="history-date">Saved ${dateLabel(report.createdAt)}</span></div><h3>${escapeHtml(report.filename)}</h3><p>${number(report.periods?.all?.qualified || report.imported - report.short)} streams · ${escapeHtml(report.type)}<br>${dateLabel(report.firstTs)} – ${dateLabel(report.lastTs)}</p><div class="history-actions"><button class="btn btn-primary" data-open-report="${report.id}">Open report ↗</button><button class="btn btn-outline" data-export-report="${report.id}">Export JSON ↓</button><button class="btn btn-danger" data-delete-report="${report.id}">Delete</button></div></article>`).join('');
   }
 
+  async function loadDemoTracks() {
+    const response = await fetch('./demo-tracks.yaml', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Could not load demo-tracks.yaml (HTTP ${response.status}). Check that the file is included in your deployment.`);
+    const lines = (await response.text()).split(/\r?\n/);
+    const tracks = [];
+    let track = null;
+    for (const [index, line] of lines.entries()) {
+      if (!line.trim() || line.trim().startsWith('#') || line.trim() === '---' || line === 'tracks:') continue;
+      const first = line.match(/^  - title: (.+)$/);
+      const property = line.match(/^    (artist|album|released|seconds|credits): (.+)$/);
+      if (first) {
+        try {
+          track = { title: JSON.parse(first[1]) };
+        } catch {
+          throw new Error(`Invalid demo catalogue title on line ${index + 1}. Use a double-quoted YAML string.`);
+        }
+        tracks.push(track);
+      } else if (property && track) {
+        try {
+          track[property[1]] = JSON.parse(property[2]);
+        } catch {
+          throw new Error(`Invalid demo catalogue value on line ${index + 1}. Use double-quoted YAML strings.`);
+        }
+      } else {
+        throw new Error(`Invalid demo catalogue format on line ${index + 1}.`);
+      }
+    }
+    if (!tracks.length) throw new Error('The demo catalogue has no tracks.');
+    const keys = new Set();
+    for (const [index, item] of tracks.entries()) {
+      if (!['title', 'artist', 'album', 'released'].every(field => typeof item[field] === 'string' && item[field].trim()) ||
+          !/^\d{4}-\d{2}-\d{2}$/.test(item.released) ||
+          !Number.isInteger(item.seconds) || item.seconds < 0 ||
+          (item.credits !== undefined && (!Array.isArray(item.credits) || !item.credits.every(name => typeof name === 'string' && name.trim())))) {
+        throw new Error(`Invalid demo track entry ${index + 1}. Check its fields, date, and duration.`);
+      }
+      const date = new Date(`${item.released}T00:00:00Z`);
+      if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== item.released) {
+        throw new Error(`Invalid release date for demo track ${index + 1}.`);
+      }
+      const key = keyOf(item.title, item.artist, item.album);
+      if (keys.has(key)) throw new Error(`Duplicate demo catalogue entry: ${item.artist} — ${item.title}.`);
+      keys.add(key);
+    }
+    return tracks;
+  }
+
   async function makeDemo() {
     if (state.loading) return;
     state.loading = true;
+    $('randomise-demo').disabled = true;
+    $('demo-button').disabled = true;
     try {
-      const artists = [
-        { name: 'Neon Atlas', album: 'Afterglow', tracks: ['Midnight Run', 'Satellite', 'Signal Lost', 'Echo Chamber'] },
-        { name: 'Paper Cities', album: 'Daylight', tracks: ['Bloom', 'Southern Lights', 'Still Here', 'New Season'] },
-        { name: 'Olive Sky', album: 'Green Room', tracks: ['Come Back', 'In Orbit', 'Winter Sun', 'Long Way Home'] },
-        { name: 'The Coast', album: 'Blue Hour', tracks: ['Runaway', 'Riverside', 'Golden', 'Summer Ends'] },
-        { name: 'Cassette Club', album: 'Replay', tracks: ['Unwritten', 'From the Start', 'If You Know', 'On Repeat'] }
-      ];
-      const builder = makeBuilder();
-      let seed = 27891;
+      const tracks = await loadDemoTracks();
+      let seed = crypto.getRandomValues(new Uint32Array(1))[0];
       const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+      const randomInt = (min, max) => min + Math.floor(rand() * (max - min + 1));
+      const choose = list => list[Math.floor(rand() * list.length)];
+      const shuffled = list => {
+        const copy = [...list];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = randomInt(0, i);
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      };
+      const now = Date.now();
+      const startYear = 2016;
+      const endYear = new Date(now).getUTCFullYear();
+      const minDate = Date.UTC(startYear, 0, 1);
+      const cutoff = now;
+      const platforms = ['linux', 'windows', 'macos', 'android', 'ios', 'chromecast', 'Apple TV', 'Android TV', 'Sonos'];
+      const artistWeights = new Map();
+      const albumWeights = new Map();
+      const trackWeights = new Map();
+      const years = [];
+      const allSessions = [];
       const rows = [];
-      for (let i = 0; i < 3900; i++) {
-        const year = rand() > .45 ? 2025 : 2024;
-        const month = Math.floor(rand() * 12);
-        const day = 1 + Math.floor(rand() * 27);
-        const hour = Math.floor(rand() * 24);
-        const artist = artists[Math.min(artists.length - 1, Math.floor(Math.pow(rand(), 1.8) * artists.length))];
-        const track = artist.tracks[Math.floor(rand() * artist.tracks.length)];
-        rows.push({ ts: new Date(Date.UTC(year, month, day, hour, i % 60)).toISOString(), master_metadata_album_artist_name: artist.name, master_metadata_track_name: track, master_metadata_album_album_name: artist.album, ms_played: 35000 + Math.floor(rand() * 225000), platform: rand() < .7 ? 'iOS' : 'Desktop', skipped: rand() < .08, shuffle: rand() > .5, offline: rand() < .07 });
+      const byYear = new Map();
+      const artists = [...new Set(tracks.map(track => track.artist))];
+      const catalogue = tracks.map(({ title, artist, album, released, seconds, credits: listedCredits = [] }, id) => {
+        const feature = title.match(/\((?:feat\.?|with)\s+([^)]+)\)/i);
+        const candidates = [...listedCredits, ...(feature ? feature[1].split(/\s*(?:&|,|\band\b)\s*/i) : [])];
+        const credits = [...new Set(candidates.map(name => name.trim()).filter(name => name && keyOf(name) !== keyOf(artist)))];
+        return {
+          id, title, artist, album, released, credits, releasedAt: Date.parse(released + 'T00:00:00Z'),
+          length: seconds ? seconds * 1000 : randomInt(115, 270) * 1000
+        };
+      });
+      for (const artist of artists) artistWeights.set(artist, 0.3 + 4 * rand() ** 2);
+      for (const track of catalogue) {
+        const albumKey = keyOf(track.artist, track.album);
+        if (!albumWeights.has(albumKey)) albumWeights.set(albumKey, 0.45 + 2 * rand());
+        trackWeights.set(track.id, (0.1 + 5 * rand() ** 5) * artistWeights.get(track.artist) * albumWeights.get(albumKey));
       }
+      for (let year = startYear; year <= endYear; year++) {
+        const begin = Math.max(minDate, Date.UTC(year, 0, 1));
+        const end = Math.min(cutoff, Date.UTC(year + 1, 0, 1) - 1);
+        if (end <= begin) continue;
+        const available = catalogue.filter(track => track.releasedAt <= end);
+        if (!available.length) continue;
+        const eligibleArtists = [...new Set(available.map(track => track.artist))];
+        const eraArtists = shuffled(eligibleArtists).slice(0, Math.min(4, eligibleArtists.length));
+        const goal = randomInt(450, 1250);
+        const sessions = [];
+        const yearRows = [];
+        let planned = 0;
+        let attempts = 0;
+        while (planned < goal && attempts++ < goal) {
+          const sessionSize = Math.min(goal - planned, randomInt(3, 18));
+          const latestStart = Math.max(begin, end - 4 * 3600_000);
+          const sessionStart = begin + Math.floor(rand() * (latestStart - begin + 1));
+          const mode = choose(platforms);
+          const shuffle = rand() < 0.55;
+          const chosenEra = choose(eraArtists);
+          const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart);
+          if (!sessionTracks.length) continue;
+          let cursor = sessionStart;
+          const sessionEvents = [];
+          for (let i = 0; i < sessionSize; i++) {
+            const weights = sessionTracks.map(track => trackWeights.get(track.id) *
+              (track.artist === chosenEra ? 3.6 : 1) *
+              (i && track.artist === sessionEvents[sessionEvents.length - 1]?.artist && !shuffle ? 4 : 1) *
+              (track.releasedAt > sessionStart - 300 * 86400_000 ? 1.35 : 1));
+            let roll = rand() * weights.reduce((a, b) => a + b, 0);
+            let chosen = sessionTracks[sessionTracks.length - 1];
+            for (let j = 0; j < sessionTracks.length; j++) {
+              roll -= weights[j];
+              if (roll <= 0) { chosen = sessionTracks[j]; break; }
+            }
+            const skipped = rand() < 0.05 + (shuffle ? 0.13 : 0.04);
+            const played = skipped ? randomInt(3, Math.max(3, Math.min(90, Math.ceil(chosen.length / 1000) - 1))) * 1000 :
+              Math.max(1000, chosen.length - randomInt(0, Math.min(5000, chosen.length - 1000)));
+            cursor += played + randomInt(0, 5000);
+            if (cursor > end || cursor > cutoff) break;
+            const entry = {
+              ts: new Date(cursor).toISOString(),
+              master_metadata_album_artist_name: chosen.artist,
+              master_metadata_track_name: chosen.title,
+              master_metadata_album_album_name: chosen.album,
+              ms_played: played,
+              platform: mode,
+              skipped,
+              shuffle,
+              offline: rand() < 0.08,
+              reason_start: i ? 'trackdone' : 'clickrow',
+              reason_end: skipped ? 'fwdbtn' : 'trackdone',
+              demo_track_id: chosen.id
+            };
+            sessionEvents.push({ id: chosen.id, artist: chosen.artist, ts: entry.ts });
+            yearRows.push(entry);
+          }
+          if (sessionEvents.length) {
+            const session = { started: new Date(sessionStart).toISOString(), ended: sessionEvents[sessionEvents.length - 1].ts, platform: mode, trackIds: sessionEvents.map(e => e.id) };
+            sessions.push(session);
+            allSessions.push(session);
+            planned += sessionEvents.length;
+          }
+        }
+        years.push({ year, artists: eraArtists, sessions: sessions.length });
+        byYear.set(String(year), yearRows.length);
+        rows.push(...yearRows);
+      }
+      const friends = ['Alex', 'Sam', 'Charlie', 'Jordan', 'Taylor', 'Morgan'].map((name, id) => ({ id: `friend-${id + 1}`, name }));
+      const playlists = ['Night Drives', 'On Repeat', 'Underground', 'Late Night', 'Gym Rotation', 'Old Favourites', 'Discoveries', 'Weekend'].map((name, id) => ({
+        id: `playlist-${id + 1}`, name, trackIds: shuffled(catalogue).slice(0, randomInt(18, 55)).map(track => track.id)
+      }));
+      const messages = [];
+      const shared = shuffled(catalogue).slice(0, Math.min(85, catalogue.length));
+      for (const friend of friends) {
+        const recommendations = shuffled(shared).slice(0, randomInt(8, 22));
+        for (const track of recommendations) {
+          if (track.releasedAt >= cutoff) continue;
+          const timestamp = track.releasedAt + Math.floor(rand() * (cutoff - track.releasedAt));
+          messages.push({ friendId: friend.id, trackId: track.id, ts: new Date(timestamp).toISOString(), direction: 'received' });
+        }
+      }
+      const builder = makeBuilder();
       ingest(builder, rows);
       builder.sourceFiles = 1;
-      activateReport(finishBuilder(builder, 'Sample listening history · not your data', 'Demo data', true));
-    } finally { state.loading = false; }
+      const report = finishBuilder(builder, 'Randomised demo · not your data', 'Demo data', true);
+      const credited = new Map();
+      for (const event of rows) {
+        if (event.ms_played < MIN_PLAY_MS) continue;
+        const track = catalogue[event.demo_track_id];
+        for (const name of track.credits) {
+          for (const periodKey of ['all', event.ts.slice(0, 4)]) {
+            if (!credited.has(periodKey)) credited.set(periodKey, new Map());
+            const map = credited.get(periodKey);
+            const key = keyOf(name);
+            if (!map.has(key)) map.set(key, { name, plays: 0, ms: 0 });
+            const artist = map.get(key);
+            artist.plays++;
+            artist.ms += event.ms_played;
+          }
+        }
+      }
+      for (const [periodKey, extras] of credited) {
+        const records = report.periods[periodKey].artists;
+        const byArtist = new Map(records.map(record => [keyOf(record.name), record]));
+        for (const [key, extra] of extras) {
+          if (byArtist.has(key)) {
+            byArtist.get(key).plays += extra.plays;
+            byArtist.get(key).ms += extra.ms;
+          } else {
+            records.push(extra);
+            byArtist.set(key, extra);
+          }
+        }
+        records.sort((a, b) => b.plays - a.plays || b.ms - a.ms);
+      }
+      report.demoData = {
+        catalogue: catalogue.map(({ id, title, artist, album, released, length, credits }) => ({ id, title, artist, album, released, durationMs: length, creditedArtists: [artist, ...credits] })),
+        events: rows,
+        sessions: allSessions,
+        eras: years,
+        playlists,
+        friends,
+        messages,
+        savedTrackIds: catalogue.filter(() => rand() < 0.48).map(track => track.id),
+        yearTotals: [...byYear.entries()]
+      };
+      activateReport(report);
+    } catch (error) {
+      console.error('Could not generate demo:', error);
+      if (state.view !== 'home') openView('home');
+      showError(error instanceof Error ? error.message : 'Could not generate a new demo.');
+    } finally {
+      state.loading = false;
+      $('randomise-demo').disabled = false;
+      $('demo-button').disabled = false;
+    }
   }
 
   function attachEvents() {
@@ -514,6 +720,7 @@
     $('browse-button').addEventListener('click', event => { event.stopPropagation(); $('file-input').click(); });
     $('file-input').addEventListener('change', event => { if (event.target.files[0]) importHistory(event.target.files[0]); });
     $('demo-button').addEventListener('click', event => { event.stopPropagation(); makeDemo(); });
+    $('randomise-demo').addEventListener('click', () => makeDemo());
     $('dropzone').addEventListener('click', event => {
       if (event.target.closest('button')) return;
       $('file-input').click();
