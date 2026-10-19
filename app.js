@@ -482,31 +482,177 @@
     if (state.loading) return;
     state.loading = true;
     try {
-      const artists = [
-        { name: 'Neon Atlas', album: 'Afterglow', tracks: ['Midnight Run', 'Satellite', 'Signal Lost', 'Echo Chamber'] },
-        { name: 'Paper Cities', album: 'Daylight', tracks: ['Bloom', 'Southern Lights', 'Still Here', 'New Season'] },
-        { name: 'Olive Sky', album: 'Green Room', tracks: ['Come Back', 'In Orbit', 'Winter Sun', 'Long Way Home'] },
-        { name: 'The Coast', album: 'Blue Hour', tracks: ['Runaway', 'Riverside', 'Golden', 'Summer Ends'] },
-        { name: 'Cassette Club', album: 'Replay', tracks: ['Unwritten', 'From the Start', 'If You Know', 'On Repeat'] }
-      ];
-      const builder = makeBuilder();
-      let seed = 27891;
-      const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-      const rows = [];
-      for (let i = 0; i < 3900; i++) {
-        const year = rand() > .45 ? 2025 : 2024;
-        const month = Math.floor(rand() * 12);
-        const day = 1 + Math.floor(rand() * 27);
-        const hour = Math.floor(rand() * 24);
-        const artist = artists[Math.min(artists.length - 1, Math.floor(Math.pow(rand(), 1.8) * artists.length))];
-        const track = artist.tracks[Math.floor(rand() * artist.tracks.length)];
-        rows.push({ ts: new Date(Date.UTC(year, month, day, hour, i % 60)).toISOString(), master_metadata_album_artist_name: artist.name, master_metadata_track_name: track, master_metadata_album_album_name: artist.album, ms_played: 35000 + Math.floor(rand() * 225000), platform: rand() < .7 ? 'iOS' : 'Desktop', skipped: rand() < .08, shuffle: rand() > .5, offline: rand() < .07 });
-      }
-      ingest(builder, rows);
-      builder.sourceFiles = 1;
-      activateReport(finishBuilder(builder, 'Sample listening history · not your data', 'Demo data', true));
-    } finally { state.loading = false; }
-  }
+      const topTracks = [
+        ['Misery in Waking Hours', '$uicideboy$', 'New World Depression', 130],
+        ['LIKE YXU WXULD KNXW (AUTUMN TREES)', 'Kordhell', 'PSYCHX', 128],
+        ['MORRISON', 'Night Lovell', "I HOPE YOU'RE HAPPY", 106],
+        ['CODE MISTAKE', 'CORPSE', 'CODE MISTAKE', 102],
+        ['Leviticus', '$uicideboy$', 'THY WILL BE DONE', 94],
+        ['MISA MISA!', 'CORPSE', 'MISA MISA!', 92],
+        ['Sorry 4 What? // LV BELT', 'Tory Lanez', 'Sorry 4 What', 80],
+        ['Ran To Atlanta (feat. Future & Molly Santana)', 'Drake', 'ICEMAN', 79],
+        ['The Light at the End of the Tunnel for $9.99 a Month', '$uicideboy$', 'New World Depression', 76],
+        ['Napoleon', '$uicideboy$', 'THY KINGDOM COME', 75],
+        ['Now and at the Hour of Our Death (feat. BONES)', '$uicideboy$', 'THY KINGDOM COME', 66],
+        ['Mood Swing Misery', 'Pouya', 'The South Got Something to Say', 65],
+        ['fuK u lol', 'CORPSE', 'fuK u lol', 61],
+        ['LIFE SUCKS SO WE FUCK (feat. ZillaKami)', 'Night Lovell', "I HOPE YOU'RE HAPPY", 59],
+        ['Cinderella', 'Future', "WE DON'T TRUST YOU", 57],
+        ['HOT DEMON B!TCHES NEAR U ! ! !', 'CORPSE', 'HOT DEMON B!TCHES NEAR U ! ! !', 57],
+        ['Cat Girls Are Ruining My Life!', 'CORPSE', 'Cat Girls Are Ruining My Life!', 56],
+        ['move on, be strong', 'Lil Peep', 'HELLBOY', 56],
+        ['E-GIRLS ARE RUINING MY LIFE!', 'CORPSE', 'E-GIRLS ARE RUINING MY LIFE!', 47],
+        ['Behold a Pale Rider', 'Savage Ga$p', 'American Gothic', 47],
+        ['DRAINO (feat. Denzel Curry)', 'City Morgue', 'CITY MORGUE VOL 2: AS GOOD AS DEAD', 46],
+        ['O Pana!', '$uicideboy$', 'Eternal Grey', 45],
+        ['Sky', 'Playboi Carti', 'Whole Lotta Red', 45],
+        ['i like the way you kiss me', 'Artemas', 'dirty little secret', 45],
+        ['Miss YOU!', 'CORPSE', 'Miss YOU!', 43],
+        ['White Tee', 'CORPSE', 'White Tee', 43],
+        ['Mask Off', 'Future', 'FUTURE', 42],
+        ['THE SUN', 'Night Lovell', 'Goodnight Lovell', 41],
+        ["That's It (feat. Future & Metro Boomin)", 'Yung Lean', "That's It (feat. Future & Metro Boomin) [from GTAVI: The Album]", 38],
+        ['MARY JANE', 'Night Lovell', 'Goodnight Lovell', 37],
+        ['Who Needs Love', 'Trippie Redd', 'A Love Letter to You 4', 36],
+        ["Jamie's Sin", 'Night Lovell', "Jamie's Sin", 35],
+        ['Type Shit', 'Future', "WE DON'T TRUST YOU", 35],
+        ["We Don't Trust You", 'Future', "WE DON'T TRUST YOU", 33],
+        ['Benz Truck (гелик)', 'Lil Peep', "Come Over When You're Sober, Pt. 1", 33],
+        ['HOT ONE (with TiaCorine & A$AP Ferg)', 'Denzel Curry', 'KING OF THE MISCHIEVOUS SOUTH', 32],
+        ['do re mi', 'blackbear', 'digital druglord', 31],
+        ['Ric Flair Drip (with Metro Boomin)', 'Offset', 'Without Warning', 31],
+        ['goosebumps (feat. Kendrick Lamar)', 'Travis Scott', 'Birds in the Trap Sing McKnight', 30],
+        ['Stronger', 'Kanye West', 'Graduation', 29],
+        ['Without Me', 'Eminem', 'The Eminem Show', 28],
+        ['HUMBLE.', 'Kendrick Lamar', 'DAMN.', 27],
+        ['a lot (feat. J. Cole)', '21 Savage', 'i am > i was', 26],
+        ['Lucid Dreams', 'Juice WRLD', 'Goodbye & Good Riddance', 25],
+        ['Jocelyn Flores', 'XXXTentacion', '17', 24],
+        ['Blinding Lights', 'The Weeknd', 'After Hours', 23],
+        ['Praise The Lord (Da Shine) (feat. Skepta)', 'A$AP Rocky', 'TESTING', 22],
+        ['A Milli', 'Lil Wayne', 'Tha Carter III', 21],
+        ['BAND4BAND (feat. Lil Baby)', 'Central Cee', "CAN'T RUSH GREATNESS", 20],
+        ['Monëy so big', 'Yeat', 'Up 2 Më', 19]
+              ];
+              const additionalAlbums = [
+        ['INDUSTRY BABY (feat. Jack Harlow)', 'Lil Nas X', 'MONTERO', 17],
+        ['XO TOUR Llif3', 'Lil Uzi Vert', 'Luv Is Rage 2', 17],
+        ["I Don't Like (feat. Lil Reese)", 'Chief Keef', 'Finally Rich', 16],
+        ["Day 'N' Nite (nightmare)", 'Kid Cudi', 'Man on the Moon: The End of Day', 16],
+        ['CLOUT COBAIN', 'Denzel Curry', 'TA13OO', 15],
+        ['Thought It Was a Drought', 'Future', 'DS2', 15]
+              ];
+
+        // Real songs from listed releases give the most prominent artists
+        // deeper catalogues without displacing the Top 50 track ranking.
+            const catalogue = [
+          ...[
+            'Lone Wolf Hysteria', 'The Thin Grey Line', 'Thorns', 'Burgundy',
+            'Transgressions', 'All of My Problems Always Involve Me', 'Us Vs. Them',
+            'Are You Going to See the Rose in the Vase, or the Dust on the Table'
+          ].map(title => [title, '$uicideboy$', 'New World Depression', 16]),
+
+        ...[
+          'WHO IS THIS WEIRDO ?', 'MY DAY IS RUINED !', 'GOLDEN TICKET', 'SUNDAY',
+          'PEEK-A-BOO', 'SUCKS TO BE YOU :/', 'FREAK (feat. Freddie Dredd)',
+        'EYE SPY', 'ALIVE EVEN WHEN I DIE', 'COLD SHOULDER'
+        ].map(title => [title, 'Night Lovell', "I HOPE YOU'RE HAPPY", 18]),
+
+        ...[
+          'BAD KID', 'LET ME DIE', 'MENTAL SLAVERY', "WHERE'S MY MONEY", 'PAIN',
+          'BUMBLE BEE', 'WATCH ME', 'JOAN OF ARC'
+        ].map(title => [title, 'Night Lovell', 'Goodnight Lovell', 18]),
+
+        ...[
+          'Young Metro', 'Ice Attack', 'Claustrophobic', 'Like That', 'Slimed In',
+          'Magic Don Juan (Princess Diana)', 'Runnin Outta Time', 'Fried (She a Vibe)',
+        "Ain't No Love", 'Everyday Hustle', 'GTA', 'Seen it All', 'WTFYM', 'Where My Twin @'
+        ].map(title => [title, 'Future', "WE DON'T TRUST YOU", 17]),
+
+        ...[
+          'Rent Money', 'Good Dope', 'Zoom', 'Draco', 'Super Trapper', 'POA',
+          'High Demand', 'Outta Time', 'Scrape'
+        ].map(title => [title, 'Future', 'FUTURE', 17]),
+
+        ...[
+          'hellboy', 'drive by', 'the song they played (when i crashed into the wall)',
+        'girls', 'OMFG', 'cobain', 'gucci mane', 'worlds away', 'we think too much', 'interlude'
+        ].map(title => [title, 'Lil Peep', 'HELLBOY', 16]),
+
+        ...[
+          'the ends', 'way back', 'coordinate', 'through the late night',
+          'beibs in the trap', 'pick up the phone', 'sweet sweet'
+        ].map(title => [title, 'Travis Scott', 'Birds in the Trap Sing McKnight', 17])
+              ];
+
+          // A smaller sample from the rest of the 50 artist roster. Tracks
+          // outside the 50 selected releases remain too low-ranked to displace them.
+          const otherArtists = [
+        ['Superhero (Heroes & Villains)', 'Metro Boomin', 'HEROES & VILLAINS', 7],
+        ['Bandz a Make Her Dance', 'Juicy J', 'Stay Trippy', 7],
+        ['Traction Control', 'CASisDEAD', 'Famous Last Words', 7],
+        ['Empire State of Mind', 'Jay-Z', 'The Blueprint 3', 7],
+        ['Tip Toe Wing in My Jawwdinz', 'Riff Raff', 'Neon Icon', 7],
+        ['Yes Indeed', 'Lil Baby', 'Harder Than Ever', 7],
+        ['See You Again (feat. Charlie Puth)', 'Wiz Khalifa', 'Furious 7 (Original Motion Picture Soundtrack)', 7],
+        ["Drop It Like It's Hot", 'Snoop Dogg', 'R&G (Rhythm & Gangsta): The Masterpiece', 7],
+        ['Collard Greens', 'ScHoolboy Q', 'Oxymoron', 7],
+        ['Hot (feat. Gunna)', 'Young Thug', 'So Much Fun', 7],
+        ["I'm Different", '2 Chainz', 'Based on a T.R.U. Story', 7],
+        ["Ain't It Funny", 'Danny Brown', 'Atrocity Exhibition', 7],
+        ['No Idea', 'Don Toliver', 'Heaven or Hell', 7],
+        ['Mercury: Retrograde', 'Ghostemane', 'HEXADA', 7],
+        ['HDMI', 'BONES', 'Rotten', 7],
+        ['The Fo Five', 'Ramirez', 'THE PLAYA$ MANUAL', 7],
+        ['Han Solo', 'Germ', 'BAD SHIT', 7],
+        ['Self Care', 'Mac Miller', 'Swimming', 7],
+        ['EARFQUAKE', 'Tyler, the Creator', 'IGOR', 7],
+        ['Agony', 'Yung Lean', 'Stranger', 7]
+              ];
+
+              const builder = makeBuilder();
+              let seed = 27891;
+              const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+              const platforms = ['linux', 'windows', 'macos', 'android', 'ios', 'chromecast', 'Apple TV', 'Android TV', 'Sonos'];
+              const rows = [];
+              let sequence = 0;
+
+              for (const [title, artist, album, plays] of [...topTracks, ...additionalAlbums, ...catalogue, ...otherArtists]) {
+                for (let i = 0; i < plays; i++) {
+                  // Use distinct millisecond timestamps so no invented demo plays are
+                  // lost to Spotify's normal event deduplication.
+                  const year = 2017 + Math.floor(Math.pow(rand(), 0.62) * 10);
+                  const month = Math.floor(rand() * 12);
+                  const day = 1 + Math.floor(rand() * 28);
+                  const hour = Math.floor(rand() * 24);
+                  const minute = Math.floor(rand() * 60);
+                  const timestamp = new Date(Date.UTC(year, month, day, hour, minute, sequence % 60, sequence % 1000)).toISOString();
+                  sequence++;
+                  const skipped = rand() < 0.12;
+                  const platform = platforms[Math.floor(rand() * platforms.length)];
+
+                  rows.push({
+                    ts: timestamp,
+                    master_metadata_album_artist_name: artist,
+                    master_metadata_track_name: title,
+                    master_metadata_album_album_name: album,
+                    ms_played: 35_000 + Math.floor(rand() * (skipped ? 75_000 : 255_000)),
+                            platform,
+                            skipped,
+                            shuffle: rand() < 0.57,
+                            offline: rand() < 0.09
+                  });
+                }
+              }
+
+              ingest(builder, rows);
+              builder.sourceFiles = 1;
+              activateReport(finishBuilder(builder, 'Sample listening history · not your data', 'Demo data', true));
+            } finally {
+              state.loading = false;
+            }
+          }
+
 
   function attachEvents() {
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', () => openView(link.dataset.nav)));
