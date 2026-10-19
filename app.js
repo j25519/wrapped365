@@ -1,4 +1,4 @@
-/* Wrapped 365 — local-only Spotify listening history analytics. No HTTP requests. */
+/* Wrapped 365 — local-only Spotify listening history analytics. */
 (() => {
   'use strict';
 
@@ -479,238 +479,60 @@
     root.innerHTML = reports.map(report => `<article class="history-card"><div class="history-card-head"><span class="history-icon">♫</span><span class="history-date">Saved ${dateLabel(report.createdAt)}</span></div><h3>${escapeHtml(report.filename)}</h3><p>${number(report.periods?.all?.qualified || report.imported - report.short)} streams · ${escapeHtml(report.type)}<br>${dateLabel(report.firstTs)} – ${dateLabel(report.lastTs)}</p><div class="history-actions"><button class="btn btn-primary" data-open-report="${report.id}">Open report ↗</button><button class="btn btn-outline" data-export-report="${report.id}">Export JSON ↓</button><button class="btn btn-danger" data-delete-report="${report.id}">Delete</button></div></article>`).join('');
   }
 
+  async function loadDemoTracks() {
+    const response = await fetch('./demo-tracks.yaml', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Could not load demo-tracks.yaml (HTTP ${response.status}). Check that the file is included in your deployment.`);
+    const lines = (await response.text()).split(/\r?\n/);
+    const tracks = [];
+    let track = null;
+    for (const [index, line] of lines.entries()) {
+      if (!line.trim() || line.trim().startsWith('#') || line.trim() === '---' || line === 'tracks:') continue;
+      const first = line.match(/^  - title: (.+)$/);
+      const property = line.match(/^    (artist|album|released|seconds|credits): (.+)$/);
+      if (first) {
+        try {
+          track = { title: JSON.parse(first[1]) };
+        } catch {
+          throw new Error(`Invalid demo catalogue title on line ${index + 1}. Use a double-quoted YAML string.`);
+        }
+        tracks.push(track);
+      } else if (property && track) {
+        try {
+          track[property[1]] = JSON.parse(property[2]);
+        } catch {
+          throw new Error(`Invalid demo catalogue value on line ${index + 1}. Use double-quoted YAML strings.`);
+        }
+      } else {
+        throw new Error(`Invalid demo catalogue format on line ${index + 1}.`);
+      }
+    }
+    if (!tracks.length) throw new Error('The demo catalogue has no tracks.');
+    const keys = new Set();
+    for (const [index, item] of tracks.entries()) {
+      if (!['title', 'artist', 'album', 'released'].every(field => typeof item[field] === 'string' && item[field].trim()) ||
+          !/^\d{4}-\d{2}-\d{2}$/.test(item.released) ||
+          !Number.isInteger(item.seconds) || item.seconds < 0 ||
+          (item.credits !== undefined && (!Array.isArray(item.credits) || !item.credits.every(name => typeof name === 'string' && name.trim())))) {
+        throw new Error(`Invalid demo track entry ${index + 1}. Check its fields, date, and duration.`);
+      }
+      const date = new Date(`${item.released}T00:00:00Z`);
+      if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== item.released) {
+        throw new Error(`Invalid release date for demo track ${index + 1}.`);
+      }
+      const key = keyOf(item.title, item.artist, item.album);
+      if (keys.has(key)) throw new Error(`Duplicate demo catalogue entry: ${item.artist} — ${item.title}.`);
+      keys.add(key);
+    }
+    return tracks;
+  }
+
   async function makeDemo() {
     if (state.loading) return;
     state.loading = true;
     $('randomise-demo').disabled = true;
     $('demo-button').disabled = true;
     try {
-      const tracks = [
-      ["Misery in Waking Hours", "$uicideboy$", "New World Depression", "2024-06-14", 219],
-      ["LIKE YXU WXULD KNXW (AUTUMN TREES)", "Kordhell", "PSYCHX", "2022-10-28", 0],
-      ["MORRISON", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["CODE MISTAKE", "CORPSE", "CODE MISTAKE", "2023-06-30", 0],
-      ["Leviticus", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 124],
-      ["MISA MISA!", "CORPSE", "MISA MISA!", "2022-08-26", 0],
-      ["Sorry 4 What? // LV BELT", "Tory Lanez", "Sorry 4 What", "2022-09-30", 0],
-      ["Ran To Atlanta (feat. Future & Molly Santana)", "Drake", "ICEMAN", "2026-05-15", 0],
-      ["The Light at the End of the Tunnel for $9.99 a Month", "$uicideboy$", "New World Depression", "2024-06-14", 139],
-      ["Napoleon", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 156],
-      ["Now and at the Hour of Our Death (feat. BONES)", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 254],
-      ["Mood Swing Misery", "Pouya", "The South Got Something to Say", "2019-07-01", 0],
-      ["fuK u lol", "CORPSE", "fuK u lol", "2020-07-01", 0],
-      ["LIFE SUCKS SO WE FUCK (feat. ZillaKami)", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["Cinderella", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["HOT DEMON B!TCHES NEAR U ! ! !", "CORPSE", "HOT DEMON B!TCHES NEAR U ! ! !", "2021-09-01", 0],
-      ["Cat Girls Are Ruining My Life!", "CORPSE", "Cat Girls Are Ruining My Life!", "2020-07-01", 0],
-      ["move on, be strong", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["E-GIRLS ARE RUINING MY LIFE!", "CORPSE", "E-GIRLS ARE RUINING MY LIFE!", "2020-09-01", 0],
-      ["Behold a Pale Rider", "Savage Ga$p", "American Gothic", "2025-01-01", 0],
-      ["DRAINO (feat. Denzel Curry)", "City Morgue", "CITY MORGUE VOL 2: AS GOOD AS DEAD", "2019-12-13", 0],
-      ["O Pana!", "$uicideboy$", "Eternal Grey", "2016-09-09", 128],
-      ["Sky", "Playboi Carti", "Whole Lotta Red", "2020-12-25", 0],
-      ["i like the way you kiss me", "Artemas", "dirty little secret", "2024-03-19", 0],
-      ["Miss YOU!", "CORPSE", "Miss YOU!", "2020-11-01", 0],
-      ["White Tee", "CORPSE", "White Tee", "2020-08-01", 0],
-      ["Mask Off", "Future", "FUTURE", "2017-02-17", 0],
-      ["THE SUN", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["That's It (feat. Future & Metro Boomin)", "Yung Lean", "That's It (feat. Future & Metro Boomin) [from GTAVI: The Album]", "2026-09-17", 0],
-      ["MARY JANE", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["Who Needs Love", "Trippie Redd", "A Love Letter to You 4", "2019-11-22", 0],
-      ["Jamie's Sin", "Night Lovell", "Jamie's Sin", "2025-01-01", 0],
-      ["Type Shit", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["We Don't Trust You", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Benz Truck (гелик)", "Lil Peep", "Come Over When You're Sober, Pt. 1", "2017-08-15", 0],
-      ["HOT ONE (with TiaCorine & A$AP Ferg)", "Denzel Curry", "KING OF THE MISCHIEVOUS SOUTH", "2024-07-19", 0],
-      ["do re mi", "blackbear", "digital druglord", "2017-04-21", 0],
-      ["Ric Flair Drip (with Metro Boomin)", "Offset", "Without Warning", "2017-10-31", 0],
-      ["goosebumps (feat. Kendrick Lamar)", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["Stronger", "Kanye West", "Graduation", "2007-09-11", 0],
-      ["Without Me", "Eminem", "The Eminem Show", "2002-05-26", 0],
-      ["HUMBLE.", "Kendrick Lamar", "DAMN.", "2017-04-14", 0],
-      ["a lot (feat. J. Cole)", "21 Savage", "i am > i was", "2018-12-21", 0],
-      ["Lucid Dreams", "Juice WRLD", "Goodbye & Good Riddance", "2018-05-23", 0],
-      ["Jocelyn Flores", "XXXTentacion", "17", "2017-08-25", 0],
-      ["Blinding Lights", "The Weeknd", "After Hours", "2020-03-20", 0],
-      ["Praise The Lord (Da Shine) (feat. Skepta)", "A$AP Rocky", "TESTING", "2018-05-25", 0],
-      ["A Milli", "Lil Wayne", "Tha Carter III", "2008-06-10", 0],
-      ["BAND4BAND (feat. Lil Baby)", "Central Cee", "CAN'T RUSH GREATNESS", "2025-01-24", 0],
-      ["Monëy so big", "Yeat", "Up 2 Më", "2021-09-10", 0],
-      ["INDUSTRY BABY (feat. Jack Harlow)", "Lil Nas X", "MONTERO", "2021-09-17", 0],
-      ["XO TOUR Llif3", "Lil Uzi Vert", "Luv Is Rage 2", "2017-08-25", 0],
-      ["I Don't Like (feat. Lil Reese)", "Chief Keef", "Finally Rich", "2012-12-18", 0],
-      ["Day 'N' Nite (nightmare)", "Kid Cudi", "Man on the Moon: The End of Day", "2009-09-15", 0],
-      ["CLOUT COBAIN", "Denzel Curry", "TA13OO", "2018-07-27", 0],
-      ["Thought It Was a Drought", "Future", "DS2", "2015-07-17", 0],
-      ["Lone Wolf Hysteria", "$uicideboy$", "New World Depression", "2024-06-14", 107],
-      ["The Thin Grey Line", "$uicideboy$", "New World Depression", "2024-06-14", 105],
-      ["Thorns", "$uicideboy$", "New World Depression", "2024-06-14", 130],
-      ["Burgundy", "$uicideboy$", "New World Depression", "2024-06-14", 268],
-      ["Transgressions", "$uicideboy$", "New World Depression", "2024-06-14", 137],
-      ["All of My Problems Always Involve Me", "$uicideboy$", "New World Depression", "2024-06-14", 121],
-      ["Us Vs. Them", "$uicideboy$", "New World Depression", "2024-06-14", 184],
-      ["Are You Going to See the Rose in the Vase, or the Dust on the Table", "$uicideboy$", "New World Depression", "2024-06-14", 150],
-      ["WHO IS THIS WEIRDO ?", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["MY DAY IS RUINED !", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["GOLDEN TICKET", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["SUNDAY", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["PEEK-A-BOO", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["SUCKS TO BE YOU :/", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["FREAK (feat. Freddie Dredd)", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["EYE SPY", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["ALIVE EVEN WHEN I DIE", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["COLD SHOULDER", "Night Lovell", "I HOPE YOU'RE HAPPY", "2023-12-08", 0],
-      ["BAD KID", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["LET ME DIE", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["MENTAL SLAVERY", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["WHERE'S MY MONEY", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["PAIN", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["BUMBLE BEE", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["WATCH ME", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["JOAN OF ARC", "Night Lovell", "Goodnight Lovell", "2019-02-22", 0],
-      ["Young Metro", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Ice Attack", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Claustrophobic", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Like That", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Slimed In", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Magic Don Juan (Princess Diana)", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Runnin Outta Time", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Fried (She a Vibe)", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Ain't No Love", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Everyday Hustle", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["GTA", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Seen it All", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["WTFYM", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Where My Twin @", "Future", "WE DON'T TRUST YOU", "2024-03-22", 0],
-      ["Rent Money", "Future", "FUTURE", "2017-02-17", 0],
-      ["Good Dope", "Future", "FUTURE", "2017-02-17", 0],
-      ["Zoom", "Future", "FUTURE", "2017-02-17", 0],
-      ["Draco", "Future", "FUTURE", "2017-02-17", 0],
-      ["Super Trapper", "Future", "FUTURE", "2017-02-17", 0],
-      ["POA", "Future", "FUTURE", "2017-02-17", 0],
-      ["High Demand", "Future", "FUTURE", "2017-02-17", 0],
-      ["Outta Time", "Future", "FUTURE", "2017-02-17", 0],
-      ["Scrape", "Future", "FUTURE", "2017-02-17", 0],
-      ["hellboy", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["drive by", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["the song they played (when i crashed into the wall)", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["girls", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["OMFG", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["cobain", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["gucci mane", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["worlds away", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["we think too much", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["interlude", "Lil Peep", "HELLBOY", "2016-09-25", 0],
-      ["the ends", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["way back", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["coordinate", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["through the late night", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["beibs in the trap", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["pick up the phone", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["sweet sweet", "Travis Scott", "Birds in the Trap Sing McKnight", "2016-09-02", 0],
-      ["Superhero (Heroes & Villains)", "Metro Boomin", "HEROES & VILLAINS", "2022-12-02", 0],
-      ["Bandz a Make Her Dance", "Juicy J", "Stay Trippy", "2013-08-27", 0],
-      ["Traction Control", "CASISDEAD", "Famous Last Words", "2023-10-27", 213],
-      ["Empire State of Mind", "Jay-Z", "The Blueprint 3", "2009-09-08", 0],
-      ["Tip Toe Wing in My Jawwdinz", "Riff Raff", "Neon Icon", "2014-06-24", 0],
-      ["Yes Indeed", "Lil Baby", "Harder Than Ever", "2018-05-18", 0],
-      ["See You Again (feat. Charlie Puth)", "Wiz Khalifa", "Furious 7 (Original Motion Picture Soundtrack)", "2015-03-17", 0],
-      ["Drop It Like It's Hot", "Snoop Dogg", "R&G (Rhythm & Gangsta): The Masterpiece", "2004-11-16", 0],
-      ["Collard Greens", "ScHoolboy Q", "Oxymoron", "2014-02-25", 0],
-      ["Hot (feat. Gunna)", "Young Thug", "So Much Fun", "2019-08-16", 0],
-      ["I'm Different", "2 Chainz", "Based on a T.R.U. Story", "2012-08-14", 0],
-      ["Ain't It Funny", "Danny Brown", "Atrocity Exhibition", "2016-09-27", 0],
-      ["No Idea", "Don Toliver", "Heaven or Hell", "2020-03-13", 0],
-      ["Mercury: Retrograde", "Ghostemane", "HEXADA", "2017-09-05", 0],
-      ["HDMI", "BONES", "Rotten", "2014-12-01", 0],
-      ["The Fo Five", "Ramirez", "THE PLAYA$ MANUAL", "2020-05-08", 0],
-      ["Han Solo", "Germ", "BAD SHIT", "2016-11-01", 0],
-      ["Self Care", "Mac Miller", "Swimming", "2018-08-03", 0],
-      ["EARFQUAKE", "Tyler, the Creator", "IGOR", "2019-05-17", 0],
-      ["Agony", "Yung Lean", "Stranger", "2017-11-10", 0],
-      ["Mental Clarity Is a Luxury I Can't Afford", "$uicideboy$", "New World Depression", "2024-06-14", 145],
-      ["Drag 'Em to the River (Totalitarian Remix)", "$uicideboy$", "New World Depression", "2024-06-14", 227],
-      ["Kill Yourself V", "$uicideboy$", "New World Depression", "2024-06-14", 116],
-      ["2009 Reggie Bush", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 205],
-      ["BLOODSWEAT", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 221],
-      ["Angel Grove", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 154],
-      ["Whatever Floats Your Boat Will Definitely Sink My Ship", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 162],
-      ["MSY", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 127],
-      ["Old Addicts, New Habits", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 172],
-      ["Frenzy", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 190],
-      ["Hypernormalisation", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 152],
-      ["Fuck Ups", "$uicideboy$", "THY WILL BE DONE", "2025-12-25", 280],
-      ["COUNT YOUR BLESSINGS", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 248],
-      ["Oh, What a Wretched Man I Am!", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 159],
-      ["Full of Grace (I Refuse to Tend My Own Grave)", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 180],
-      ["Chain Breaker", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 133],
-      ["Self-Inflicted", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 87],
-      ["GREY+GREY+GREY", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 160],
-      ["Carried Away (feat. Night Lovell)", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 223],
-      ["Monochromatic", "$uicideboy$", "THY KINGDOM COME", "2025-07-31", 137],
-      ["BREAKDALAW2k16 (feat. Pouya)", "$uicideboy$", "Eternal Grey", "2016-09-09", 110],
-      ["Say Cheese and Die", "$uicideboy$", "Eternal Grey", "2016-09-09", 162],
-      ["Eclipse", "$uicideboy$", "Eternal Grey", "2016-09-09", 128],
-      ["Chariot of Fire", "$uicideboy$", "Eternal Grey", "2016-09-09", 131],
-      ["I Want to Believe", "$uicideboy$", "Eternal Grey", "2016-09-09", 82],
-      ["Uglier", "$uicideboy$", "Eternal Grey", "2016-09-09", 158],
-      ["Water $uicide (feat. Chris Travis)", "$uicideboy$", "Eternal Grey", "2016-09-09", 154],
-      ["Elysian Fields", "$uicideboy$", "Eternal Grey", "2016-09-09", 154],
-      ["275 $uicide", "$uicideboy$", "Eternal Grey", "2016-09-09", 129],
-      ["Lucky Me", "$uicideboy$", "Eternal Grey", "2016-09-09", 106],
-      ["It's Hard to Win When You Always Lose", "$uicideboy$", "Eternal Grey", "2016-09-09", 86],
-      ["Ultimate $uicide (feat. Denzel Curry)", "$uicideboy$", "Eternal Grey", "2016-09-09", 171],
-      ["Leave Your Things Behind II", "$uicideboy$", "Eternal Grey", "2016-09-09", 167],
-      ["Do You Trust Me?", "CASISDEAD", "Famous Last Words", "2023-10-27", 53],
-      ["A Spark", "CASISDEAD", "Famous Last Words", "2023-10-27", 172],
-      ["Loosin'", "CASISDEAD", "Famous Last Words", "2023-10-27", 97],
-      ["Steptronic", "CASISDEAD", "Famous Last Words", "2023-10-27", 111],
-      ["DEADCORP", "CASISDEAD", "Famous Last Words", "2023-10-27", 12],
-      ["Pineapple Juice", "CASISDEAD", "Famous Last Words", "2023-10-27", 198],
-      ["I Wanna Go Home", "CASISDEAD", "Famous Last Words", "2023-10-27", 40],
-      ["Actin' Up", "CASISDEAD", "Famous Last Words", "2023-10-27", 206],
-      ["Sarah Connor", "CASISDEAD", "Famous Last Words", "2023-10-27", 149],
-      ["Do You Remember What It Was Like?", "CASISDEAD", "Famous Last Words", "2023-10-27", 93],
-      ["Marilyn", "CASISDEAD", "Famous Last Words", "2023-10-27", 244],
-      ["Aghast 6", "CASISDEAD", "Famous Last Words", "2023-10-27", 29],
-      ["Boys Will Be Boys", "CASISDEAD", "Famous Last Words", "2023-10-27", 248],
-      ["Venom", "CASISDEAD", "Famous Last Words", "2023-10-27", 232],
-      ["The Ants", "CASISDEAD", "Famous Last Words", "2023-10-27", 56],
-      ["Matte Grey Wrap", "CASISDEAD", "Famous Last Words", "2023-10-27", 228],
-      ["Pat Earrings", "CASISDEAD", "Famous Last Words", "2023-10-27", 235],
-      ["Before This", "CASISDEAD", "Famous Last Words", "2023-10-27", 263],
-      ["Jane", "CASISDEAD", "Famous Last Words", "2023-10-27", 18],
-      ["Sugar Free", "CASISDEAD", "Famous Last Words", "2023-10-27", 199],
-      ["Access Denied", "CASISDEAD", "Famous Last Words", "2023-10-27", 73],
-      ["Skydive", "CASISDEAD", "Famous Last Words", "2023-10-27", 268],
-      ["XanaX Damage", "Future", "SAVE ME", "2019-06-07", 104],
-      ["St. Lucia", "Future", "SAVE ME", "2019-06-07", 198],
-      ["Please Tell Me", "Future", "SAVE ME", "2019-06-07", 204],
-      ["Shotgun", "Future", "SAVE ME", "2019-06-07", 258],
-      ["Government Official", "Future", "SAVE ME", "2019-06-07", 150],
-      ["Extra", "Future", "SAVE ME", "2019-06-07", 173],
-      ["Love Thy Enemies", "Future", "SAVE ME", "2019-06-07", 127],
-      ["My Collection", "Future", "HNDRXX", "2017-02-24", 255],
-      ["Comin Out Strong (feat. The Weeknd)", "Future", "HNDRXX", "2017-02-24", 254],
-      ["Lookin Exotic", "Future", "HNDRXX", "2017-02-24", 227],
-      ["Damage", "Future", "HNDRXX", "2017-02-24", 237],
-      ["Use Me", "Future", "HNDRXX", "2017-02-24", 256],
-      ["Incredible", "Future", "HNDRXX", "2017-02-24", 248],
-      ["Testify", "Future", "HNDRXX", "2017-02-24", 178],
-      ["Fresh Air", "Future", "HNDRXX", "2017-02-24", 270],
-      ["Neva Missa Lost", "Future", "HNDRXX", "2017-02-24", 238],
-      ["Keep Quiet", "Future", "HNDRXX", "2017-02-24", 202],
-      ["Hallucinating", "Future", "HNDRXX", "2017-02-24", 221],
-      ["I Thank U", "Future", "HNDRXX", "2017-02-24", 141],
-      ["New Illuminati", "Future", "HNDRXX", "2017-02-24", 181],
-      ["Turn On Me", "Future", "HNDRXX", "2017-02-24", 264],
-      ["Selfish (feat. Rihanna)", "Future", "HNDRXX", "2017-02-24", 251],
-      ["Solo", "Future", "HNDRXX", "2017-02-24", 265],
-      ["Sorry", "Future", "HNDRXX", "2017-02-24", 451],
-      ["PIE (feat. Chris Brown)", "Future", "HNDRXX", "2017-06-25", 210],
-      ["You Da Baddest (feat. Nicki Minaj)", "Future", "HNDRXX", "2017-07-28", 241],
-      ["So Slow", "Slevpy808", "So Slow", "2024-11-22", 147]
-      ];
+      const tracks = await loadDemoTracks();
       let seed = crypto.getRandomValues(new Uint32Array(1))[0];
       const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
       const randomInt = (min, max) => min + Math.floor(rand() * (max - min + 1));
@@ -736,26 +558,10 @@
       const allSessions = [];
       const rows = [];
       const byYear = new Map();
-      const artists = [...new Set(tracks.map(track => track[1]))];
-      const specialCredits = {
-        'LIKE YXU WXULD KNXW (AUTUMN TREES)': ['Scarlxrd', 'CORPSE'],
-        'CODE MISTAKE': ['Bring Me The Horizon'],
-        'MISA MISA!': ['Scarlxrd', 'Kordhell'],
-        'Cinderella': ['Metro Boomin', 'Travis Scott'],
-        'HOT DEMON B!TCHES NEAR U ! ! !': ['Night Lovell'],
-        'E-GIRLS ARE RUINING MY LIFE!': ['Savage Ga$p'],
-        'Type Shit': ['Metro Boomin', 'Travis Scott', 'Playboi Carti'],
-        "We Don't Trust You": ['Metro Boomin'],
-        'Pineapple Juice': ['Kamio'],
-        "Actin' Up": ['Desire'],
-        'Marilyn': ['Connie Constance'],
-        'Matte Grey Wrap': ['Desire'],
-        'Before This': ['LATER'],
-        'Skydive': ['Neil Tennant']
-      };
-      const catalogue = tracks.map(([title, artist, album, released, seconds], id) => {
+      const artists = [...new Set(tracks.map(track => track.artist))];
+      const catalogue = tracks.map(({ title, artist, album, released, seconds, credits: listedCredits = [] }, id) => {
         const feature = title.match(/\((?:feat\.?|with)\s+([^)]+)\)/i);
-        const candidates = [...(specialCredits[title] || []), ...(feature ? feature[1].split(/\s*(?:&|,|\band\b)\s*/i) : [])];
+        const candidates = [...listedCredits, ...(feature ? feature[1].split(/\s*(?:&|,|\band\b)\s*/i) : [])];
         const credits = [...new Set(candidates.map(name => name.trim()).filter(name => name && keyOf(name) !== keyOf(artist)))];
         return {
           id, title, artist, album, released, credits, releasedAt: Date.parse(released + 'T00:00:00Z'),
@@ -898,6 +704,7 @@
       activateReport(report);
     } catch (error) {
       console.error('Could not generate demo:', error);
+      if (state.view !== 'home') openView('home');
       showError(error instanceof Error ? error.message : 'Could not generate a new demo.');
     } finally {
       state.loading = false;
