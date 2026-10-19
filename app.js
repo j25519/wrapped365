@@ -142,6 +142,50 @@
       .filter(name => typeof name === 'string').map(name => name.trim())
       .filter(name => { const key = keyOf(name); if (!name || seen.has(key)) return false; seen.add(key); return true; });
   }
+  // Infer additional artist credits from explicit textual attribution, not arbitrary
+  // punctuation in a name. Spotify's standard history only supplies an album artist.
+  // This is intentionally conservative and requires a feature/with marker.
+  const featureMarker = String.raw`(?:feat(?:uring)?[.:]?|ft[.:]?|f\/|with|w\/)`;
+  const featureOnlyMarker = String.raw`(?:feat(?:uring)?[.:]?|ft[.:]?|f\/)`;
+  const bracketFeature = new RegExp(String.raw`[\(\[]\s*${featureMarker}\s*([^)\]]+)\s*[\)\]]`, 'gi');
+  const dashFeature = new RegExp(String.raw`\s+[-–—]\s*${featureMarker}\s+(.+)$`, 'i');
+  const bareFeature = new RegExp(String.raw`\s+${featureOnlyMarker}\s+(.+)$`, 'i');
+  const artistWithFeature = new RegExp(String.raw`^(.+?)\s*[\(\[]\s*${featureMarker}\s+([^)\]]+)\s*[\)\]]$`, 'i');
+  const artistWithBareFeature = new RegExp(String.raw`^(.+?)\s+(?:${featureOnlyMarker}|[-–—]\s*${featureMarker})\s+(.+)$`, 'i');
+
+  function namesFromFeature(value) {
+    if (typeof value !== 'string') return [];
+    // A final remix/edit label isn't a featured artist.
+    const cleaned = value.trim().replace(/\s*[\(\[]\s*(?:remix|edit|remaster(?:ed)?|live|radio edit|explicit|clean)(?:\s+[^)\]]*)?[\)\]]\s*$/i, '')
+      .replace(/^[\s:–—-]+|[\s:–—-]+$/g, '');
+    if (!cleaned || cleaned.length > 160) return [];
+    // Commas in names such as "Tyler, the Creator" are not separators.
+    return creditedNames(cleaned.split(/\s+(?:&|and|x|×|\+|vs\.?)\s+|;\s*|,\s+(?!the\s|jr\.?\b|sr\.?\b)/i)
+      .map(name => name.replace(/^[\s"“”']+|[\s"“”']+$/g, '').trim())
+      .filter(name => name && name.length <= 90));
+  }
+
+  function featureCreditsFromTitle(title) {
+    if (typeof title !== 'string') return [];
+    const found = [];
+    for (const match of title.matchAll(bracketFeature)) found.push(...namesFromFeature(match[1]));
+    // Handle "Song - feat. X" and "Song ft. X" without square brackets.
+    // Only inspect the suffix if no bracketed feature credit was identified.
+    if (!found.length) {
+      const match = title.match(dashFeature) || title.match(bareFeature);
+      if (match) found.push(...namesFromFeature(match[1]));
+    }
+    return creditedNames(found);
+  }
+
+  function splitPrimaryArtist(raw) {
+    const text = typeof raw === 'string' ? raw.trim() : '';
+    const match = text.match(artistWithFeature) || text.match(artistWithBareFeature);
+    if (!match) return { primary: text, featured: [] };
+    const primary = match[1].replace(/[\s,–—-]+$/g, '').trim();
+    const featured = namesFromFeature(match[2]);
+    return primary && featured.length ? { primary, featured } : { primary: text, featured: [] };
+  }
   const artistCredits = item => Array.isArray(item?.creditedArtists) && item.creditedArtists.length
     ? item.creditedArtists : item?.artist ? [item.artist] : [];
   const artistCreditLabel = item => artistCredits(item).join(', ');
@@ -205,7 +249,9 @@
     if (row.spotify_episode_uri || row.episode_name || row.episode_show_name || row.episodeName) return null;
     const rawArtist = row.master_metadata_album_artist_name ?? row.artistName;
     const listed = creditedNames(row.credited_artists ?? row.creditedArtists ?? row.artists ?? row.artist_names ?? row.artistNames ?? row.master_metadata_artists ?? (Array.isArray(rawArtist) ? rawArtist : null));
-    const artist = typeof rawArtist === 'string' ? rawArtist.trim() : listed[0];
+    const primarySource = typeof rawArtist === 'string' ? rawArtist : listed[0];
+    const parsedArtist = splitPrimaryArtist(primarySource);
+    const artist = parsedArtist.primary;
     const title = row.master_metadata_track_name ?? row.trackName;
     const album = row.master_metadata_album_album_name ?? row.albumName ?? '';
     const ms = Number(row.ms_played ?? row.msPlayed);
@@ -213,7 +259,10 @@
     if (!artist || !title || !ts || !Number.isFinite(ms) || ms < 0) return null;
     const uri = /^spotify:track:[A-Za-z0-9]+$/.test(row.spotify_track_uri || '') ? row.spotify_track_uri : '';
     return {
-      ts, ms, artist: String(artist).trim(), creditedArtists: creditedNames([artist, ...listed]), title: String(title).trim(),
+      ts, ms, artist: String(artist).trim(),
+      creditedArtists: creditedNames([artist, ...listed.filter(name => keyOf(name) !== keyOf(primarySource)),
+        ...parsedArtist.featured, ...featureCreditsFromTitle(String(title))]),
+      title: String(title).trim(),
       album: String(album).trim(), platform: typeof row.platform === 'string' ? row.platform.trim() : '', uri,
       skipped: typeof row.skipped === 'boolean' ? row.skipped : null,
       shuffle: typeof row.shuffle === 'boolean' ? row.shuffle : null,
@@ -987,9 +1036,8 @@
       const byYear = new Map();
       const artists = [...new Set(tracks.map(track => track.artist))];
       const catalogue = tracks.map(({ title, artist, album, released, seconds, credits: listedCredits = [] }, id) => {
-        const feature = title.match(/\((?:feat\.?|with)\s+([^)]+)\)/i);
-        const candidates = [...listedCredits, ...(feature ? feature[1].split(/\s*(?:&|,|\band\b)\s*/i) : [])];
-        const credits = [...new Set(candidates.map(name => name.trim()).filter(name => name && keyOf(name) !== keyOf(artist)))];
+        const candidates = [...listedCredits, ...featureCreditsFromTitle(title)];
+        const credits = creditedNames(candidates).filter(name => keyOf(name) !== keyOf(artist));
         return {
           id, title, artist, album, released, credits, releasedAt: Date.parse(released + 'T00:00:00Z'),
           length: seconds ? seconds * 1000 : randomInt(115, 270) * 1000
