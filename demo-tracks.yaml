@@ -1133,3 +1133,65 @@ tracks:
     album: "So Slow"
     released: "2024-11-22"
     seconds: 147
+  - title: "Professional"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 368
+  - title: "The Town"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 307
+  - title: "Adaptation"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 283
+  - title: "Love In The Sky"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-07-30"
+    seconds: 267
+  - title: "Belong To The World"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-07-16"
+    seconds: 307
+  - title: "Live For"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-08-20"
+    seconds: 222
+    credits: ["Drake"]
+  - title: "Wanderlust"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 306
+  - title: "Kiss Land"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-05-17"
+    seconds: 455
+  - title: "Pretty"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 375
+  - title: "Tears In The Rain"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 444
+  - title: "Wanderlust (Pharrell Remix)"
+    artist: "The Weeknd"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 305
+  - title: "Odd Look"
+    artist: "Kavinsky"
+    album: "Kiss Land"
+    released: "2013-09-10"
+    seconds: 252
+    credits: ["The Weeknd"]
