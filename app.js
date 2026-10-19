@@ -36,9 +36,10 @@
     if (/android.?tv|google.?tv/.test(value)) return 'Android TV';
     if (/android/.test(value)) return 'Android';
     if (/iphone|ipad|ios/.test(value)) return 'iOS / iPadOS';
-    if (/macos|os x|mac os/.test(value)) return 'macOS';
+    if (/macos|os x|mac os|osx/.test(value)) return 'macOS';
     if (/windows/.test(value)) return 'Windows';
     if (/linux/.test(value)) return 'Linux';
+    if (/xbox/.test(value)) return 'Xbox';
     if (/apple.?tv|tvos/.test(value)) return 'Apple TV';
     if (/sonos/.test(value)) return 'Sonos';
     if (/alexa|echo/.test(value)) return 'Alexa / Echo';
@@ -449,7 +450,7 @@
     $('heatmap').innerHTML = heatmap + '</div>';
     const platforms = p.platforms.slice(0, 8);
     const platformTotal = p.platforms.reduce((sum, row) => sum + row[1], 0);
-    $('platform-list').innerHTML = platforms.map(([name, ms], i) => `<div class="rank-row"><span class="rank-position">${i + 1}</span><div class="rank-art">▣</div><div class="rank-main"><span class="rank-title" title="${escapeHtml(name)}">${escapeHtml(name)}</span><span class="rank-sub">${percent(ms, platformTotal)} of listening time</span></div><div class="rank-data"><span class="rank-number">${hours(ms)} h</span></div></div>`).join('') || emptyMessage();
+    $('platform-list').innerHTML = platforms.map(([name, ms], i) => `<div class="rank-row"><span class="rank-position">${i + 1}</span><div class="rank-art">▣</div><div class="rank-main"><span class="rank-title" title="${escapeHtml(platformGroup(name))}">${escapeHtml(platformGroup(name))}</span><span class="rank-sub">${percent(ms, platformTotal)} of listening time</span></div><div class="rank-data"><span class="rank-number">${hours(ms)} h</span></div></div>`).join('') || emptyMessage();
     const values = [
       ['Total listening days', `${number(p.activeDays)} days`],
       ['Average active-day listening', duration(p.activeDays ? p.ms / p.activeDays : 0)],
