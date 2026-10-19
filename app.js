@@ -12,9 +12,9 @@
   const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'patterns', 'history'];
+  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'history'];
   const $ = id => document.getElementById(id);
-  const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false };
+  const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null };
 
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const number = value => formatter.format(Math.round(value || 0));
@@ -129,7 +129,7 @@
     };
   }
   function makeBuilder() {
-    return { periods: new Map([['all', emptyPeriod()]]), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0 };
+    return { periods: new Map([['all', emptyPeriod()]]), monthPeriods: new Map(), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0 };
   }
   function rankUpdate(map, key, item, ms) {
     let previous = map.get(key);
@@ -211,6 +211,10 @@
       const year = play.ts.slice(0, 4);
       if (!builder.periods.has(year)) builder.periods.set(year, emptyPeriod());
       updatePeriod(builder.periods.get(year), play);
+      // Preserve true monthly rankings for the Eras explorer (not just listening hours).
+      const month = play.ts.slice(0, 7);
+      if (!builder.monthPeriods.has(month)) builder.monthPeriods.set(month, emptyPeriod());
+      updatePeriod(builder.monthPeriods.get(month), play);
     }
   }
   function periodToJSON(p) {
@@ -226,15 +230,27 @@
       albums: [...p.albums.values()].sort((a, b) => b.plays - a.plays)
     };
   }
+  function monthToJSON(p) {
+    return {
+      qualified: p.qualified, allEvents: p.allEvents, ms: p.ms,
+      firstTs: p.firstTs, lastTs: p.lastTs, activeDays: p.activeDays.size,
+      skipYes: p.skipYes, skipKnown: p.skipKnown,
+      artists: [...p.artists.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms),
+      tracks: [...p.tracks.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms),
+      albums: [...p.albums.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms)
+    };
+  }
   function finishBuilder(builder, filename, type, demo = false) {
     const periods = {};
     for (const [year, period] of builder.periods) periods[year] = periodToJSON(period);
+    const monthDetails = {};
+    for (const [month, data] of builder.monthPeriods) monthDetails[month] = monthToJSON(data);
     return {
       id: uuid(), createdAt: new Date().toISOString(), filename, type, isDemo: demo,
       imported: builder.imported, ignored: builder.ignored, duplicates: builder.duplicates,
       short: builder.short, files: builder.sourceFiles,
       firstTs: periods.all.firstTs, lastTs: periods.all.lastTs,
-      years: Object.keys(periods).filter(x => x !== 'all').sort((a, b) => b.localeCompare(a)), periods
+      years: Object.keys(periods).filter(x => x !== 'all').sort((a, b) => b.localeCompare(a)), periods, monthDetails
     };
   }
 
@@ -331,11 +347,11 @@
 
   function openView(view) {
     if (!views.includes(view)) return;
-    if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'patterns'].includes(view)) view = 'home';
+    if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'eras', 'patterns'].includes(view)) view = 'home';
     state.view = view;
     for (const section of document.querySelectorAll('.view')) section.classList.toggle('active', section.id === `view-${view}`);
     for (const nav of document.querySelectorAll('[data-nav]')) nav.classList.toggle('active', nav.dataset.nav === view);
-    $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', patterns: 'Listening patterns', history: 'Saved reports' }[view];
+    $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', history: 'Saved reports' }[view];
     $('report-controls').classList.toggle('hidden', !state.report || view === 'history');
     $('randomise-demo').classList.toggle('hidden', !state.report?.isDemo || view === 'home' || view === 'history');
     if (view === 'history') renderHistory();
@@ -345,6 +361,9 @@
   function activateReport(report) {
     state.report = report;
     state.year = 'all';
+    state.eras = { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } };
+    state.eraHistory = null;
+    state.eraChaptersCache = null;
     $('year-filter').innerHTML = '<option value="all">All time</option>' + report.years.map(y => `<option value="${escapeHtml(y)}">${escapeHtml(y)}</option>`).join('');
     $('year-filter').value = 'all';
     $('storage-warning').classList.toggle('hidden', !report.unsaved);
@@ -362,6 +381,7 @@
     if (state.view === 'overview') renderOverview();
     if (['artists', 'tracks', 'albums'].includes(state.view)) renderListing(state.view);
     if (state.view === 'patterns') renderPatterns();
+    if (state.view === 'eras') renderEras();
   }
   const insightCard = (label, value, description) => `<div class="insight-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><p>${escapeHtml(description)}</p></div>`;
   function statCard(label, value, subtitle, icon) {
@@ -461,6 +481,215 @@
       ['Latest play', dateLabel(p.lastTs)]
     ];
     $('detail-stats').innerHTML = values.map(([label, value]) => `<div class="detail-stat"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
+  }
+
+  // The Eras explorer is built from the same qualified music plays as the main
+  // rankings. Its month-level data is saved at import time; no raw history is kept.
+  const monthNumber = key => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7));
+  const monthTitle = key => new Date(`${key}-01T00:00:00Z`).toLocaleDateString('en-GB', {
+    month: 'long', year: 'numeric', timeZone: 'UTC'
+  });
+  const monthShort = key => `${monthLabels[Number(key.slice(5, 7)) - 1]} ${key.slice(0, 4)}`;
+  const monthSpan = (from, to) => from === to ? monthTitle(from) : `${monthShort(from)} – ${monthShort(to)}`;
+
+  function eligibleEraMonths() {
+    return Object.entries(state.report?.monthDetails || {})
+      .filter(([key, data]) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key) &&
+        (state.year === 'all' || key.startsWith(state.year + '-')) && data?.qualified > 0)
+      .map(([key, data]) => ({ key, ...data }))
+      .sort((a, b) => a.key.localeCompare(b.key));
+  }
+  function eraRecordKey(category, item) {
+    return category === 'artists' ? keyOf(item.name) : keyOf(item.artist, item.name);
+  }
+  function combineEraRanks(months, category) {
+    const combined = new Map();
+    for (const month of months) {
+      for (const item of (month[category] || [])) {
+        const key = eraRecordKey(category, item);
+        if (!combined.has(key)) combined.set(key, { ...item, plays: 0, ms: 0 });
+        const total = combined.get(key);
+        total.plays += item.plays;
+        total.ms += item.ms;
+        if (item.uri && !total.uri) total.uri = item.uri;
+      }
+    }
+    return [...combined.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms || a.name.localeCompare(b.name));
+  }
+  function artistSimilarity(a, b) {
+    const weights = rows => new Map((rows || []).slice(0, 10).map(row => [keyOf(row.name), row.plays]));
+    const first = weights(a.artists);
+    const second = weights(b.artists);
+    const norm = map => Math.sqrt([...map.values()].reduce((sum, x) => sum + x * x, 0));
+    const denominator = norm(first) * norm(second);
+    if (!denominator) return 0;
+    let dot = 0;
+    for (const [artist, plays] of first) dot += plays * (second.get(artist) || 0);
+    return dot / denominator;
+  }
+  function detectListeningEras(months) {
+    const groups = [];
+    let current = [];
+    for (const month of months) {
+      const previous = current[current.length - 1];
+      const similarity = previous ? artistSimilarity(previous, month) : 0;
+      const sameLead = previous?.artists?.[0] && month.artists?.[0] &&
+        keyOf(previous.artists[0].name) === keyOf(month.artists[0].name);
+      const joined = previous && monthNumber(month.key) === monthNumber(previous.key) + 1 &&
+        current.length < 6 && (similarity >= .56 || (sameLead && similarity >= .39) ||
+          (previous.qualified < 12 && month.qualified < 12));
+      if (!joined && current.length) { groups.push(current); current = []; }
+      current.push(month);
+    }
+    if (current.length) groups.push(current);
+    return groups.map((group, index) => {
+      const artists = combineEraRanks(group, 'artists');
+      const tracks = combineEraRanks(group, 'tracks');
+      const albums = combineEraRanks(group, 'albums');
+      const qualified = group.reduce((total, month) => total + month.qualified, 0);
+      const ms = group.reduce((total, month) => total + month.ms, 0);
+      const leader = artists[0]?.name || 'Unknown artist';
+      const secondary = artists[1];
+      const title = secondary && secondary.plays >= artists[0].plays * .76
+        ? `${leader} & ${secondary.name}` : leader;
+      return { index, months: group, from: group[0].key, to: group[group.length - 1].key,
+        artists, tracks, albums, qualified, ms, title };
+    });
+  }
+  function getEraHistory() {
+    if (state.eraHistory?.report === state.report) return state.eraHistory;
+    const all = Object.entries(state.report?.monthDetails || {})
+      .filter(([key, month]) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key) && month?.qualified > 0)
+      .sort(([a], [b]) => a.localeCompare(b));
+    const tracks = new Map();
+    for (const [key, month] of all) {
+      for (const item of month.tracks || []) {
+        const id = eraRecordKey('tracks', item);
+        if (!tracks.has(id)) tracks.set(id, { name: item.name, artist: item.artist, months: [] });
+        tracks.get(id).months.push({ key, plays: item.plays });
+      }
+    }
+    state.eraHistory = { report: state.report, tracks, latestMonth: all.at(-1)?.[0] || '' };
+    return state.eraHistory;
+  }
+  function monthMemories(month, history) {
+    const newcomers = [], returns = [], forgotten = [];
+    for (const item of month.tracks || []) {
+      const activity = history.tracks.get(eraRecordKey('tracks', item));
+      if (!activity) continue;
+      const appearances = activity.months;
+      const currentIndex = appearances.findIndex(entry => entry.key === month.key);
+      if (currentIndex < 0) continue;
+      if (currentIndex === 0 && item.plays >= 3) {
+        newcomers.push({ ...item, reason: `${number(item.plays)} plays on its first recorded month` });
+      } else if (currentIndex > 0 && item.plays >= 3) {
+        const prior = appearances[currentIndex - 1];
+        const quiet = monthNumber(month.key) - monthNumber(prior.key) - 1;
+        if (quiet >= 6) returns.push({ ...item, reason: `Back after ${number(quiet)} quiet months` });
+      }
+      const lastSeen = appearances.at(-1).key;
+      const away = monthNumber(history.latestMonth) - monthNumber(lastSeen);
+      if (item.plays >= 4 && away >= 12) {
+        forgotten.push({ ...item, reason: `Last recorded ${monthShort(lastSeen)} · ${number(away)} months ago` });
+      }
+    }
+    const order = list => list.sort((a, b) => b.plays - a.plays || b.ms - a.ms).slice(0, 4);
+    return { newcomers: order(newcomers), returns: order(returns), forgotten: order(forgotten) };
+  }
+  function eraMemoryPanel(kicker, heading, items, empty) {
+    return `<article class="panel era-memory-panel"><div class="kicker">${escapeHtml(kicker)}</div><h2>${escapeHtml(heading)}</h2>${items.length
+      ? items.map(item => `<div class="era-memory-item"><strong title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</strong><span>${escapeHtml(item.artist)}</span><small>${escapeHtml(item.reason)}</small></div>`).join('')
+      : `<p class="era-memory-empty">${escapeHtml(empty)}</p>`}</article>`;
+  }
+  function eraChapterCard(chapter, selected) {
+    return `<button type="button" class="era-chapter ${selected ? 'selected' : ''}" data-era-month="${escapeHtml(chapter.to)}" aria-pressed="${selected}">
+      <span class="era-chapter-date">${escapeHtml(monthSpan(chapter.from, chapter.to))} · ${number(chapter.months.length)} ${chapter.months.length === 1 ? 'month' : 'months'}</span>
+      <strong class="era-chapter-name" title="${escapeHtml(chapter.title)}">${escapeHtml(chapter.title)}<span class="accent">.</span></strong>
+      <span class="era-chapter-favourite">♫ ${escapeHtml(chapter.tracks[0]?.name || 'No tracks')}</span>
+      <span class="era-chapter-favourite">▤ ${escapeHtml(chapter.albums[0]?.name || 'No album metadata')}</span>
+      <span class="era-chapter-count">${number(chapter.qualified)} plays · ${hours(chapter.ms)} hrs <span aria-hidden="true">↗</span></span>
+    </button>`;
+  }
+  function renderEraChapterDetail(chapter) {
+    const categoryBlock = (heading, icon, entries, cat) => `<div class="era-chapter-toplist"><span class="era-chapter-toplabel">${icon} ${escapeHtml(heading)}</span>${entries.slice(0, 4).map((item, i) =>
+      `<div class="era-chapter-item"><span>${i + 1}.</span><span title="${escapeHtml(item.name)}">${escapeHtml(item.name)}${cat !== 'artists' ? `<small>${escapeHtml(item.artist)}</small>` : ''}</span><b>${number(item.plays)}</b></div>`).join('') || emptyMessage('No album information for this chapter.')}</div>`;
+    return `<div class="era-feature"><div class="era-feature-heading"><div><div class="kicker">SELECTED CHAPTER · ${escapeHtml(monthSpan(chapter.from, chapter.to))}</div><h3>${escapeHtml(chapter.title)} era</h3><p>${number(chapter.qualified)} qualifying plays across ${number(chapter.months.length)} ${chapter.months.length === 1 ? 'month' : 'months'} · ${hours(chapter.ms)} listening hours</p></div><span class="era-feature-disc" aria-hidden="true">✳</span></div><div class="era-chapter-toplists">${categoryBlock('Defining artists', '◉', chapter.artists, 'artists')}${categoryBlock('On repeat', '♫', chapter.tracks, 'tracks')}${categoryBlock('Defining albums', '▤', chapter.albums, 'albums')}</div></div>`;
+  }
+  function renderEraRanks(category, month) {
+    const items = month[category] || [];
+    const sorting = state.eras.sort;
+    const ranked = sorting === 'plays' ? items : [...items].sort((a, b) => b.ms - a.ms || b.plays - a.plays);
+    const limit = state.eras.limits[category];
+    $(`era-${category}`).innerHTML = ranked.slice(0, limit).map((item, i) => rankRow(item, i, category, sorting)).join('') || emptyMessage('No recorded qualifying plays.');
+    const more = $(`era-more-${category}`);
+    more.classList.toggle('hidden', ranked.length <= limit);
+    more.textContent = `Show more (${number(Math.max(0, ranked.length - limit))} remaining) ↓`;
+  }
+  function renderEras() {
+    const dashboard = $('era-dashboard');
+    const notice = $('era-legacy-notice');
+    if (!state.report?.monthDetails) {
+      dashboard.classList.add('hidden');
+      notice.classList.remove('hidden');
+      notice.textContent = 'This report was created before month-by-month Eras data was available. Re-import your original Spotify ZIP to unlock accurate monthly artists, tracks, albums, and rediscoveries. Your older saved report is unchanged.';
+      return;
+    }
+    const cache = state.eraChaptersCache?.report === state.report && state.eraChaptersCache?.year === state.year
+      ? state.eraChaptersCache : null;
+    const months = cache ? cache.months : eligibleEraMonths();
+    if (!months.length) {
+      dashboard.classList.add('hidden');
+      notice.classList.remove('hidden');
+      notice.textContent = 'No qualifying music plays were found for this date range.';
+      return;
+    }
+    notice.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    $('eras-range-label').textContent = state.year === 'all' ? 'ALL TIME' : state.year;
+    const firstSelection = !months.some(month => month.key === state.eras.month);
+    if (firstSelection) state.eras.month = months.at(-1).key;
+    const selected = months.find(month => month.key === state.eras.month);
+    const chapters = cache ? cache.chapters : detectListeningEras(months);
+    if (!cache) state.eraChaptersCache = { report: state.report, year: state.year, months, chapters };
+    const currentChapter = chapters.find(chapter => chapter.months.some(month => month.key === selected.key));
+    const history = getEraHistory();
+    const mostActive = [...months].sort((a, b) => b.ms - a.ms)[0];
+    const firsts = months.reduce((sum, month) => sum + month.qualified, 0);
+    $('era-stats').innerHTML = [
+      statCard('Months explored', number(months.length), `${monthShort(months[0].key)} – ${monthShort(months.at(-1).key)}`, '◷'),
+      statCard('Listening chapters', number(chapters.length), 'Detected from shifting music tastes', '✳'),
+      statCard('Recorded plays', number(firsts), 'Streams of at least 30 seconds', '♫'),
+      statCard('Busiest month', monthShort(mostActive.key), `${hours(mostActive.ms)} hours listened`, '▥')
+    ].join('');
+    $('era-chapters').innerHTML = [...chapters].reverse().map(chapter => eraChapterCard(chapter, chapter === currentChapter)).join('');
+    $('era-chapter-details').innerHTML = renderEraChapterDetail(currentChapter);
+    const strip = $('era-month-strip');
+    const oldScroll = strip.scrollLeft;
+    const peak = Math.max(...months.map(month => month.ms), 1);
+    strip.innerHTML = months.map(month => `<button type="button" class="era-month-pill ${month.key === selected.key ? 'selected' : ''}" data-era-month="${escapeHtml(month.key)}" aria-pressed="${month.key === selected.key}" title="${escapeHtml(monthTitle(month.key))} · ${number(month.qualified)} plays">
+      <span class="era-pill-year">${escapeHtml(month.key.slice(0, 4))}</span><strong>${escapeHtml(monthLabels[Number(month.key.slice(5, 7)) - 1])}</strong><span class="era-pill-artist" title="${escapeHtml(month.artists[0]?.name || '')}">${escapeHtml(month.artists[0]?.name || 'No artist')}</span>
+      <span class="era-pill-meter"><i style="height:${Math.max(3, Math.round(month.ms / peak * 26))}px"></i></span></button>`).join('');
+    if (firstSelection) {
+      const active = strip.querySelector('.selected');
+      if (active) strip.scrollLeft = Math.max(0, active.offsetLeft - strip.offsetLeft - strip.clientWidth / 2);
+    } else strip.scrollLeft = oldScroll;
+    const selectedIndex = months.findIndex(row => row.key === selected.key);
+    const prev = months[selectedIndex - 1];
+    const next = months[selectedIndex + 1];
+    const artist = selected.artists[0];
+    const track = selected.tracks[0];
+    const album = selected.albums[0];
+    $('era-month-detail').innerHTML = `<article class="panel era-selected-month"><div class="era-month-heading"><div><div class="kicker">MONTHLY DEEP DIVE · UTC</div><h2>${escapeHtml(monthTitle(selected.key))}<span class="accent">.</span></h2><p>A snapshot of what you were listening to, playing on repeat, and discovering.</p></div><div class="era-month-arrows"><button type="button" class="small-icon-btn" data-era-step="-1" ${prev ? '' : 'disabled'} aria-label="Previous listening month" title="Previous listening month">←</button><button type="button" class="small-icon-btn" data-era-step="1" ${next ? '' : 'disabled'} aria-label="Next listening month" title="Next listening month">→</button></div></div>
+      <div class="era-month-numbers"><div><b>${number(selected.qualified)}</b><span>Qualifying plays</span></div><div><b>${hours(selected.ms)} h</b><span>Listening time</span></div><div><b>${number(selected.activeDays)}</b><span>Active days</span></div><div><b>${number(selected.tracks.length)}</b><span>Different tracks</span></div><div><b>${percent(selected.skipYes, selected.skipKnown)}</b><span>Recorded skip rate</span></div></div>
+      <div class="era-month-favourites"><div><span>◉ YOUR LEADING ARTIST</span><strong>${escapeHtml(artist?.name || 'Unknown')}</strong><small>${artist ? `${number(artist.plays)} plays · ${percent(artist.plays, selected.qualified)} of this month` : 'No artist plays'}</small></div><div><span>♫ THE TRACK ON REPEAT</span><strong>${escapeHtml(track?.name || 'Unknown')}</strong><small>${track ? `${escapeHtml(track.artist)} · ${number(track.plays)} plays` : 'No track plays'}</small></div><div><span>▤ YOUR GO-TO ALBUM</span><strong>${escapeHtml(album?.name || 'Unknown')}</strong><small>${album ? `${escapeHtml(album.artist)} · ${number(album.plays)} plays` : 'No album data'}</small></div></div></article>`;
+    const memories = monthMemories(selected, history);
+    $('era-memory').innerHTML = [
+      eraMemoryPanel('FIRST APPEARANCES', 'New obsessions', memories.newcomers, 'No tracks first appeared with three or more plays in this month.'),
+      eraMemoryPanel('A SECOND WIND', 'Rediscovered favourites', memories.returns, 'No tracks returned after six or more quiet months.'),
+      eraMemoryPanel('WHERE ARE THEY NOW?', 'Forgotten favourites', memories.forgotten, 'No tracks from this month have been absent for at least a year by the end of this export.')
+    ].join('');
+    for (const category of ['tracks', 'artists', 'albums']) renderEraRanks(category, selected);
+    document.querySelectorAll('[data-era-sort]').forEach(button => button.classList.toggle('active', button.dataset.eraSort === state.eras.sort));
   }
 
   async function refreshHistoryCount() {
@@ -594,14 +823,17 @@
           const sessionStart = begin + Math.floor(rand() * (latestStart - begin + 1));
           const mode = choose(platforms);
           const shuffle = rand() < 0.55;
-          const chosenEra = choose(eraArtists);
+          // Rotate the musical focus each quarter so demo data develops real,
+          // recognisable month-scale phases instead of uniform yearly tastes.
+          const focusIndex = Math.floor(new Date(sessionStart).getUTCMonth() / 3) % eraArtists.length;
+          const chosenEra = rand() < 0.86 ? eraArtists[focusIndex] : choose(eraArtists);
           const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart);
           if (!sessionTracks.length) continue;
           let cursor = sessionStart;
           const sessionEvents = [];
           for (let i = 0; i < sessionSize; i++) {
             const weights = sessionTracks.map(track => trackWeights.get(track.id) *
-              (track.artist === chosenEra ? 3.6 : 1) *
+              (track.artist === chosenEra ? 8 : 1) *
               (i && track.artist === sessionEvents[sessionEvents.length - 1]?.artist && !shuffle ? 4 : 1) *
               (track.releasedAt > sessionStart - 300 * 86400_000 ? 1.35 : 1));
             let roll = rand() * weights.reduce((a, b) => a + b, 0);
@@ -730,7 +962,7 @@
     ['dragleave', 'drop'].forEach(name => $('dropzone').addEventListener(name, event => { event.preventDefault(); $('dropzone').classList.remove('dragging'); }));
     $('dropzone').addEventListener('drop', event => { const file = event.dataTransfer.files[0]; if (file) importHistory(file); });
     $('new-upload').addEventListener('click', () => openView('home'));
-    $('year-filter').addEventListener('change', event => { state.year = event.target.value; state.count = 25; renderCurrent(); });
+    $('year-filter').addEventListener('change', event => { state.year = event.target.value; state.count = 25; state.eras.month = null; state.eras.limits = { artists: 8, tracks: 10, albums: 8 }; renderCurrent(); });
     for (const type of ['artist', 'track', 'album']) $(type + '-search').addEventListener('input', () => { state.count = 25; renderListing({ artist: 'artists', track: 'tracks', album: 'albums' }[type]); });
     document.querySelectorAll('[data-sort-for]').forEach(group => group.addEventListener('click', event => {
       const button = event.target.closest('[data-sort]');
@@ -740,6 +972,35 @@
       renderListing(group.dataset.sortFor);
     }));
     for (const type of ['artist', 'track', 'album']) $(type + '-more').addEventListener('click', () => { state.count += 25; renderListing({ artist: 'artists', track: 'tracks', album: 'albums' }[type]); });
+    $('view-eras').addEventListener('click', event => {
+      const monthButton = event.target.closest('[data-era-month]');
+      const stepButton = event.target.closest('[data-era-step]');
+      const sortButton = event.target.closest('[data-era-sort]');
+      const moreButton = event.target.closest('[data-era-more]');
+      if (monthButton) {
+        state.eras.month = monthButton.dataset.eraMonth;
+        state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
+        renderEras();
+      } else if (stepButton) {
+        const months = eligibleEraMonths();
+        const index = months.findIndex(row => row.key === state.eras.month);
+        const next = months[index + Number(stepButton.dataset.eraStep)];
+        if (next) {
+          state.eras.month = next.key;
+          state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
+          renderEras();
+        }
+      } else if (sortButton) {
+        state.eras.sort = sortButton.dataset.eraSort;
+        renderEras();
+      } else if (moreButton) {
+        const category = moreButton.dataset.eraMore;
+        if (['artists', 'tracks', 'albums'].includes(category)) {
+          state.eras.limits[category] += 20;
+          renderEras();
+        }
+      }
+    });
     $('history-list').addEventListener('click', async event => {
       const button = event.target.closest('button');
       if (!button) return;
