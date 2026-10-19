@@ -1049,6 +1049,60 @@
         if (!albumWeights.has(albumKey)) albumWeights.set(albumKey, 0.45 + 2 * rand());
         trackWeights.set(track.id, (0.1 + 5 * rand() ** 5) * artistWeights.get(track.artist) * albumWeights.get(albumKey));
       }
+      // Give demo-only tracks believable listening stories instead of relying on
+      // incidental random repeats. These records pass through the normal importer;
+      // the Eras thresholds and genuine Spotify data are deliberately unchanged.
+      const storyBursts = new Map();
+      const storyKeys = new Set();
+      const storyKey = track => keyOf(track.artist, track.title);
+      const finalDemoMonth = new Date(cutoff - 6 * 86400_000);
+      const finalDemoMonthNumber = finalDemoMonth.getUTCFullYear() * 12 + finalDemoMonth.getUTCMonth();
+      const storyMonthNumber = date => date.getUTCFullYear() * 12 + date.getUTCMonth();
+      const storyMonthStart = (year, month) => Date.UTC(year, month - 1, 1);
+      const storyMonthIsUsable = timestamp => storyMonthNumber(new Date(timestamp)) <= finalDemoMonthNumber;
+      const pickStoryTrack = timestamp => {
+        const available = catalogue.filter(track => !storyKeys.has(storyKey(track)) &&
+          track.releasedAt <= timestamp + 5 * 86400_000);
+        if (!available.length) return null;
+        const track = choose(available);
+        storyKeys.add(storyKey(track));
+        return track;
+      };
+      const addStoryBurst = (track, timestamp, count) => {
+        const year = String(new Date(timestamp).getUTCFullYear());
+        const list = storyBursts.get(year) || [];
+        list.push({ track, timestamp, count });
+        storyBursts.set(year, list);
+      };
+      for (let year = startYear; year <= endYear; year++) {
+        const lastMonth = year === finalDemoMonth.getUTCFullYear()
+          ? finalDemoMonth.getUTCMonth() + 1 : 12;
+        if (year > finalDemoMonth.getUTCFullYear() || lastMonth < 1) continue;
+
+        // A short first-month obsession; make the newest available month useful
+        // when the user first opens Eras in the randomised demo.
+        const obsessionMonth = year === finalDemoMonth.getUTCFullYear()
+          ? lastMonth : randomInt(1, lastMonth);
+        const firstDate = storyMonthStart(year, obsessionMonth);
+        const obsession = pickStoryTrack(firstDate);
+        if (obsession) {
+          addStoryBurst(obsession, firstDate, randomInt(7, 14));
+          // A genuine 8–24 month absence, followed by several repeat plays.
+          // Reserve the track from ordinary random listening in between.
+          const quietMonths = randomInt(8, 24);
+          const comeback = Date.UTC(year, obsessionMonth - 1 + quietMonths + 1, 1);
+          if (storyMonthIsUsable(comeback)) addStoryBurst(obsession, comeback, randomInt(5, 10));
+        }
+
+        // A different track becomes a favourite and then vanishes completely.
+        // Only schedule this far enough back for the actual 12-month rule.
+        const forgottenMonth = randomInt(1, lastMonth);
+        const forgottenDate = storyMonthStart(year, forgottenMonth);
+        if (finalDemoMonthNumber - storyMonthNumber(new Date(forgottenDate)) >= 12) {
+          const forgotten = pickStoryTrack(forgottenDate);
+          if (forgotten) addStoryBurst(forgotten, forgottenDate, randomInt(6, 12));
+        }
+      }
       for (let year = startYear; year <= endYear; year++) {
         const begin = Math.max(minDate, Date.UTC(year, 0, 1));
         const end = Math.min(cutoff, Date.UTC(year + 1, 0, 1) - 1);
@@ -1072,7 +1126,10 @@
           // recognisable month-scale phases instead of uniform yearly tastes.
           const focusIndex = Math.floor(new Date(sessionStart).getUTCMonth() / 3) % eraArtists.length;
           const chosenEra = rand() < 0.86 ? eraArtists[focusIndex] : choose(eraArtists);
-          const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart);
+          // Story tracks are played only in their planned bursts, so ordinary
+          // random sessions cannot erase a rediscovery gap or a forgotten song.
+          const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart &&
+            !storyKeys.has(storyKey(track)));
           if (!sessionTracks.length) continue;
           let cursor = sessionStart;
           const sessionEvents = [];
@@ -1115,6 +1172,37 @@
             sessions.push(session);
             allSessions.push(session);
             planned += sessionEvents.length;
+          }
+        }
+        for (const burst of storyBursts.get(String(year)) || []) {
+          const monthEnd = Date.UTC(new Date(burst.timestamp).getUTCFullYear(),
+            new Date(burst.timestamp).getUTCMonth() + 1, 1);
+          const latest = Math.min(monthEnd - 60_000, cutoff - 60_000);
+          const earliest = Math.max(burst.timestamp + 6 * 86400_000, burst.track.releasedAt + 60_000);
+          if (latest < earliest + burst.track.length) continue;
+          const spread = Math.min(latest - earliest - burst.track.length, 9 * 86400_000);
+          for (let i = 0; i < burst.count; i++) {
+            const finishedAt = earliest + burst.track.length + Math.floor(spread * i / Math.max(1, burst.count - 1));
+            const platform = choose(platforms);
+            const entry = {
+              ts: new Date(finishedAt).toISOString(),
+              master_metadata_album_artist_name: burst.track.artist,
+              credited_artists: [burst.track.artist, ...burst.track.credits],
+              master_metadata_track_name: burst.track.title,
+              master_metadata_album_album_name: burst.track.album,
+              ms_played: burst.track.length,
+              platform,
+              skipped: false,
+              shuffle: rand() < 0.3,
+              offline: rand() < 0.08,
+              reason_start: 'clickrow', reason_end: 'trackdone',
+              demo_track_id: burst.track.id
+            };
+            yearRows.push(entry);
+            const session = { started: new Date(finishedAt - burst.track.length).toISOString(),
+              ended: entry.ts, platform, trackIds: [burst.track.id] };
+            sessions.push(session);
+            allSessions.push(session);
           }
         }
         years.push({ year, artists: eraArtists, sessions: sessions.length });
