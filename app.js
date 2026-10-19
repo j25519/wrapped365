@@ -12,9 +12,9 @@
   const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'patterns', 'history'];
+  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history'];
   const $ = id => document.getElementById(id);
-  const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false };
+  const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
 
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const number = value => formatter.format(Math.round(value || 0));
@@ -129,8 +129,68 @@
     };
   }
   function makeBuilder() {
-    return { periods: new Map([['all', emptyPeriod()]]), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0 };
+    return { periods: new Map([['all', emptyPeriod()]]), monthPeriods: new Map(), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0 };
   }
+  // Extended Streaming History normally provides one album-artist string.
+  // Preserve additional credits when a source actually provides an artist list;
+  // never split arbitrary comma-separated names (e.g. Tyler, the Creator).
+  function creditedNames(value) {
+    if (!Array.isArray(value)) return [];
+    const seen = new Set();
+    return value.map(entry => typeof entry === 'string' ? entry :
+      entry && typeof entry === 'object' ? (entry.name ?? entry.artistName ?? entry.artist_name) : '')
+      .filter(name => typeof name === 'string').map(name => name.trim())
+      .filter(name => { const key = keyOf(name); if (!name || seen.has(key)) return false; seen.add(key); return true; });
+  }
+  // Infer additional artist credits from explicit textual attribution, not arbitrary
+  // punctuation in a name. Spotify's standard history only supplies an album artist.
+  // This is intentionally conservative and requires a feature/with marker.
+  const featureMarker = String.raw`(?:feat(?:uring)?[.:]?|ft[.:]?|f\/|with|w\/)`;
+  const featureOnlyMarker = String.raw`(?:feat(?:uring)?[.:]?|ft[.:]?|f\/)`;
+  const bracketFeature = new RegExp(String.raw`[\(\[]\s*${featureMarker}\s*([^)\]]+)\s*[\)\]]`, 'gi');
+  const dashFeature = new RegExp(String.raw`\s+[-–—]\s*${featureMarker}\s+(.+)$`, 'i');
+  const bareFeature = new RegExp(String.raw`\s+${featureOnlyMarker}\s+(.+)$`, 'i');
+  const artistWithFeature = new RegExp(String.raw`^(.+?)\s*[\(\[]\s*${featureMarker}\s+([^)\]]+)\s*[\)\]]$`, 'i');
+  const artistWithBareFeature = new RegExp(String.raw`^(.+?)\s+(?:${featureOnlyMarker}|[-–—]\s*${featureMarker})\s+(.+)$`, 'i');
+
+  function namesFromFeature(value) {
+    if (typeof value !== 'string') return [];
+    // A final remix/edit label isn't a featured artist.
+    const cleaned = value.trim().replace(/\s*[\(\[]\s*(?:remix|edit|remaster(?:ed)?|live|radio edit|explicit|clean)(?:\s+[^)\]]*)?[\)\]]\s*$/i, '')
+      .replace(/^[\s:–—-]+|[\s:–—-]+$/g, '');
+    if (!cleaned || cleaned.length > 160) return [];
+    // Commas in names such as "Tyler, the Creator" are not separators.
+    return creditedNames(cleaned.split(/\s+(?:&|and|x|×|\+|vs\.?)\s+|;\s*|,\s+(?!the\s|jr\.?\b|sr\.?\b)/i)
+      .map(name => name.replace(/^[\s"“”']+|[\s"“”']+$/g, '').trim())
+      .filter(name => name && name.length <= 90));
+  }
+
+  function featureCreditsFromTitle(title) {
+    if (typeof title !== 'string') return [];
+    const found = [];
+    for (const match of title.matchAll(bracketFeature)) found.push(...namesFromFeature(match[1]));
+    // Handle "Song - feat. X" and "Song ft. X" without square brackets.
+    // Only inspect the suffix if no bracketed feature credit was identified.
+    if (!found.length) {
+      const match = title.match(dashFeature) || title.match(bareFeature);
+      if (match) found.push(...namesFromFeature(match[1]));
+    }
+    return creditedNames(found);
+  }
+
+  function splitPrimaryArtist(raw) {
+    const text = typeof raw === 'string' ? raw.trim() : '';
+    const match = text.match(artistWithFeature) || text.match(artistWithBareFeature);
+    if (!match) return { primary: text, featured: [] };
+    const primary = match[1].replace(/[\s,–—-]+$/g, '').trim();
+    const featured = namesFromFeature(match[2]);
+    return primary && featured.length ? { primary, featured } : { primary: text, featured: [] };
+  }
+  const artistCredits = item => Array.isArray(item?.creditedArtists) && item.creditedArtists.length
+    ? item.creditedArtists : item?.artist ? [item.artist] : [];
+  const artistCreditLabel = item => artistCredits(item).join(', ');
+  const recordKey = (category, item) => category === 'artists' ? keyOf(item.name) : keyOf(item.artist, item.name);
+
   function rankUpdate(map, key, item, ms) {
     let previous = map.get(key);
     if (!previous) { previous = { ...item, plays: 0, ms: 0 }; map.set(key, previous); }
@@ -138,6 +198,12 @@
     previous.ms += ms;
     // Keep a valid Spotify link if an earlier row for this song lacked a URI.
     if (item.uri && !previous.uri) previous.uri = item.uri;
+    if (item.creditedArtists?.length) {
+      const credits = artistCredits(previous);
+      const seen = new Set(credits.map(name => keyOf(name)));
+      for (const name of item.creditedArtists) if (!seen.has(keyOf(name))) { credits.push(name); seen.add(keyOf(name)); }
+      previous.creditedArtists = credits;
+    }
   }
   function updatePeriod(period, play) {
     period.allEvents++;
@@ -161,8 +227,8 @@
     period.heat[day][hour] += play.ms;
     const platform = platformGroup(play.platform);
     period.platforms.set(platform, (period.platforms.get(platform) || 0) + play.ms);
-    rankUpdate(period.artists, keyOf(play.artist), { name: play.artist }, play.ms);
-    rankUpdate(period.tracks, keyOf(play.artist, play.title), { name: play.title, artist: play.artist, album: play.album, uri: play.uri }, play.ms);
+    for (const name of play.creditedArtists) rankUpdate(period.artists, keyOf(name), { name }, play.ms);
+    rankUpdate(period.tracks, keyOf(play.artist, play.title), { name: play.title, artist: play.artist, creditedArtists: play.creditedArtists, album: play.album, uri: play.uri }, play.ms);
     if (play.album) rankUpdate(period.albums, keyOf(play.artist, play.album), { name: play.album, artist: play.artist }, play.ms);
   }
   function parseSpotifyDate(input) {
@@ -181,7 +247,11 @@
   function readPlay(row) {
     if (!row || typeof row !== 'object' || Array.isArray(row)) return null;
     if (row.spotify_episode_uri || row.episode_name || row.episode_show_name || row.episodeName) return null;
-    const artist = row.master_metadata_album_artist_name ?? row.artistName;
+    const rawArtist = row.master_metadata_album_artist_name ?? row.artistName;
+    const listed = creditedNames(row.credited_artists ?? row.creditedArtists ?? row.artists ?? row.artist_names ?? row.artistNames ?? row.master_metadata_artists ?? (Array.isArray(rawArtist) ? rawArtist : null));
+    const primarySource = typeof rawArtist === 'string' ? rawArtist : listed[0];
+    const parsedArtist = splitPrimaryArtist(primarySource);
+    const artist = parsedArtist.primary;
     const title = row.master_metadata_track_name ?? row.trackName;
     const album = row.master_metadata_album_album_name ?? row.albumName ?? '';
     const ms = Number(row.ms_played ?? row.msPlayed);
@@ -189,7 +259,10 @@
     if (!artist || !title || !ts || !Number.isFinite(ms) || ms < 0) return null;
     const uri = /^spotify:track:[A-Za-z0-9]+$/.test(row.spotify_track_uri || '') ? row.spotify_track_uri : '';
     return {
-      ts, ms, artist: String(artist).trim(), title: String(title).trim(),
+      ts, ms, artist: String(artist).trim(),
+      creditedArtists: creditedNames([artist, ...listed.filter(name => keyOf(name) !== keyOf(primarySource)),
+        ...parsedArtist.featured, ...featureCreditsFromTitle(String(title))]),
+      title: String(title).trim(),
       album: String(album).trim(), platform: typeof row.platform === 'string' ? row.platform.trim() : '', uri,
       skipped: typeof row.skipped === 'boolean' ? row.skipped : null,
       shuffle: typeof row.shuffle === 'boolean' ? row.shuffle : null,
@@ -211,6 +284,10 @@
       const year = play.ts.slice(0, 4);
       if (!builder.periods.has(year)) builder.periods.set(year, emptyPeriod());
       updatePeriod(builder.periods.get(year), play);
+      // Preserve true monthly rankings for the Eras explorer (not just listening hours).
+      const month = play.ts.slice(0, 7);
+      if (!builder.monthPeriods.has(month)) builder.monthPeriods.set(month, emptyPeriod());
+      updatePeriod(builder.monthPeriods.get(month), play);
     }
   }
   function periodToJSON(p) {
@@ -226,15 +303,27 @@
       albums: [...p.albums.values()].sort((a, b) => b.plays - a.plays)
     };
   }
+  function monthToJSON(p) {
+    return {
+      qualified: p.qualified, allEvents: p.allEvents, ms: p.ms,
+      firstTs: p.firstTs, lastTs: p.lastTs, activeDays: p.activeDays.size,
+      skipYes: p.skipYes, skipKnown: p.skipKnown,
+      artists: [...p.artists.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms),
+      tracks: [...p.tracks.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms),
+      albums: [...p.albums.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms)
+    };
+  }
   function finishBuilder(builder, filename, type, demo = false) {
     const periods = {};
     for (const [year, period] of builder.periods) periods[year] = periodToJSON(period);
+    const monthDetails = {};
+    for (const [month, data] of builder.monthPeriods) monthDetails[month] = monthToJSON(data);
     return {
       id: uuid(), createdAt: new Date().toISOString(), filename, type, isDemo: demo,
       imported: builder.imported, ignored: builder.ignored, duplicates: builder.duplicates,
       short: builder.short, files: builder.sourceFiles,
       firstTs: periods.all.firstTs, lastTs: periods.all.lastTs,
-      years: Object.keys(periods).filter(x => x !== 'all').sort((a, b) => b.localeCompare(a)), periods
+      years: Object.keys(periods).filter(x => x !== 'all').sort((a, b) => b.localeCompare(a)), periods, monthDetails
     };
   }
 
@@ -331,11 +420,11 @@
 
   function openView(view) {
     if (!views.includes(view)) return;
-    if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'patterns'].includes(view)) view = 'home';
+    if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search'].includes(view)) view = 'home';
     state.view = view;
     for (const section of document.querySelectorAll('.view')) section.classList.toggle('active', section.id === `view-${view}`);
     for (const nav of document.querySelectorAll('[data-nav]')) nav.classList.toggle('active', nav.dataset.nav === view);
-    $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', patterns: 'Listening patterns', history: 'Saved reports' }[view];
+    $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports' }[view];
     $('report-controls').classList.toggle('hidden', !state.report || view === 'history');
     $('randomise-demo').classList.toggle('hidden', !state.report?.isDemo || view === 'home' || view === 'history');
     if (view === 'history') renderHistory();
@@ -345,6 +434,12 @@
   function activateReport(report) {
     state.report = report;
     state.year = 'all';
+    state.eras = { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } };
+    state.eraHistory = null;
+    state.eraChaptersCache = null;
+    state.search = { query: '', filter: 'all', selected: null, matches: [], limit: 30 };
+    $('unified-search').value = '';
+    $('search-filter').value = 'all';
     $('year-filter').innerHTML = '<option value="all">All time</option>' + report.years.map(y => `<option value="${escapeHtml(y)}">${escapeHtml(y)}</option>`).join('');
     $('year-filter').value = 'all';
     $('storage-warning').classList.toggle('hidden', !report.unsaved);
@@ -362,6 +457,8 @@
     if (state.view === 'overview') renderOverview();
     if (['artists', 'tracks', 'albums'].includes(state.view)) renderListing(state.view);
     if (state.view === 'patterns') renderPatterns();
+    if (state.view === 'eras') renderEras();
+    if (state.view === 'search') renderSearch();
   }
   const insightCard = (label, value, description) => `<div class="insight-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><p>${escapeHtml(description)}</p></div>`;
   function statCard(label, value, subtitle, icon) {
@@ -369,13 +466,13 @@
   }
   function rankRow(item, index, category, sorting) {
     const isArtist = category === 'artists';
-    const subtitle = isArtist ? `${number(item.plays)} qualifying plays` : `${item.artist}${item.album && category === 'tracks' ? ' · ' + item.album : ''}`;
+    const subtitle = isArtist ? `${number(item.plays)} credited plays` : `${category === 'tracks' ? artistCreditLabel(item) : item.artist}${item.album && category === 'tracks' ? ' · ' + item.album : ''}`;
     const art = { artists: '◉', tracks: '♫', albums: '▤' }[category];
     const metric = sorting === 'ms' ? duration(item.ms) : number(item.plays);
     const unit = sorting === 'ms' ? 'listening time' : 'plays';
     const spotifyLink = category === 'tracks' && /^spotify:track:[A-Za-z0-9]+$/.test(item.uri || '')
       ? `<a class="rank-link" href="https://open.spotify.com/track/${encodeURIComponent(item.uri.split(':').pop())}" target="_blank" rel="noopener noreferrer" title="Open in Spotify" aria-label="Open ${escapeHtml(item.name)} in Spotify">↗</a>` : '';
-    return `<div class="rank-row"><span class="rank-position">${number(index + 1).padStart(2, '0')}</span><div class="rank-art">${art}</div><div class="rank-main"><span class="rank-title" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span><span class="rank-sub" title="${escapeHtml(subtitle)}">${escapeHtml(subtitle)}</span></div><div class="rank-data"><span class="rank-number">${escapeHtml(metric)}</span><span class="rank-unit">${unit}</span></div>${spotifyLink}</div>`;
+    return `<div class="rank-row"><span class="rank-position">${number(index + 1).padStart(2, '0')}</span><div class="rank-art">${art}</div><div class="rank-main"><button type="button" class="rank-title rank-title-button" data-explore-category="${category}" data-explore-key="${escapeHtml(encodeURIComponent(recordKey(category, item)))}" title="Explore ${escapeHtml(item.name)}">${escapeHtml(item.name)}</button><span class="rank-sub" title="${escapeHtml(subtitle)}">${escapeHtml(subtitle)}</span></div><div class="rank-data"><span class="rank-number">${escapeHtml(metric)}</span><span class="rank-unit">${unit}</span></div>${spotifyLink}</div>`;
   }
   function renderOverview() {
     const p = period();
@@ -421,7 +518,7 @@
     const words = { artists: 'artist', tracks: 'track', albums: 'album' };
     const search = ($(words[category] + '-search')?.value || '').trim().toLowerCase();
     const sorting = state.sorts[category];
-    const filtered = sortedRecords(category).filter(item => `${item.name} ${item.artist || ''} ${item.album || ''}`.toLowerCase().includes(search));
+    const filtered = sortedRecords(category).filter(item => `${item.name} ${artistCreditLabel(item)} ${item.album || ''}`.toLocaleLowerCase('en-GB').includes(search));
     const visible = filtered.slice(0, state.count);
     $(words[category] + '-list').innerHTML = visible.length ? visible.map((item, i) => rankRow(item, i, category, sorting)).join('') : emptyMessage();
     const more = $(words[category] + '-more');
@@ -461,6 +558,384 @@
       ['Latest play', dateLabel(p.lastTs)]
     ];
     $('detail-stats').innerHTML = values.map(([label, value]) => `<div class="detail-stat"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
+  }
+
+  // The Eras explorer is built from the same qualified music plays as the main
+  // rankings. Its month-level data is saved at import time; no raw history is kept.
+  const monthNumber = key => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7));
+  const monthTitle = key => new Date(`${key}-01T00:00:00Z`).toLocaleDateString('en-GB', {
+    month: 'long', year: 'numeric', timeZone: 'UTC'
+  });
+  const monthShort = key => `${monthLabels[Number(key.slice(5, 7)) - 1]} ${key.slice(0, 4)}`;
+  const monthSpan = (from, to) => from === to ? monthTitle(from) : `${monthShort(from)} – ${monthShort(to)}`;
+
+  function eligibleEraMonths() {
+    return Object.entries(state.report?.monthDetails || {})
+      .filter(([key, data]) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key) &&
+        (state.year === 'all' || key.startsWith(state.year + '-')) && data?.qualified > 0)
+      .map(([key, data]) => ({ key, ...data }))
+      .sort((a, b) => a.key.localeCompare(b.key));
+  }
+  function eraRecordKey(category, item) {
+    return recordKey(category, item);
+  }
+  function combineEraRanks(months, category) {
+    const combined = new Map();
+    for (const month of months) {
+      for (const item of (month[category] || [])) {
+        const key = eraRecordKey(category, item);
+        if (!combined.has(key)) combined.set(key, { ...item, plays: 0, ms: 0 });
+        const total = combined.get(key);
+        total.plays += item.plays;
+        total.ms += item.ms;
+        if (item.uri && !total.uri) total.uri = item.uri;
+        if (item.creditedArtists?.length) total.creditedArtists = creditedNames([...(total.creditedArtists || []), ...item.creditedArtists]);
+      }
+    }
+    return [...combined.values()].sort((a, b) => b.plays - a.plays || b.ms - a.ms || a.name.localeCompare(b.name));
+  }
+  function artistSimilarity(a, b) {
+    const weights = rows => new Map((rows || []).slice(0, 10).map(row => [keyOf(row.name), row.plays]));
+    const first = weights(a.artists);
+    const second = weights(b.artists);
+    const norm = map => Math.sqrt([...map.values()].reduce((sum, x) => sum + x * x, 0));
+    const denominator = norm(first) * norm(second);
+    if (!denominator) return 0;
+    let dot = 0;
+    for (const [artist, plays] of first) dot += plays * (second.get(artist) || 0);
+    return dot / denominator;
+  }
+  function detectListeningEras(months) {
+    const groups = [];
+    let current = [];
+    for (const month of months) {
+      const previous = current[current.length - 1];
+      const similarity = previous ? artistSimilarity(previous, month) : 0;
+      const sameLead = previous?.artists?.[0] && month.artists?.[0] &&
+        keyOf(previous.artists[0].name) === keyOf(month.artists[0].name);
+      const joined = previous && monthNumber(month.key) === monthNumber(previous.key) + 1 &&
+        current.length < 6 && (similarity >= .56 || (sameLead && similarity >= .39) ||
+          (previous.qualified < 12 && month.qualified < 12));
+      if (!joined && current.length) { groups.push(current); current = []; }
+      current.push(month);
+    }
+    if (current.length) groups.push(current);
+    return groups.map((group, index) => {
+      const artists = combineEraRanks(group, 'artists');
+      const tracks = combineEraRanks(group, 'tracks');
+      const albums = combineEraRanks(group, 'albums');
+      const qualified = group.reduce((total, month) => total + month.qualified, 0);
+      const ms = group.reduce((total, month) => total + month.ms, 0);
+      const leader = artists[0]?.name || 'Unknown artist';
+      const secondary = artists[1];
+      const title = secondary && secondary.plays >= artists[0].plays * .76
+        ? `${leader} & ${secondary.name}` : leader;
+      return { index, months: group, from: group[0].key, to: group[group.length - 1].key,
+        artists, tracks, albums, qualified, ms, title };
+    });
+  }
+  function getEraHistory() {
+    if (state.eraHistory?.report === state.report) return state.eraHistory;
+    const all = Object.entries(state.report?.monthDetails || {})
+      .filter(([key, month]) => /^\d{4}-(0[1-9]|1[0-2])$/.test(key) && month?.qualified > 0)
+      .sort(([a], [b]) => a.localeCompare(b));
+    const tracks = new Map();
+    for (const [key, month] of all) {
+      for (const item of month.tracks || []) {
+        const id = eraRecordKey('tracks', item);
+        if (!tracks.has(id)) tracks.set(id, { name: item.name, artist: item.artist, months: [] });
+        tracks.get(id).months.push({ key, plays: item.plays });
+      }
+    }
+    state.eraHistory = { report: state.report, tracks, latestMonth: all.at(-1)?.[0] || '' };
+    return state.eraHistory;
+  }
+  function monthMemories(month, history) {
+    const newcomers = [], returns = [], forgotten = [];
+    for (const item of month.tracks || []) {
+      const activity = history.tracks.get(eraRecordKey('tracks', item));
+      if (!activity) continue;
+      const appearances = activity.months;
+      const currentIndex = appearances.findIndex(entry => entry.key === month.key);
+      if (currentIndex < 0) continue;
+      if (currentIndex === 0 && item.plays >= 3) {
+        newcomers.push({ ...item, reason: `${number(item.plays)} plays on its first recorded month` });
+      } else if (currentIndex > 0 && item.plays >= 3) {
+        const prior = appearances[currentIndex - 1];
+        const quiet = monthNumber(month.key) - monthNumber(prior.key) - 1;
+        if (quiet >= 6) returns.push({ ...item, reason: `Back after ${number(quiet)} quiet months` });
+      }
+      const lastSeen = appearances.at(-1).key;
+      const away = monthNumber(history.latestMonth) - monthNumber(lastSeen);
+      if (item.plays >= 4 && away >= 12) {
+        forgotten.push({ ...item, reason: `Last recorded ${monthShort(lastSeen)} · ${number(away)} months ago` });
+      }
+    }
+    const order = list => list.sort((a, b) => b.plays - a.plays || b.ms - a.ms).slice(0, 4);
+    return { newcomers: order(newcomers), returns: order(returns), forgotten: order(forgotten) };
+  }
+  function eraMemoryPanel(kicker, heading, items, empty) {
+    return `<article class="panel era-memory-panel"><div class="kicker">${escapeHtml(kicker)}</div><h2>${escapeHtml(heading)}</h2>${items.length
+      ? items.map(item => `<div class="era-memory-item"><strong title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</strong><span>${escapeHtml(artistCreditLabel(item))}</span><small>${escapeHtml(item.reason)}</small></div>`).join('')
+      : `<p class="era-memory-empty">${escapeHtml(empty)}</p>`}</article>`;
+  }
+  function eraChapterCard(chapter, selected) {
+    return `<button type="button" class="era-chapter ${selected ? 'selected' : ''}" data-era-month="${escapeHtml(chapter.to)}" aria-pressed="${selected}">
+      <span class="era-chapter-date">${escapeHtml(monthSpan(chapter.from, chapter.to))} · ${number(chapter.months.length)} ${chapter.months.length === 1 ? 'month' : 'months'}</span>
+      <strong class="era-chapter-name" title="${escapeHtml(chapter.title)}">${escapeHtml(chapter.title)}<span class="accent">.</span></strong>
+      <span class="era-chapter-favourite">♫ ${escapeHtml(chapter.tracks[0]?.name || 'No tracks')}</span>
+      <span class="era-chapter-favourite">▤ ${escapeHtml(chapter.albums[0]?.name || 'No album metadata')}</span>
+      <span class="era-chapter-count">${number(chapter.qualified)} plays · ${hours(chapter.ms)} hrs <span aria-hidden="true">↗</span></span>
+    </button>`;
+  }
+  function renderEraChapterDetail(chapter) {
+    const categoryBlock = (heading, icon, entries, cat) => `<div class="era-chapter-toplist"><span class="era-chapter-toplabel">${icon} ${escapeHtml(heading)}</span>${entries.slice(0, 4).map((item, i) =>
+      `<div class="era-chapter-item"><span>${i + 1}.</span><span title="${escapeHtml(item.name)}">${escapeHtml(item.name)}${cat !== 'artists' ? `<small>${escapeHtml(cat === 'tracks' ? artistCreditLabel(item) : item.artist)}</small>` : ''}</span><b>${number(item.plays)}</b></div>`).join('') || emptyMessage('No album information for this chapter.')}</div>`;
+    return `<div class="era-feature"><div class="era-feature-heading"><div><div class="kicker">SELECTED CHAPTER · ${escapeHtml(monthSpan(chapter.from, chapter.to))}</div><h3>${escapeHtml(chapter.title)} era</h3><p>${number(chapter.qualified)} qualifying plays across ${number(chapter.months.length)} ${chapter.months.length === 1 ? 'month' : 'months'} · ${hours(chapter.ms)} listening hours</p></div><span class="era-feature-disc" aria-hidden="true">✳</span></div><div class="era-chapter-toplists">${categoryBlock('Defining artists', '◉', chapter.artists, 'artists')}${categoryBlock('On repeat', '♫', chapter.tracks, 'tracks')}${categoryBlock('Defining albums', '▤', chapter.albums, 'albums')}</div></div>`;
+  }
+  function renderEraRanks(category, month) {
+    const items = month[category] || [];
+    const sorting = state.eras.sort;
+    const ranked = sorting === 'plays' ? items : [...items].sort((a, b) => b.ms - a.ms || b.plays - a.plays);
+    const limit = state.eras.limits[category];
+    $(`era-${category}`).innerHTML = ranked.slice(0, limit).map((item, i) => rankRow(item, i, category, sorting)).join('') || emptyMessage('No recorded qualifying plays.');
+    const more = $(`era-more-${category}`);
+    more.classList.toggle('hidden', ranked.length <= limit);
+    more.textContent = `Show more (${number(Math.max(0, ranked.length - limit))} remaining) ↓`;
+  }
+  function renderEras() {
+    const dashboard = $('era-dashboard');
+    const notice = $('era-legacy-notice');
+    if (!state.report?.monthDetails) {
+      dashboard.classList.add('hidden');
+      notice.classList.remove('hidden');
+      notice.textContent = 'This report was created before month-by-month Eras data was available. Re-import your original Spotify ZIP to unlock accurate monthly artists, tracks, albums, and rediscoveries. Your older saved report is unchanged.';
+      return;
+    }
+    const cache = state.eraChaptersCache?.report === state.report && state.eraChaptersCache?.year === state.year
+      ? state.eraChaptersCache : null;
+    const months = cache ? cache.months : eligibleEraMonths();
+    if (!months.length) {
+      dashboard.classList.add('hidden');
+      notice.classList.remove('hidden');
+      notice.textContent = 'No qualifying music plays were found for this date range.';
+      return;
+    }
+    notice.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    $('eras-range-label').textContent = state.year === 'all' ? 'ALL TIME' : state.year;
+    const firstSelection = !months.some(month => month.key === state.eras.month);
+    if (firstSelection) state.eras.month = months.at(-1).key;
+    const selected = months.find(month => month.key === state.eras.month);
+    const chapters = cache ? cache.chapters : detectListeningEras(months);
+    if (!cache) state.eraChaptersCache = { report: state.report, year: state.year, months, chapters };
+    const currentChapter = chapters.find(chapter => chapter.months.some(month => month.key === selected.key));
+    const history = getEraHistory();
+    const mostActive = [...months].sort((a, b) => b.ms - a.ms)[0];
+    const firsts = months.reduce((sum, month) => sum + month.qualified, 0);
+    $('era-stats').innerHTML = [
+      statCard('Months explored', number(months.length), `${monthShort(months[0].key)} – ${monthShort(months.at(-1).key)}`, '◷'),
+      statCard('Listening chapters', number(chapters.length), 'Detected from shifting music tastes', '✳'),
+      statCard('Recorded plays', number(firsts), 'Streams of at least 30 seconds', '♫'),
+      statCard('Busiest month', monthShort(mostActive.key), `${hours(mostActive.ms)} hours listened`, '▥')
+    ].join('');
+    $('era-chapters').innerHTML = [...chapters].reverse().map(chapter => eraChapterCard(chapter, chapter === currentChapter)).join('');
+    $('era-chapter-details').innerHTML = renderEraChapterDetail(currentChapter);
+    const strip = $('era-month-strip');
+    const oldScroll = strip.scrollLeft;
+    const peak = Math.max(...months.map(month => month.ms), 1);
+    strip.innerHTML = months.map(month => `<button type="button" class="era-month-pill ${month.key === selected.key ? 'selected' : ''}" data-era-month="${escapeHtml(month.key)}" aria-pressed="${month.key === selected.key}" title="${escapeHtml(monthTitle(month.key))} · ${number(month.qualified)} plays">
+      <span class="era-pill-year">${escapeHtml(month.key.slice(0, 4))}</span><strong>${escapeHtml(monthLabels[Number(month.key.slice(5, 7)) - 1])}</strong><span class="era-pill-artist" title="${escapeHtml(month.artists[0]?.name || '')}">${escapeHtml(month.artists[0]?.name || 'No artist')}</span>
+      <span class="era-pill-meter"><i style="height:${Math.max(3, Math.round(month.ms / peak * 26))}px"></i></span></button>`).join('');
+    if (firstSelection) {
+      const active = strip.querySelector('.selected');
+      if (active) strip.scrollLeft = Math.max(0, active.offsetLeft - strip.offsetLeft - strip.clientWidth / 2);
+    } else strip.scrollLeft = oldScroll;
+    const selectedIndex = months.findIndex(row => row.key === selected.key);
+    const prev = months[selectedIndex - 1];
+    const next = months[selectedIndex + 1];
+    const artist = selected.artists[0];
+    const track = selected.tracks[0];
+    const album = selected.albums[0];
+    $('era-month-detail').innerHTML = `<article class="panel era-selected-month"><div class="era-month-heading"><div><div class="kicker">MONTHLY DEEP DIVE · UTC</div><h2>${escapeHtml(monthTitle(selected.key))}<span class="accent">.</span></h2><p>A snapshot of what you were listening to, playing on repeat, and discovering.</p></div><div class="era-month-arrows"><button type="button" class="small-icon-btn" data-era-step="-1" ${prev ? '' : 'disabled'} aria-label="Previous listening month" title="Previous listening month">←</button><button type="button" class="small-icon-btn" data-era-step="1" ${next ? '' : 'disabled'} aria-label="Next listening month" title="Next listening month">→</button></div></div>
+      <div class="era-month-numbers"><div><b>${number(selected.qualified)}</b><span>Qualifying plays</span></div><div><b>${hours(selected.ms)} h</b><span>Listening time</span></div><div><b>${number(selected.activeDays)}</b><span>Active days</span></div><div><b>${number(selected.tracks.length)}</b><span>Different tracks</span></div><div><b>${percent(selected.skipYes, selected.skipKnown)}</b><span>Recorded skip rate</span></div></div>
+      <div class="era-month-favourites"><div><span>◉ YOUR LEADING ARTIST</span><strong>${escapeHtml(artist?.name || 'Unknown')}</strong><small>${artist ? `${number(artist.plays)} plays · ${percent(artist.plays, selected.qualified)} of this month` : 'No artist plays'}</small></div><div><span>♫ THE TRACK ON REPEAT</span><strong>${escapeHtml(track?.name || 'Unknown')}</strong><small>${track ? `${escapeHtml(artistCreditLabel(track))} · ${number(track.plays)} plays` : 'No track plays'}</small></div><div><span>▤ YOUR GO-TO ALBUM</span><strong>${escapeHtml(album?.name || 'Unknown')}</strong><small>${album ? `${escapeHtml(album.artist)} · ${number(album.plays)} plays` : 'No album data'}</small></div></div></article>`;
+    const memories = monthMemories(selected, history);
+    $('era-memory').innerHTML = [
+      eraMemoryPanel('FIRST APPEARANCES', 'New obsessions', memories.newcomers, 'No tracks first appeared with three or more plays in this month.'),
+      eraMemoryPanel('A SECOND WIND', 'Rediscovered favourites', memories.returns, 'No tracks returned after six or more quiet months.'),
+      eraMemoryPanel('WHERE ARE THEY NOW?', 'Forgotten favourites', memories.forgotten, 'No tracks from this month have been absent for at least a year by the end of this export.')
+    ].join('');
+    for (const category of ['tracks', 'artists', 'albums']) renderEraRanks(category, selected);
+    document.querySelectorAll('[data-era-sort]').forEach(button => button.classList.toggle('active', button.dataset.eraSort === state.eras.sort));
+  }
+
+  // Unified Search works against the same aggregated year and month data as
+  // the rest of the app. It never sends a query to Spotify or an external API.
+  const searchCategories = { artists: 'Artist', tracks: 'Track', albums: 'Album' };
+  function exploreItem(category, item) {
+    state.search.query = item.name;
+    state.search.filter = category;
+    state.search.selected = { category, key: recordKey(category, item) };
+    state.search.limit = 30;
+    $('unified-search').value = item.name;
+    $('search-filter').value = category;
+    openView('search');
+  }
+  function searchScore(item, category, query) {
+    if (!query) return 0;
+    const name = item.name.toLocaleLowerCase('en-GB');
+    const credits = artistCreditLabel(item).toLocaleLowerCase('en-GB');
+    const album = (item.album || '').toLocaleLowerCase('en-GB');
+    const terms = query.split(/\s+/).filter(Boolean);
+    if (!terms.every(term => `${name} ${credits} ${album}`.includes(term))) return -1;
+    if (name === query) return 100;
+    if (name.startsWith(query)) return 75;
+    if (name.includes(query)) return 55;
+    if (category === 'tracks' && credits.split(', ').some(credit => credit === query)) return 45;
+    if (credits.includes(query)) return 35;
+    return 10;
+  }
+  function renderSearch() {
+    $('search-range').textContent = state.year === 'all' ? 'ALL TIME' : state.year;
+    document.querySelectorAll('[data-search-filter-chip]').forEach(button => {
+      button.classList.toggle('active', button.dataset.searchFilterChip === state.search.filter);
+      button.setAttribute('aria-pressed', String(button.dataset.searchFilterChip === state.search.filter));
+    });
+    const query = state.search.query.trim().toLocaleLowerCase('en-GB');
+    const matches = [];
+    for (const category of ['tracks', 'artists', 'albums']) {
+      if (state.search.filter !== 'all' && state.search.filter !== category) continue;
+      for (const item of period()?.[category] || []) {
+        const score = searchScore(item, category, query);
+        if (score >= 0) matches.push({ category, item, score });
+      }
+    }
+    matches.sort((a, b) => b.score - a.score || b.item.plays - a.item.plays || b.item.ms - a.item.ms);
+    state.search.matches = matches;
+    renderSearchResults();
+    renderSearchDetail();
+  }
+  function renderSearchResults() {
+    const matches = state.search.matches;
+    const results = $('search-results');
+    $('search-result-count').textContent = `${number(matches.length)} ${matches.length === 1 ? 'result' : 'results'}`;
+    if (!matches.length) {
+      results.innerHTML = emptyMessage('No matches in this listening history. Try a different track, artist, or album.');
+    } else {
+      results.innerHTML = matches.slice(0, state.search.limit).map(({ category, item }, index) => {
+        const selected = state.search.selected?.category === category && state.search.selected.key === recordKey(category, item);
+        const sub = category === 'tracks' ? `${artistCreditLabel(item)}${item.album ? ' · ' + item.album : ''}` :
+          category === 'albums' ? item.artist : `${number(item.plays)} credited plays`;
+        return `<button type="button" class="search-result ${selected ? 'selected' : ''}" data-search-result="${index}" aria-pressed="${selected}">
+          <span class="search-result-art" aria-hidden="true">${category === 'tracks' ? '♫' : category === 'albums' ? '▤' : '◉'}</span>
+          <span class="search-result-main"><strong title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</strong><small title="${escapeHtml(sub)}">${escapeHtml(sub)}</small></span>
+          <span class="search-result-meta"><span>${escapeHtml(searchCategories[category])}</span><b>${number(item.plays)} plays</b></span>
+          <span class="search-result-arrow" aria-hidden="true">↗</span></button>`;
+      }).join('');
+    }
+    $('search-more').classList.toggle('hidden', matches.length <= state.search.limit);
+    $('search-more').textContent = `Show more (${number(matches.length - state.search.limit)} remaining) ↓`;
+  }
+  function searchMonthlyHistory(category, item) {
+    if (!state.report?.monthDetails) return [];
+    const key = recordKey(category, item);
+    return Object.entries(state.report.monthDetails)
+      .filter(([month]) => /^\d{4}-(0[1-9]|1[0-2])$/.test(month) && (state.year === 'all' || month.startsWith(state.year + '-')))
+      .map(([month, data]) => ({ month, entry: (data[category] || []).find(record => recordKey(category, record) === key) }))
+      .filter(({ entry }) => entry && entry.plays > 0)
+      .sort((a, b) => a.month.localeCompare(b.month));
+  }
+  function searchTimeline(history) {
+    if (!history.length) return emptyMessage('Month-by-month details are not stored in this report. Re-import your original history to unlock the full timeline.');
+    const first = monthNumber(history[0].month), last = monthNumber(history.at(-1).month);
+    const span = last - first + 1;
+    const bucketWidth = Math.max(1, Math.ceil(span / 28));
+    const buckets = [];
+    const values = new Map(history.map(({ month, entry }) => [monthNumber(month), entry.plays]));
+    for (let start = first; start <= last; start += bucketWidth) {
+      const end = Math.min(last, start + bucketWidth - 1);
+      let plays = 0;
+      for (let index = start; index <= end; index++) plays += values.get(index) || 0;
+      const labelMonth = month => `${Math.floor((month - 1) / 12)}-${String((month - 1) % 12 + 1).padStart(2, '0')}`;
+      buckets.push({ label: bucketWidth === 1 ? monthShort(labelMonth(start)) : `${monthShort(labelMonth(start))} – ${monthShort(labelMonth(end))}`, plays });
+    }
+    const max = Math.max(...buckets.map(bucket => bucket.plays), 1);
+    return `<div class="search-timeline" role="img" aria-label="Monthly plays from ${escapeHtml(monthShort(history[0].month))} to ${escapeHtml(monthShort(history.at(-1).month))}">
+      ${buckets.map(bucket => `<div class="search-timeline-col" title="${escapeHtml(bucket.label)}: ${number(bucket.plays)} plays"><span class="search-timeline-bar" style="height:${bucket.plays ? Math.max(4, bucket.plays / max * 100) : 0}%"></span></div>`).join('')}</div>
+      <div class="search-timeline-axis"><span>${escapeHtml(monthShort(history[0].month))}</span><span>${escapeHtml(monthShort(history.at(-1).month))}</span></div>
+      ${bucketWidth > 1 ? `<p class="search-muted">Each bar represents up to ${number(bucketWidth)} months.</p>` : ''}`;
+  }
+  function searchEraLinks(category, item) {
+    if (!state.report?.monthDetails) return [];
+    const months = eligibleEraMonths();
+    const chapters = detectListeningEras(months);
+    const key = recordKey(category, item);
+    return chapters.filter(chapter => chapter[category].slice(0, category === 'artists' ? 5 : 10)
+      .some(entry => recordKey(category, entry) === key))
+      .map(chapter => ({ title: chapter.title, from: chapter.from, to: chapter.to }));
+  }
+  function searchDemoConnections(category, item) {
+    if (category !== 'tracks' || !state.report?.isDemo || !state.report.demoData) return '';
+    const data = state.report.demoData;
+    const track = (data.catalogue || []).find(row => keyOf(row.artist, row.title) === keyOf(item.artist, item.name));
+    if (!track) return '';
+    const playlists = (data.playlists || []).filter(list => list.trackIds.includes(track.id));
+    const shares = (data.messages || []).filter(message => message.trackId === track.id && message.direction === 'received');
+    const senders = [...new Set(shares.map(message => (data.friends || []).find(friend => friend.id === message.friendId)?.name).filter(Boolean))];
+    const saved = (data.savedTrackIds || []).includes(track.id);
+    return `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">EXAMPLE SOCIAL & LIBRARY DATA</div><h2>Connections</h2></div></div>
+      <div class="search-connections">
+      <div><strong>${saved ? 'Saved in your library' : 'Not saved in your library'}</strong><p>Demo library snapshot</p></div>
+      <div><strong>${number(playlists.length)} ${playlists.length === 1 ? 'playlist' : 'playlists'}</strong><p>${escapeHtml(playlists.map(list => list.name).join(', ') || 'Not in any demo playlists')}</p></div>
+      <div><strong>${number(senders.length)} recommending ${senders.length === 1 ? 'friend' : 'friends'}</strong><p>${escapeHtml(senders.join(', ') || 'No recommendations recorded')} · ${number(shares.length)} total shares</p></div>
+      </div></article>`;
+  }
+  function renderSearchDetail() {
+    const target = $('search-detail');
+    const selected = state.search.selected;
+    if (!selected) {
+      target.innerHTML = `<div class="panel search-detail-placeholder"><span aria-hidden="true">♫</span><h2>Every song has a story.</h2><p>Choose a track, artist, or album to discover its listening timeline, milestones, and connections to your musical eras.</p></div>`;
+      return;
+    }
+    const item = (period()?.[selected.category] || []).find(row => recordKey(selected.category, row) === selected.key);
+    if (!item) {
+      state.search.selected = null;
+      target.innerHTML = emptyMessage('This entry is not present in the selected year. Try All time.');
+      return;
+    }
+    const category = selected.category;
+    const history = searchMonthlyHistory(category, item);
+    const first = history[0]?.month || null;
+    const last = history.at(-1)?.month || null;
+    const peak = [...history].sort((a, b) => b.entry.plays - a.entry.plays)[0];
+    const eras = searchEraLinks(category, item);
+    const subtitle = category === 'tracks' ? `${artistCreditLabel(item)}${item.album ? ' · ' + item.album : ''}` :
+      category === 'albums' ? item.artist : 'Artist';
+    const categories = { artists: '◉', tracks: '♫', albums: '▤' };
+    const stats = [
+      ['Qualifying plays', number(item.plays)], ['Listening time', `${hours(item.ms)} hrs`],
+      ['First recorded month', first ? monthShort(first) : 'Unavailable'],
+      ['Most recent month', last ? monthShort(last) : 'Unavailable']
+    ];
+    if (peak) stats.push(['Peak month', `${monthShort(peak.month)} · ${number(peak.entry.plays)} plays`]);
+    if (category === 'tracks') stats.push(['Credited artists', number(artistCredits(item).length)]);
+    const related = category === 'artists'
+      ? (period().tracks || []).filter(row => artistCredits(row).some(name => keyOf(name) === keyOf(item.name))).slice(0, 6)
+      : category === 'albums'
+        ? (period().tracks || []).filter(row => keyOf(row.artist, row.album) === keyOf(item.artist, item.name)).slice(0, 6)
+        : [];
+    const links = category === 'tracks'
+      ? `<div class="search-entity-links">${artistCredits(item).map(name => `<button type="button" data-explore-category="artists" data-explore-key="${escapeHtml(encodeURIComponent(keyOf(name)))}">Explore ${escapeHtml(name)} ↗</button>`).join('')}${item.album ? `<button type="button" data-explore-category="albums" data-explore-key="${escapeHtml(encodeURIComponent(keyOf(item.artist, item.album)))}">Explore ${escapeHtml(item.album)} ↗</button>` : ''}</div>` : '';
+    target.innerHTML = `<article class="panel search-detail-main"><div class="search-detail-title"><span class="search-detail-art">${categories[category]}</span><div><div class="kicker">${escapeHtml(searchCategories[category].toUpperCase())} DEEP DIVE</div><h2>${escapeHtml(item.name)}<span class="accent">.</span></h2><p>${escapeHtml(subtitle)}</p></div></div>
+      <div class="search-stat-grid">${stats.map(([label, value]) => `<div><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`).join('')}</div>${links}</article>
+      <article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">THROUGH THE YEARS</div><h2>Listening timeline</h2></div><span class="heading-note">RECORDED PLAYS</span></div>${searchTimeline(history)}</article>
+      <article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">CONNECTED TO YOUR HISTORY</div><h2>Listening eras</h2></div></div>
+      ${eras.length ? `<div class="search-era-links">${eras.map(era => `<button type="button" data-search-era-month="${escapeHtml(era.to)}"><strong>${escapeHtml(era.title)} era</strong><span>${escapeHtml(monthSpan(era.from, era.to))} ↗</span></button>`).join('')}</div>` : `<p class="search-muted">Not among the leading ${category} in any automatically detected era for this time range.</p>`}</article>
+      ${related.length ? `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">GO DEEPER</div><h2>${category === 'albums' ? 'Most-played album tracks' : 'Most-played tracks featuring this artist'}</h2></div></div><div class="rank-list">${related.map((row, i) => rankRow(row, i, 'tracks', 'plays')).join('')}</div></article>` : ''}
+      ${searchDemoConnections(category, item)}
+      ${category === 'tracks' && !state.report?.isDemo ? `<p class="search-muted">Playlist membership and friend recommendations will appear here once Account Data import support is added. The standard Spotify streaming-history export does not contain those records.</p>` : ''}
+      <p class="search-muted">Counts reflect streams of at least 30 seconds, grouped by UTC month. An era connection means this was among that chapter's leading entries. Historical reports without month-level data cannot show a precise timeline.</p>`;
   }
 
   async function refreshHistoryCount() {
@@ -561,9 +1036,8 @@
       const byYear = new Map();
       const artists = [...new Set(tracks.map(track => track.artist))];
       const catalogue = tracks.map(({ title, artist, album, released, seconds, credits: listedCredits = [] }, id) => {
-        const feature = title.match(/\((?:feat\.?|with)\s+([^)]+)\)/i);
-        const candidates = [...listedCredits, ...(feature ? feature[1].split(/\s*(?:&|,|\band\b)\s*/i) : [])];
-        const credits = [...new Set(candidates.map(name => name.trim()).filter(name => name && keyOf(name) !== keyOf(artist)))];
+        const candidates = [...listedCredits, ...featureCreditsFromTitle(title)];
+        const credits = creditedNames(candidates).filter(name => keyOf(name) !== keyOf(artist));
         return {
           id, title, artist, album, released, credits, releasedAt: Date.parse(released + 'T00:00:00Z'),
           length: seconds ? seconds * 1000 : randomInt(115, 270) * 1000
@@ -574,6 +1048,60 @@
         const albumKey = keyOf(track.artist, track.album);
         if (!albumWeights.has(albumKey)) albumWeights.set(albumKey, 0.45 + 2 * rand());
         trackWeights.set(track.id, (0.1 + 5 * rand() ** 5) * artistWeights.get(track.artist) * albumWeights.get(albumKey));
+      }
+      // Give demo-only tracks believable listening stories instead of relying on
+      // incidental random repeats. These records pass through the normal importer;
+      // the Eras thresholds and genuine Spotify data are deliberately unchanged.
+      const storyBursts = new Map();
+      const storyKeys = new Set();
+      const storyKey = track => keyOf(track.artist, track.title);
+      const finalDemoMonth = new Date(cutoff - 6 * 86400_000);
+      const finalDemoMonthNumber = finalDemoMonth.getUTCFullYear() * 12 + finalDemoMonth.getUTCMonth();
+      const storyMonthNumber = date => date.getUTCFullYear() * 12 + date.getUTCMonth();
+      const storyMonthStart = (year, month) => Date.UTC(year, month - 1, 1);
+      const storyMonthIsUsable = timestamp => storyMonthNumber(new Date(timestamp)) <= finalDemoMonthNumber;
+      const pickStoryTrack = timestamp => {
+        const available = catalogue.filter(track => !storyKeys.has(storyKey(track)) &&
+          track.releasedAt <= timestamp + 5 * 86400_000);
+        if (!available.length) return null;
+        const track = choose(available);
+        storyKeys.add(storyKey(track));
+        return track;
+      };
+      const addStoryBurst = (track, timestamp, count) => {
+        const year = String(new Date(timestamp).getUTCFullYear());
+        const list = storyBursts.get(year) || [];
+        list.push({ track, timestamp, count });
+        storyBursts.set(year, list);
+      };
+      for (let year = startYear; year <= endYear; year++) {
+        const lastMonth = year === finalDemoMonth.getUTCFullYear()
+          ? finalDemoMonth.getUTCMonth() + 1 : 12;
+        if (year > finalDemoMonth.getUTCFullYear() || lastMonth < 1) continue;
+
+        // A short first-month obsession; make the newest available month useful
+        // when the user first opens Eras in the randomised demo.
+        const obsessionMonth = year === finalDemoMonth.getUTCFullYear()
+          ? lastMonth : randomInt(1, lastMonth);
+        const firstDate = storyMonthStart(year, obsessionMonth);
+        const obsession = pickStoryTrack(firstDate);
+        if (obsession) {
+          addStoryBurst(obsession, firstDate, randomInt(7, 14));
+          // A genuine 8–24 month absence, followed by several repeat plays.
+          // Reserve the track from ordinary random listening in between.
+          const quietMonths = randomInt(8, 24);
+          const comeback = Date.UTC(year, obsessionMonth - 1 + quietMonths + 1, 1);
+          if (storyMonthIsUsable(comeback)) addStoryBurst(obsession, comeback, randomInt(5, 10));
+        }
+
+        // A different track becomes a favourite and then vanishes completely.
+        // Only schedule this far enough back for the actual 12-month rule.
+        const forgottenMonth = randomInt(1, lastMonth);
+        const forgottenDate = storyMonthStart(year, forgottenMonth);
+        if (finalDemoMonthNumber - storyMonthNumber(new Date(forgottenDate)) >= 12) {
+          const forgotten = pickStoryTrack(forgottenDate);
+          if (forgotten) addStoryBurst(forgotten, forgottenDate, randomInt(6, 12));
+        }
       }
       for (let year = startYear; year <= endYear; year++) {
         const begin = Math.max(minDate, Date.UTC(year, 0, 1));
@@ -594,14 +1122,20 @@
           const sessionStart = begin + Math.floor(rand() * (latestStart - begin + 1));
           const mode = choose(platforms);
           const shuffle = rand() < 0.55;
-          const chosenEra = choose(eraArtists);
-          const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart);
+          // Rotate the musical focus each quarter so demo data develops real,
+          // recognisable month-scale phases instead of uniform yearly tastes.
+          const focusIndex = Math.floor(new Date(sessionStart).getUTCMonth() / 3) % eraArtists.length;
+          const chosenEra = rand() < 0.86 ? eraArtists[focusIndex] : choose(eraArtists);
+          // Story tracks are played only in their planned bursts, so ordinary
+          // random sessions cannot erase a rediscovery gap or a forgotten song.
+          const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart &&
+            !storyKeys.has(storyKey(track)));
           if (!sessionTracks.length) continue;
           let cursor = sessionStart;
           const sessionEvents = [];
           for (let i = 0; i < sessionSize; i++) {
             const weights = sessionTracks.map(track => trackWeights.get(track.id) *
-              (track.artist === chosenEra ? 3.6 : 1) *
+              (track.artist === chosenEra ? 8 : 1) *
               (i && track.artist === sessionEvents[sessionEvents.length - 1]?.artist && !shuffle ? 4 : 1) *
               (track.releasedAt > sessionStart - 300 * 86400_000 ? 1.35 : 1));
             let roll = rand() * weights.reduce((a, b) => a + b, 0);
@@ -618,6 +1152,7 @@
             const entry = {
               ts: new Date(cursor).toISOString(),
               master_metadata_album_artist_name: chosen.artist,
+              credited_artists: [chosen.artist, ...chosen.credits],
               master_metadata_track_name: chosen.title,
               master_metadata_album_album_name: chosen.album,
               ms_played: played,
@@ -637,6 +1172,37 @@
             sessions.push(session);
             allSessions.push(session);
             planned += sessionEvents.length;
+          }
+        }
+        for (const burst of storyBursts.get(String(year)) || []) {
+          const monthEnd = Date.UTC(new Date(burst.timestamp).getUTCFullYear(),
+            new Date(burst.timestamp).getUTCMonth() + 1, 1);
+          const latest = Math.min(monthEnd - 60_000, cutoff - 60_000);
+          const earliest = Math.max(burst.timestamp + 6 * 86400_000, burst.track.releasedAt + 60_000);
+          if (latest < earliest + burst.track.length) continue;
+          const spread = Math.min(latest - earliest - burst.track.length, 9 * 86400_000);
+          for (let i = 0; i < burst.count; i++) {
+            const finishedAt = earliest + burst.track.length + Math.floor(spread * i / Math.max(1, burst.count - 1));
+            const platform = choose(platforms);
+            const entry = {
+              ts: new Date(finishedAt).toISOString(),
+              master_metadata_album_artist_name: burst.track.artist,
+              credited_artists: [burst.track.artist, ...burst.track.credits],
+              master_metadata_track_name: burst.track.title,
+              master_metadata_album_album_name: burst.track.album,
+              ms_played: burst.track.length,
+              platform,
+              skipped: false,
+              shuffle: rand() < 0.3,
+              offline: rand() < 0.08,
+              reason_start: 'clickrow', reason_end: 'trackdone',
+              demo_track_id: burst.track.id
+            };
+            yearRows.push(entry);
+            const session = { started: new Date(finishedAt - burst.track.length).toISOString(),
+              ended: entry.ts, platform, trackIds: [burst.track.id] };
+            sessions.push(session);
+            allSessions.push(session);
           }
         }
         years.push({ year, artists: eraArtists, sessions: sessions.length });
@@ -661,36 +1227,6 @@
       ingest(builder, rows);
       builder.sourceFiles = 1;
       const report = finishBuilder(builder, 'Randomised demo · not your data', 'Demo data', true);
-      const credited = new Map();
-      for (const event of rows) {
-        if (event.ms_played < MIN_PLAY_MS) continue;
-        const track = catalogue[event.demo_track_id];
-        for (const name of track.credits) {
-          for (const periodKey of ['all', event.ts.slice(0, 4)]) {
-            if (!credited.has(periodKey)) credited.set(periodKey, new Map());
-            const map = credited.get(periodKey);
-            const key = keyOf(name);
-            if (!map.has(key)) map.set(key, { name, plays: 0, ms: 0 });
-            const artist = map.get(key);
-            artist.plays++;
-            artist.ms += event.ms_played;
-          }
-        }
-      }
-      for (const [periodKey, extras] of credited) {
-        const records = report.periods[periodKey].artists;
-        const byArtist = new Map(records.map(record => [keyOf(record.name), record]));
-        for (const [key, extra] of extras) {
-          if (byArtist.has(key)) {
-            byArtist.get(key).plays += extra.plays;
-            byArtist.get(key).ms += extra.ms;
-          } else {
-            records.push(extra);
-            byArtist.set(key, extra);
-          }
-        }
-        records.sort((a, b) => b.plays - a.plays || b.ms - a.ms);
-      }
       report.demoData = {
         catalogue: catalogue.map(({ id, title, artist, album, released, length, credits }) => ({ id, title, artist, album, released, durationMs: length, creditedArtists: [artist, ...credits] })),
         events: rows,
@@ -717,6 +1253,46 @@
   function attachEvents() {
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', () => openView(link.dataset.nav)));
     document.querySelectorAll('[data-go]').forEach(link => link.addEventListener('click', () => openView(link.dataset.go)));
+    document.addEventListener('click', event => {
+      const element = event.target.closest('[data-explore-category][data-explore-key]');
+      if (!element || !state.report) return;
+      const category = element.dataset.exploreCategory;
+      const key = decodeURIComponent(element.dataset.exploreKey);
+      const item = (period()?.[category] || []).find(row => recordKey(category, row) === key);
+      if (item) exploreItem(category, item);
+    });
+    $('unified-search').addEventListener('input', event => {
+      state.search.query = event.target.value;
+      state.search.selected = null;
+      state.search.limit = 30;
+      renderSearch();
+    });
+    $('view-search').addEventListener('click', event => {
+      const chip = event.target.closest('[data-search-filter-chip]');
+      if (!chip) return;
+      state.search.filter = chip.dataset.searchFilterChip;
+      $('search-filter').value = state.search.filter;
+      state.search.selected = null;
+      state.search.limit = 30;
+      renderSearch();
+    });
+    $('search-filter').addEventListener('change', event => {
+      state.search.filter = event.target.value;
+      state.search.selected = null;
+      state.search.limit = 30;
+      renderSearch();
+    });
+    $('search-results').addEventListener('click', event => {
+      const item = event.target.closest('[data-search-result]');
+      if (!item) return;
+      const result = state.search.matches[Number(item.dataset.searchResult)];
+      if (result) { state.search.selected = { category: result.category, key: recordKey(result.category, result.item) }; renderSearchResults(); renderSearchDetail(); }
+    });
+    $('search-more').addEventListener('click', () => { state.search.limit += 30; renderSearchResults(); });
+    $('search-detail').addEventListener('click', event => {
+      const month = event.target.closest('[data-search-era-month]');
+      if (month) { state.eras.month = month.dataset.searchEraMonth; openView('eras'); }
+    });
     $('browse-button').addEventListener('click', event => { event.stopPropagation(); $('file-input').click(); });
     $('file-input').addEventListener('change', event => { if (event.target.files[0]) importHistory(event.target.files[0]); });
     $('demo-button').addEventListener('click', event => { event.stopPropagation(); makeDemo(); });
@@ -730,7 +1306,7 @@
     ['dragleave', 'drop'].forEach(name => $('dropzone').addEventListener(name, event => { event.preventDefault(); $('dropzone').classList.remove('dragging'); }));
     $('dropzone').addEventListener('drop', event => { const file = event.dataTransfer.files[0]; if (file) importHistory(file); });
     $('new-upload').addEventListener('click', () => openView('home'));
-    $('year-filter').addEventListener('change', event => { state.year = event.target.value; state.count = 25; renderCurrent(); });
+    $('year-filter').addEventListener('change', event => { state.year = event.target.value; state.count = 25; state.search.selected = null; state.search.limit = 30; state.eras.month = null; state.eras.limits = { artists: 8, tracks: 10, albums: 8 }; renderCurrent(); });
     for (const type of ['artist', 'track', 'album']) $(type + '-search').addEventListener('input', () => { state.count = 25; renderListing({ artist: 'artists', track: 'tracks', album: 'albums' }[type]); });
     document.querySelectorAll('[data-sort-for]').forEach(group => group.addEventListener('click', event => {
       const button = event.target.closest('[data-sort]');
@@ -740,6 +1316,35 @@
       renderListing(group.dataset.sortFor);
     }));
     for (const type of ['artist', 'track', 'album']) $(type + '-more').addEventListener('click', () => { state.count += 25; renderListing({ artist: 'artists', track: 'tracks', album: 'albums' }[type]); });
+    $('view-eras').addEventListener('click', event => {
+      const monthButton = event.target.closest('[data-era-month]');
+      const stepButton = event.target.closest('[data-era-step]');
+      const sortButton = event.target.closest('[data-era-sort]');
+      const moreButton = event.target.closest('[data-era-more]');
+      if (monthButton) {
+        state.eras.month = monthButton.dataset.eraMonth;
+        state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
+        renderEras();
+      } else if (stepButton) {
+        const months = eligibleEraMonths();
+        const index = months.findIndex(row => row.key === state.eras.month);
+        const next = months[index + Number(stepButton.dataset.eraStep)];
+        if (next) {
+          state.eras.month = next.key;
+          state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
+          renderEras();
+        }
+      } else if (sortButton) {
+        state.eras.sort = sortButton.dataset.eraSort;
+        renderEras();
+      } else if (moreButton) {
+        const category = moreButton.dataset.eraMore;
+        if (['artists', 'tracks', 'albums'].includes(category)) {
+          state.eras.limits[category] += 20;
+          renderEras();
+        }
+      }
+    });
     $('history-list').addEventListener('click', async event => {
       const button = event.target.closest('button');
       if (!button) return;
