@@ -31,6 +31,12 @@ All ZIP processing and analysis happen **in your browser**. There is no Spotify 
 
 Reports are saved in the browser using **IndexedDB**, with a first-party cookie identifying the local report collection. Clearing browser site data removes the saved reports.
 
+### Listening Eras
+Discover the musical chapters of your life through automatically identified listening eras, based on changes in your listening habits. Explore month-by-month statistics, defining tracks, artists, and albums, rediscovered favourites, forgotten songs, and periods of heavy rotation.
+
+### Unified Search
+Search your entire listening history for tracks, albums, and artists. Explore detailed statistics, listening timelines, popularity peaks, and connections to your listening eras. Search results include featured artists where available, with local metadata enrichment to identify additional artist credits.
+
 ## Technologies
 
 - **HTML, CSS, and vanilla JavaScript** for the responsive interface and statistics engine.
