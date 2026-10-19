@@ -2,7 +2,7 @@ name: Build and publish Docker image
 
 on:
   push:
-    branches: [main, test]
+    branches: [main, test, test2]
     tags: ['v*']
   pull_request:
     branches: [main]
@@ -110,6 +110,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=beta,enable=${{ github.ref == 'refs/heads/test' }}
+            type=raw,value=beta2,enable=${{ github.ref == 'refs/heads/test2' }}
             type=ref,event=tag
             type=sha,prefix=sha-,format=short
 
