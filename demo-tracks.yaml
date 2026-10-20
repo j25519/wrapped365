@@ -377,11 +377,206 @@ tracks:
     album: "Graduation"
     released: "2007-09-11"
     seconds: 185
+  - title: "Curtains Up - Skit"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 29
+  - title: "White America"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 324
+  - title: "Business"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 251
+  - title: "Cleanin' Out My Closet"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 297
+  - title: "Square Dance"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 323
+  - title: "The Kiss - Skit"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 75
+  - title: "Soldier"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 226
+  - title: "Say Goodbye Hollywood"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 272
+  - title: "Drips (feat. Obie Trice)"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 285
   - title: "Without Me"
     artist: "Eminem"
     album: "The Eminem Show"
     released: "2002-05-26"
-    seconds: 0
+    seconds: 290
+  - title: "Paul Rosenberg - Skit"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 22
+  - title: "Sing For The Moment"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 339
+  - title: "Superman (feat. Dina Rae)"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 350
+  - title: "Hailie's Song"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 320
+  - title: "Steve Berman - Skit"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 33
+  - title: "When The Music Stops (feat. D12)"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 269
+  - title: "Say What You Say (feat. Dr. Dre)"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 309
+  - title: "Till I Collapse (feat. Nate Dogg)"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 297
+  - title: "My Dad's Gone Crazy (feat. Hailie Jade)"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 267
+  - title: "Curtains Close"
+    artist: "Eminem"
+    album: "The Eminem Show"
+    released: "2002-05-26"
+    seconds: 61
+  - title: "Public Service Announcement"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 33
+  - title: "My Name Is"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 268
+  - title: "Guilty Conscience (feat. Dr. Dre)"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 199
+  - title: "Brain Damage"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 226
+  - title: "Paul - Skit"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 15
+  - title: "If I Had"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 245
+  - title: "'97 Bonnie & Clyde"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 316
+  - title: "Bitch - Skit"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 19
+  - title: "Role Model"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 205
+  - title: "Lounge - Skit"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 46
+  - title: "My Fault"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 241
+  - title: "Ken Kaniff - Skit"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 76
+  - title: "Cum On Everybody"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 219
+  - title: "Rock Bottom"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 214
+  - title: "Just Don't Give A Fuck"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 242
+  - title: "Soap - Skit"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 34
+  - title: "As The World Turns"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 265
+  - title: "I'm Shady"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 211
+  - title: "Bad Meets Evil (feat. Royce Da 5'9\")"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 253
+  - title: "Still Don't Give A Fuck"
+    artist: "Eminem"
+    album: "The Slim Shady LP"
+    released: "1999-02-23"
+    seconds: 252
   - title: "HUMBLE."
     artist: "Kendrick Lamar"
     album: "DAMN."
@@ -1017,16 +1212,236 @@ tracks:
     album: "Famous Last Words"
     released: "2023-10-27"
     seconds: 213
-  - title: "Empire State of Mind"
+  - title: "What We Talkin' About (feat. Luke Steele)"
     artist: "Jay-Z"
     album: "The Blueprint 3"
     released: "2009-09-08"
-    seconds: 0
-  - title: "Tip Toe Wing in My Jawwdinz"
+    seconds: 244
+  - title: "Thank You"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 249
+  - title: "D.O.A. (Death Of Auto-Tune)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 256
+  - title: "Run This Town (feat. Rihanna & Kanye West)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 268
+  - title: "Empire State Of Mind (feat. Alicia Keys)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 277
+  - title: "Real As It Gets (feat. Young Jeezy)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 253
+  - title: "On To The Next One (feat. Swizz Beatz)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 256
+  - title: "Off That (feat. Drake)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 247
+  - title: "A Star Is Born (feat. J. Cole)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 227
+  - title: "Venus Vs. Mars"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 190
+  - title: "Already Home (feat. Kid Cudi)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 270
+  - title: "Hate (feat. Kanye West)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 151
+  - title: "Reminder"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 258
+  - title: "So Ambitious (feat. Pharrell Williams)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 252
+  - title: "Young Forever (feat. Mr Hudson)"
+    artist: "Jay-Z"
+    album: "The Blueprint 3"
+    released: "2009-09-08"
+    seconds: 254
+  - title: "No Church in the Wild (feat. Frank Ocean)"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 272
+  - title: "Lift Off (feat. Beyoncé)"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 266
+  - title: "Niggas in Paris"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 219
+  - title: "Otis"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 178
+  - title: "Gotta Have It"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 141
+  - title: "New Day"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 273
+  - title: "That's My Bitch"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 203
+  - title: "Welcome to the Jungle"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 174
+  - title: "Who Gon Stop Me"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 257
+  - title: "Murder to Excellence"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 301
+  - title: "Made in America (feat. Frank Ocean)"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 292
+  - title: "Why I Love You (feat. Mr Hudson)"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 201
+  - title: "Illest Motherfucker Alive"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 323
+  - title: "H.A.M."
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 276
+  - title: "Primetime"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 199
+  - title: "The Joy (feat. Curtis Mayfield)"
+    artist: "Jay-Z & Kanye West"
+    album: "Watch the Throne (Deluxe)"
+    released: "2011-08-08"
+    seconds: 318
+  - title: "Introducing The Icon"
     artist: "Riff Raff"
     album: "Neon Icon"
     released: "2014-06-24"
-    seconds: 0
+    seconds: 246
+  - title: "Kokayne"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 183
+  - title: "Wetter Than Tsunami (feat. Danny Brown)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 196
+  - title: "Jody 3 Moons (Skit)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 88
+  - title: "Versace Python"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 183
+  - title: "Lava Glaciers (feat. Childish Gambino)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 232
+  - title: "Tip Toe Wing In My Jawwwdinz"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 244
+  - title: "Maybe You Love Me (feat. Mike Posner)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 177
+  - title: "Aquaberry Dolphin (feat. Mac Miller)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 135
+  - title: "The Bloomingdales At Windshire Palace (Skit)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 104
+  - title: "Time"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 219
+  - title: "How To Be The Man"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 173
+  - title: "Cool It Down (feat. Amber Coffman)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 201
+  - title: "VIP Pass To My Heart"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 214
+  - title: "How To Be The Man (Houston Remix) (feat. Slim Thug & Paul Wall)"
+    artist: "Riff Raff"
+    album: "Neon Icon"
+    released: "2014-06-24"
+    seconds: 258
   - title: "Yes Indeed"
     artist: "Lil Baby"
     album: "Harder Than Ever"
