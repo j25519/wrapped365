@@ -140,20 +140,10 @@ tracks:
     album: "FUTURE"
     released: "2017-02-17"
     seconds: 0
-  - title: "THE SUN"
-    artist: "Night Lovell"
-    album: "Goodnight Lovell"
-    released: "2019-02-22"
-    seconds: 0
   - title: "That's It (feat. Future & Metro Boomin)"
     artist: "Yung Lean"
     album: "That's It (feat. Future & Metro Boomin) [from GTAVI: The Album]"
     released: "2026-09-17"
-    seconds: 0
-  - title: "MARY JANE"
-    artist: "Night Lovell"
-    album: "Goodnight Lovell"
-    released: "2019-02-22"
     seconds: 0
   - title: "Who Needs Love"
     artist: "Trippie Redd"
@@ -202,11 +192,76 @@ tracks:
     album: "Birds in the Trap Sing McKnight"
     released: "2016-09-02"
     seconds: 0
+  - title: "Good Morning"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 195
+  - title: "Champion"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 167
   - title: "Stronger"
     artist: "Kanye West"
     album: "Graduation"
     released: "2007-09-11"
-    seconds: 0
+    seconds: 311
+  - title: "I Wonder"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 243
+  - title: "Good Life (feat. T-Pain)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 207
+  - title: "Can't Tell Me Nothing"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 271
+  - title: "Barry Bonds (feat. Lil Wayne)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 204
+  - title: "Drunk and Hot Girls (feat. Mos Def)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 313
+  - title: "Flashing Lights (feat. Dwele)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 237
+  - title: "Everything I Am (feat. DJ Premier)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 227
+  - title: "The Glory"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 212
+  - title: "Homecoming (feat. Chris Martin)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 203
+  - title: "Big Brother"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 287
+  - title: "Good Night (feat. Mos Def & Al Be Back)"
+    artist: "Kanye West"
+    album: "Graduation"
+    released: "2007-09-11"
+    seconds: 185
   - title: "Without Me"
     artist: "Eminem"
     album: "The Eminem Show"
@@ -222,11 +277,91 @@ tracks:
     album: "i am > i was"
     released: "2018-12-21"
     seconds: 0
+  - title: "Intro"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 75
+  - title: "All Girls Are The Same"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 166
   - title: "Lucid Dreams"
     artist: "Juice WRLD"
     album: "Goodbye & Good Riddance"
     released: "2018-05-23"
-    seconds: 0
+    seconds: 240
+  - title: "Wasted (feat. Lil Uzi Vert)"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 258
+  - title: "Armed And Dangerous"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 170
+  - title: "Black & White"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 187
+  - title: "Lean Wit Me"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 176
+  - title: "I'll Be Fine"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 244
+  - title: "Used To"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 176
+  - title: "Candles"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 184
+  - title: "Scared Of Love"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 171
+  - title: "Hurt Me"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 122
+  - title: "I'm Still"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 193
+  - title: "End Of The Road"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 163
+  - title: "Long Gone"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 187
+  - title: "Betrayal (Skit)"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 64
+  - title: "Karma (Skit)"
+    artist: "Juice WRLD"
+    album: "Goodbye & Good Riddance"
+    released: "2018-05-23"
+    seconds: 75
   - title: "Jocelyn Flores"
     artist: "XXXTentacion"
     album: "17"
@@ -284,9 +419,94 @@ tracks:
     seconds: 0
   - title: "Thought It Was a Drought"
     artist: "Future"
-    album: "DS2"
+    album: "DS2 (Deluxe)"
     released: "2015-07-17"
-    seconds: 0
+    seconds: 265
+  - title: "I Serve the Base"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 190
+  - title: "Where Ya At (feat. Drake)"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 208
+  - title: "Groupies"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 187
+  - title: "Lil One"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 207
+  - title: "Stick Talk"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 171
+  - title: "Freak Hoe"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 174
+  - title: "Rotation"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 167
+  - title: "Slave Master"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 199
+  - title: "Blow a Bag"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 194
+  - title: "Colossal"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 183
+  - title: "Rich $ex"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 240
+  - title: "Blood On the Money"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 282
+  - title: "Trap Niggas"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 183
+  - title: "The Percocet & Stripper Joint"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 148
+  - title: "Real Sisters"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 173
+  - title: "Kno The Meaning"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 225
+  - title: "Fuck Up Some Commas"
+    artist: "Future"
+    album: "DS2 (Deluxe)"
+    released: "2015-07-17"
+    seconds: 237
   - title: "Lone Wolf Hysteria"
     artist: "$uicideboy$"
     album: "New World Depression"
@@ -377,46 +597,96 @@ tracks:
     album: "I HOPE YOU'RE HAPPY"
     released: "2023-12-08"
     seconds: 0
+  - title: "MARY JANE"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 215
   - title: "BAD KID"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
+    seconds: 142
   - title: "LET ME DIE"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
-  - title: "MENTAL SLAVERY"
+    seconds: 145
+  - title: "MENTAL SLAVERY (feat. Lil West)"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
+    seconds: 173
   - title: "WHERE'S MY MONEY"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
+    seconds: 177
   - title: "PAIN"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
+    seconds: 152
   - title: "BUMBLE BEE"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
+    seconds: 155
   - title: "WATCH ME"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
-  - title: "JOAN OF ARC"
+    seconds: 142
+  - title: "UNKNOWN LOCATION INTERLUDE"
     artist: "Night Lovell"
     album: "Goodnight Lovell"
     released: "2019-02-22"
-    seconds: 0
+    seconds: 96
+  - title: "JOAN OF ARC (feat. $uicideboy$)"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 145
+  - title: "PLEASE DON'T GO"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 125
+  - title: "MURDER RATE"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 141
+  - title: "PINK WITCH / LESSON"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 199
+  - title: "I LIKE BLOOD (feat. wifisfuneral)"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 137
+  - title: "CAN'T LOSE YOU"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 158
+  - title: "SINISTER"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 148
+  - title: "INSIDE (feat. Lil Gnar)"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 115
+  - title: "THE SUN"
+    artist: "Night Lovell"
+    album: "Goodnight Lovell"
+    released: "2019-02-22"
+    seconds: 162
   - title: "Young Metro"
     artist: "Future"
     album: "WE DON'T TRUST YOU"
@@ -657,11 +927,81 @@ tracks:
     album: "R&G (Rhythm & Gangsta): The Masterpiece"
     released: "2004-11-16"
     seconds: 0
-  - title: "Collard Greens"
+  - title: "Gangsta"
     artist: "ScHoolboy Q"
-    album: "Oxymoron"
+    album: "Oxymoron (Deluxe)"
     released: "2014-02-25"
-    seconds: 0
+    seconds: 231
+  - title: "Los Awesome (feat. Jay Rock)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 252
+  - title: "Collard Greens (feat. Kendrick Lamar)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 299
+  - title: "What They Want (feat. 2 Chainz)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 267
+  - title: "Hoover Street"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 396
+  - title: "Studio (feat. BJ the Chicago Kid)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 278
+  - title: "Prescription/Oxymoron"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 429
+  - title: "The Purge (feat. Tyler, The Creator & Kurupt)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 294
+  - title: "Blind Threats (feat. Raekwon)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 269
+  - title: "Hell Of A Night"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 272
+  - title: "Break The Bank"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 354
+  - title: "Man Of The Year"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 216
+  - title: "His & Her Fiend (feat. SZA)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 175
+  - title: "Grooveline Pt. 2 (feat. Suga Free)"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 258
+  - title: "Fuck LA"
+    artist: "ScHoolboy Q"
+    album: "Oxymoron (Deluxe)"
+    released: "2014-02-25"
+    seconds: 200
   - title: "Hot (feat. Gunna)"
     artist: "Young Thug"
     album: "So Much Fun"
@@ -1297,3 +1637,378 @@ tracks:
     album: "Warlord (Deluxe)"
     released: "2016-02-25"
     seconds: 291
+  - title: "Dark Fantasy"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 280
+  - title: "Gorgeous (feat. Kid Cudi & Raekwon)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 357
+  - title: "POWER"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 292
+  - title: "All Of The Lights (Interlude)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 62
+  - title: "All Of The Lights"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 299
+  - title: "Monster (feat. Jay-Z, Rick Ross, Nicki Minaj & Bon Iver)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 378
+  - title: "So Appalled (feat. Jay-Z, Pusha T, CyHi, Swizz Beatz & RZA)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 397
+  - title: "Devil In A New Dress (feat. Rick Ross)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 351
+  - title: "Runaway (feat. Pusha T)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 547
+  - title: "Hell Of A Life"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 327
+  - title: "Blame Game (feat. John Legend)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 469
+  - title: "Lost In The World (feat. Bon Iver)"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 256
+  - title: "Who Will Survive In America"
+    artist: "Kanye West"
+    album: "My Beautiful Dark Twisted Fantasy"
+    released: "2010-11-22"
+    seconds: 98
+  - title: "HYAENA"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 222
+  - title: "THANK GOD"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 184
+  - title: "MODERN JAM (feat. Teezo Touchdown)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 255
+  - title: "MY EYES"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 251
+  - title: "GOD'S COUNTRY"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 127
+  - title: "SIRENS"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 204
+  - title: "MELTDOWN (feat. Drake)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 246
+  - title: "FE!N (feat. Playboi Carti)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 191
+  - title: "DELRESTO (ECHOES) (feat. Beyoncé)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 274
+  - title: "I KNOW ?"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 211
+  - title: "TOPIA TWINS (feat. Rob49 & 21 Savage)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 223
+  - title: "CIRCUS MAXIMUS (feat. The Weeknd & Swae Lee)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 258
+  - title: "PARASAIL (feat. Yung Lean & Dave Chappelle)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 154
+  - title: "SKITZO (feat. Young Thug)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 366
+  - title: "LOST FOREVER (feat. Westside Gunn)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 163
+  - title: "LOOOVE (feat. Kid Cudi)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 226
+  - title: "K-POP (feat. Bad Bunny & The Weeknd)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 185
+  - title: "TELEKINESIS (feat. SZA & Future)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 353
+  - title: "TIL FURTHER NOTICE (feat. James Blake & 21 Savage)"
+    artist: "Travis Scott"
+    album: "UTOPIA"
+    released: "2023-07-28"
+    seconds: 314
+  - title: "I Thought About Killing You"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 274
+  - title: "Yikes"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 188
+  - title: "All Mine"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 145
+  - title: "Wouldn't Leave (feat. PARTYNEXTDOOR)"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 205
+  - title: "No Mistakes"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 123
+  - title: "Ghost Town (feat. PARTYNEXTDOOR)"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 271
+  - title: "Violent Crimes"
+    artist: "Kanye West"
+    album: "ye"
+    released: "2018-06-01"
+    seconds: 215
+  - title: "FRANCHISE (feat. Young Thug & M.I.A.)"
+    artist: "Travis Scott"
+    album: "FRANCHISE"
+    released: "2020-09-25"
+    seconds: 203
+  - title: "FRANCHISE (feat. Future, Young Thug & M.I.A.) - REMIX"
+    artist: "Travis Scott"
+    album: "FRANCHISE (REMIX)"
+    released: "2020-10-07"
+    seconds: 207
+  - title: "Jet Lag (feat. Young Scooter)"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 271
+  - title: "Astronauts"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 170
+  - title: "Fine China"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 142
+  - title: "Red Bentley (feat. Young Thug)"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 208
+  - title: "Make It Back"
+    artist: "Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 103
+  - title: "Oxy (feat. Lil Wayne)"
+    artist: "Future"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 180
+  - title: "7 AM Freestyle"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 193
+  - title: "Different (feat. Yung Bans)"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 151
+  - title: "Shorty"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 121
+  - title: "Realer N Realer"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 171
+  - title: "No Issue"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 185
+  - title: "WRLD On Drugs"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 217
+  - title: "Afterlife"
+    artist: "Future"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 214
+  - title: "Ain't Livin Right (feat. Gunna)"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 231
+  - title: "Transformer (feat. Nicki Minaj)"
+    artist: "Future"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 196
+  - title: "Hard Work Pays Off"
+    artist: "Future & Juice WRLD"
+    album: "Future & Juice WRLD Present… WRLD ON DRUGS"
+    released: "2018-10-19"
+    seconds: 225
+  - title: "Starboy (feat. Daft Punk)"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 230
+  - title: "Party Monster"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 249
+  - title: "False Alarm"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 220
+  - title: "Reminder"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 218
+  - title: "Rockin’"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 232
+  - title: "Secrets"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 265
+  - title: "True Colors"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 206
+  - title: "Stargirl Interlude (feat. Lana Del Rey)"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 111
+  - title: "Sidewalks (feat. Kendrick Lamar)"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 231
+  - title: "Six Feet Under"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 237
+  - title: "Love To Lay"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 223
+  - title: "A Lonely Night"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 220
+  - title: "Attention"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 197
+  - title: "Ordinary Life"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 221
+  - title: "Nothing Without You"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 198
+  - title: "All I Know (feat. Future)"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 321
+  - title: "Die For You"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 260
+  - title: "I Feel It Coming (feat. Daft Punk)"
+    artist: "The Weeknd"
+    album: "Starboy"
+    released: "2016-11-25"
+    seconds: 269
