@@ -286,17 +286,505 @@ tracks:
     artist: "Lil Peep"
     album: "Come Over When You're Sober, Pt. 1"
     released: "2017-08-15"
-    seconds: 0
+    seconds: 159
+  - title: "Save That Shit"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 1"
+    released: "2017-08-15"
+    seconds: 231
+  - title: "Awful Things (feat. Lil Tracy)"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 1"
+    released: "2017-08-15"
+    seconds: 214
+  - title: "U Said"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 1"
+    released: "2017-08-15"
+    seconds: 224
+  - title: "Better Off (Dying)"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 1"
+    released: "2017-08-15"
+    seconds: 154
+  - title: "The Brightside"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 1"
+    released: "2017-08-15"
+    seconds: 216
+  - title: "Problems"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 1"
+    released: "2017-08-15"
+    seconds: 209
+
+  - title: "Broken Smile (My All)"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 281
+  - title: "Runaway"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 193
+  - title: "Sex with My Ex"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 214
+  - title: "Cry Alone"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 167
+  - title: "Leanin'"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 207
+  - title: "16 Lines"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 245
+  - title: "Life is Beautiful"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 208
+  - title: "Hate Me"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 181
+  - title: "IDGAF"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 214
+  - title: "White Girl"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 201
+  - title: "Fingers"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 183
+  - title: "Falling Down (feat. XXXTENTACION)"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 196
+    credits: ["XXXTENTACION"]
+  - title: "Sunlight On Your Skin (feat. iLoveMakonnen)"
+    artist: "Lil Peep"
+    album: "Come Over When You're Sober, Pt. 2"
+    released: "2018-11-09"
+    seconds: 200
+    credits: ["iLoveMakonnen"]
   - title: "HOT ONE (with TiaCorine & A$AP Ferg)"
     artist: "Denzel Curry"
     album: "KING OF THE MISCHIEVOUS SOUTH"
     released: "2024-07-19"
     seconds: 0
+  - title: "Dr. West (Skit)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 89
+  - title: "3 a.m."
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 320
+  - title: "My Mom"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 320
+  - title: "Insane"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 181
+  - title: "Bagpipes From Baghdad"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 283
+  - title: "Hello"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 248
+  - title: "Tonya (Skit)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 42
+  - title: "Same Song & Dance"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 247
+  - title: "We Made You"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 270
+  - title: "Medicine Ball"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 237
+  - title: "Paul (Skit)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 19
+  - title: "Stay Wide Awake"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 320
+  - title: "Old Time's Sake (feat. Dr. Dre)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 278
+  - title: "Must Be The Ganja"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 243
+  - title: "Mr. Mathers (Skit)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 42
+  - title: "Deja Vu"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 284
+  - title: "Beautiful"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 393
+  - title: "Crack A Bottle (feat. Dr. Dre & 50 Cent)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 298
+  - title: "Steve Berman (Skit)"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 89
+  - title: "Underground"
+    artist: "Eminem"
+    album: "Relapse"
+    released: "2009-05-15"
+    seconds: 371
+  - title: "Cold Wind Blows"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 304
+  - title: "Talkin’ 2 Myself (feat. Kobe)"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 300
+  - title: "On Fire"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 213
+  - title: "Won't Back Down (feat. P!nk)"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 266
+  - title: "W.T.P."
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 238
+  - title: "Going Through Changes"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 299
+  - title: "Not Afraid"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 248
+  - title: "Seduction"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 275
+  - title: "No Love (feat. Lil Wayne)"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 300
+  - title: "Space Bound"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 279
+  - title: "Cinderella Man"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 279
+  - title: "25 To Life"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 242
+  - title: "So Bad"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 325
+  - title: "Almost Famous"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 292
+  - title: "Love The Way You Lie (feat. Rihanna)"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 263
+  - title: "You’re Never Over"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 306
+  - title: "Untitled"
+    artist: "Eminem"
+    album: "Recovery"
+    released: "2010-06-18"
+    seconds: 194
+  - title: "Curtains Up"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 47
+  - title: "Evil Deeds"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 260
+  - title: "Never Enough (feat. 50 Cent & Nate Dogg)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 160
+  - title: "Yellow Brick Road"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 346
+  - title: "Like Toy Soldiers"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 297
+  - title: "Mosh"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 318
+  - title: "Puke"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 248
+  - title: "My 1st Single"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 303
+  - title: "Paul (Skit)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 32
+  - title: "Rain Man"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 314
+  - title: "Big Weenie"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 267
+  - title: "Em Calls Paul (Skit)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 72
+  - title: "Just Lose It"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 249
+  - title: "Ass Like That"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 266
+  - title: "Spend Some Time (feat. Obie Trice, Stat Quo & 50 Cent)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 311
+  - title: "Mockingbird"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 251
+  - title: "Crazy In Love"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 242
+  - title: "One Shot 2 Shot (feat. D12)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 267
+  - title: "Final Thought (Skit)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 30
+  - title: "Encore/Curtains Down (feat. Dr. Dre & 50 Cent)"
+    artist: "Eminem"
+    album: "Encore"
+    released: "2004-11-12"
+    seconds: 348
+  - title: "hell is where i dreamt of u and woke up alone"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 168
+  - title: "moodz (feat. 24hrs)"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 221
+  - title: "i miss the old u"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 211
   - title: "do re mi"
     artist: "blackbear"
     album: "digital druglord"
     released: "2017-04-21"
-    seconds: 0
+    seconds: 212
+  - title: "wish u the best (feat. Stalking Gia)"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 154
+  - title: "juicy sweatsuits (feat. Juicy J)"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 184
+  - title: "double"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 180
+  - title: "if i could i would feel nothing"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 185
+  - title: "chateau"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 213
+  - title: "make daddy proud"
+    artist: "blackbear"
+    album: "digital druglord"
+    released: "2017-04-21"
+    seconds: 208
+  - title: "Umbrella (feat. Jay-Z)"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 276
+  - title: "Push Up on Me"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 195
+  - title: "Don't Stop the Music"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 267
+  - title: "Breakin' Dishes"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 201
+  - title: "Shut Up and Drive"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 213
+  - title: "Hate That I Love You (feat. Ne-Yo)"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 219
+  - title: "Say It"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 251
+  - title: "Sell Me Candy"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 165
+  - title: "Lemme Get That"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 221
+  - title: "Rehab"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 295
+  - title: "Question Existing"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 248
+  - title: "Good Girl Gone Bad"
+    artist: "Rihanna"
+    album: "Good Girl Gone Bad"
+    released: "2007-06-05"
+    seconds: 215
   - title: "Ric Flair Drip (with Metro Boomin)"
     artist: "Offset"
     album: "Without Warning"
@@ -647,11 +1135,271 @@ tracks:
     album: "DAMN."
     released: "2017-04-14"
     seconds: 248
+  - title: "wacced out murals"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 317
+  - title: "squabble up"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 157
+  - title: "luther (feat. SZA)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 177
+  - title: "man at the garden"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 233
+  - title: "hey now (feat. Dody6)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 217
+  - title: "reincarnated"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 275
+  - title: "tv off (feat. Lefty Gunplay)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 220
+  - title: "dodger blue (feat. Wallie the Sensei, Siete7x & Roddy Ricch)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 131
+  - title: "peekaboo (feat. AZ Chike)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 155
+  - title: "heart pt. 6"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 292
+  - title: "gnx (feat. Hitta J3, YoungThreat & Peysoh)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 193
+  - title: "gloria (feat. SZA)"
+    artist: "Kendrick Lamar"
+    album: "GNX"
+    released: "2024-11-22"
+    seconds: 287
+  - title: "Intro"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 135
+  - title: "The Box"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 196
+  - title: "Start Wit Me (feat. Gunna)"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 158
+  - title: "Perfect Time"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 142
+  - title: "Moonwalkin (feat. Lil Durk)"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 167
+  - title: "Big Stepper"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 175
+  - title: "God's Eyes"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 135
+  - title: "Peta (feat. Meek Mill)"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 198
+  - title: "Boom Boom Room"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 167
+  - title: "Elyse's Skit"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 23
+  - title: "High Fashion (feat. Mustard)"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 220
+  - title: "Bacc Seat (feat. Ty Dolla $ign)"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 172
+  - title: "Roll Dice"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 170
+  - title: "Prayers to the Trap God"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 160
+  - title: "Tip Toe (feat. A Boogie Wit da Hoodie)"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 185
+  - title: "War Baby"
+    artist: "Roddy Ricch"
+    album: "Please Excuse Me For Being Antisocial"
+    released: "2019-12-06"
+    seconds: 195
   - title: "a lot (feat. J. Cole)"
     artist: "21 Savage"
     album: "i am > i was"
     released: "2018-12-21"
-    seconds: 0
+    seconds: 288
+  - title: "break da law"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 177
+  - title: "a&t (feat. City Girls)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 211
+  - title: "out for the night"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 137
+  - title: "gun smoke"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 167
+  - title: "1.5 (feat. Offset)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 148
+  - title: "all my friends (feat. Post Malone)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 211
+  - title: "can't leave without it (feat. Lil Baby & Gunna)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 205
+  - title: "asmr"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 171
+  - title: "ball w/o you"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 195
+  - title: "good day (feat. ScHoolboy Q & Project Pat)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 242
+  - title: "pad lock"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 191
+  - title: "monster (feat. Childish Gambino)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 233
+  - title: "letter 2 my momma"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 194
+  - title: "4L (feat. Young Nudy)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 288
+  - title: "out for the night - part 2 (feat. Travis Scott)"
+    artist: "21 Savage"
+    album: "i am > i was"
+    released: "2018-12-21"
+    seconds: 235
+  - title: "No Advance"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 276
+  - title: "No Heart"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 235
+  - title: "X (feat. Future)"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 258
+  - title: "Savage Mode"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 249
+  - title: "Bad Guy"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 169
+  - title: "Real Nigga"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 185
+  - title: "Mad High"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 180
+  - title: "Feel It"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 163
+  - title: "Ocean Drive"
+    artist: "21 Savage"
+    album: "Savage Mode"
+    released: "2016-07-15"
+    seconds: 227
   - title: "Intro"
     artist: "Juice WRLD"
     album: "Goodbye & Good Riddance"
@@ -1227,6 +1975,56 @@ tracks:
     album: "HELLBOY"
     released: "2016-09-25"
     seconds: 0
+  - title: "crybaby"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 247
+  - title: "lil jeep"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 203
+  - title: "yesterday"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 112
+  - title: "absolute in doubt (feat. Wicca Phase Springs Eternal)"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 227
+  - title: "ghost girl"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 173
+  - title: "big city blues (feat. Cold Hart)"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 155
+  - title: "skyscrapers (love now, cry later)"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 121
+  - title: "nineteen"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 177
+  - title: "white tee (feat. Lil Tracy)"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 132
+  - title: "driveway"
+    artist: "Lil Peep"
+    album: "crybaby"
+    released: "2016-06-10"
+    seconds: 159
   - title: "the ends"
     artist: "Travis Scott"
     album: "Birds in the Trap Sing McKnight"
@@ -1762,6 +2560,116 @@ tracks:
     album: "Atrocity Exhibition"
     released: "2016-09-27"
     seconds: 229
+  - title: "XXX"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 110
+  - title: "Die Like A Rockstar"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 145
+  - title: "Pac Blood"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 152
+  - title: "Radio Song"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 141
+  - title: "Lie4"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 191
+  - title: "I Will"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 195
+  - title: "Bruiser Brigade (feat. Dopehead)"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 224
+  - title: "Detroit187 (feat. Chip$)"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 185
+  - title: "Monopoly"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 164
+  - title: "Blunt After Blunt"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 205
+  - title: "Outer Space"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 164
+  - title: "Adderall Admiral"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 103
+  - title: "DNA"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 176
+  - title: "Nosebleeds"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 96
+  - title: "Party All the Time"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 208
+  - title: "EWNESW"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 143
+  - title: "Fields"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 153
+  - title: "Scrap Or Die"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 236
+  - title: "30"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 198
+  - title: "Baseline"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 159
+  - title: "Witit"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 163
+  - title: "Shouldn't Of"
+    artist: "Danny Brown"
+    album: "XXX"
+    released: "2011-08-15"
+    seconds: 148
   - title: "No Idea"
     artist: "Don Toliver"
     album: "Heaven or Hell"
@@ -2382,6 +3290,111 @@ tracks:
     album: "Warlord (Deluxe)"
     released: "2016-02-25"
     seconds: 291
+  - title: "Back at It"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 116
+  - title: "Hop Out (feat. Luckaleannn)"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 165
+  - title: "Hennessy & Sailor Moon (feat. Bladee)"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 254
+  - title: "Cashin (feat. Adamn Killa)"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 226
+  - title: "Crystal City (feat. A$AP Ferg)"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 245
+  - title: "Kirby"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 143
+  - title: "Head 2 Toe (feat. Bladee)"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 197
+  - title: "Get It Back"
+    artist: "Yung Lean"
+    album: "Frost God"
+    released: "2016-12-14"
+    seconds: 150
+  - title: "Blommor (Intro)"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 93
+  - title: "Blinded"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 254
+  - title: "Sunrise Angel"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 179
+  - title: "Yoshi City"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 225
+  - title: "Ice Cold Smoke"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 101
+  - title: "Dog Walk (Intermission)"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 66
+  - title: "Don't Go"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 236
+  - title: "Ghosttown (feat. Travis Scott)"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 309
+  - title: "Monster"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 255
+  - title: "Volt"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 193
+  - title: "Leanworld"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 239
+  - title: "Sandman"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 178
+  - title: "Helt Ensam (Outro)"
+    artist: "Yung Lean"
+    album: "Unknown Memory"
+    released: "2014-09-23"
+    seconds: 185
   - title: "Dark Fantasy"
     artist: "Kanye West"
     album: "My Beautiful Dark Twisted Fantasy"
@@ -2757,3 +3770,668 @@ tracks:
     album: "Starboy"
     released: "2016-11-25"
     seconds: 269
+  - title: "712PM"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 173
+  - title: "I'M DAT N****"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 272
+  - title: "KEEP IT BURNIN (feat. Kanye West)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 207
+  - title: "FOR A NUT (feat. Gunna & Young Thug)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 208
+  - title: "PUFFIN ON ZOOTIEZ"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 173
+  - title: "GOLD STACKS"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 162
+  - title: "WAIT FOR U (feat. Drake & Tems)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 190
+  - title: "LOVE YOU BETTER"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 129
+  - title: "MASSAGING ME"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 106
+  - title: "CHICKENS (feat. EST Gee)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 195
+  - title: "WE JUS WANNA GET HIGH"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 133
+  - title: "VOODOO (feat. Kodak Black)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 211
+  - title: "HOLY GHOST"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 170
+  - title: "THE WAY THINGS GOING"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 179
+  - title: "I'M ON ONE (feat. Drake)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 236
+  - title: "BACK TO THE BASICS"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 177
+  - title: "NO SECURITY (feat. Babyface Ray)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 161
+  - title: "LIKE ME (feat. 42 Dugg & Lil Baby)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 133
+  - title: "AFFILIATED (feat. Lil Durk)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 183
+  - title: "STAYED DOWN (feat. Young Scooter)"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 172
+  - title: "WORST DAY"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 187
+  - title: "JUST THE BEGINNING"
+    artist: "Future"
+    album: "I NEVER LIKED YOU (Extended)"
+    released: "2022-04-29"
+    seconds: 173
+  - title: "HIGHEST IN THE ROOM"
+    artist: "Travis Scott"
+    album: "HIGHEST IN THE ROOM"
+    released: "2019-10-04"
+    seconds: 175
+  - title: "HIGHEST IN THE ROOM (feat. ROSALÍA & Lil Baby) - REMIX"
+    artist: "Travis Scott"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 244
+  - title: "JACKBOYS"
+    artist: "JACKBOYS"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 46
+  - title: "GANG GANG"
+    artist: "JACKBOYS"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 244
+  - title: "HAD ENOUGH (feat. Quavo & Offset)"
+    artist: "Don Toliver"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 157
+  - title: "OUT WEST (feat. Young Thug)"
+    artist: "JACKBOYS"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 157
+  - title: "WHAT TO DO? (feat. Don Toliver)"
+    artist: "JACKBOYS"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 250
+  - title: "GATTI"
+    artist: "JACKBOYS"
+    album: "JACKBOYS"
+    released: "2019-12-27"
+    seconds: 181
+  - title: "Can You Feel My Heart"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 227
+  - title: "The House of Wolves"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 205
+  - title: "Empire (Let Them Sing)"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 225
+  - title: "Sleepwalking"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 230
+  - title: "Go to Hell, for Heaven's Sake"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 242
+  - title: "Shadow Moses"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 243
+  - title: "And the Snakes Start to Sing"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 301
+  - title: "Seen It All Before"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 247
+  - title: "Antivist"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 193
+  - title: "Crooked Young"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 214
+  - title: "Hospital for Souls"
+    artist: "Bring Me The Horizon"
+    album: "Sempiternal"
+    released: "2013-04-01"
+    seconds: 404
+  - title: "Born To Die"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 286
+  - title: "Off To The Races"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 299
+  - title: "Blue Jeans"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 209
+  - title: "Video Games"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 281
+  - title: "Diet Mountain Dew"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 222
+  - title: "National Anthem"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 230
+  - title: "Dark Paradise"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 243
+  - title: "Radio"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 214
+  - title: "Carmen"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 248
+  - title: "Million Dollar Man"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 231
+  - title: "Summertime Sadness"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 265
+  - title: "This Is What Makes Us Girls"
+    artist: "Lana Del Rey"
+    album: "Born To Die"
+    released: "2012-01-27"
+    seconds: 240
+  - title: "...Ready For It?"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 208
+  - title: "End Game (feat. Ed Sheeran & Future)"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 244
+  - title: "I Did Something Bad"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 238
+  - title: "Don't Blame Me"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 236
+  - title: "Delicate"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 232
+  - title: "Look What You Made Me Do"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 211
+  - title: "So It Goes..."
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 227
+  - title: "Gorgeous"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 209
+  - title: "Getaway Car"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 233
+  - title: "King Of My Heart"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 214
+  - title: "Dancing With Our Hands Tied"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 211
+  - title: "Dress"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 230
+  - title: "This Is Why We Can't Have Nice Things"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 207
+  - title: "Call It What You Want"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 203
+  - title: "New Year's Day"
+    artist: "Taylor Swift"
+    album: "reputation"
+    released: "2017-11-10"
+    seconds: 235
+  - title: "Beautiful People (feat. Khalid)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 197
+  - title: "South of the Border (feat. Camila Cabello & Cardi B)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 204
+  - title: "Cross Me (feat. Chance the Rapper & PnB Rock)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 206
+  - title: "Take Me Back to London (feat. Stormzy)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 189
+  - title: "Best Part of Me (feat. YEBBA)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 243
+  - title: "I Don't Care (feat. Justin Bieber)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 219
+  - title: "Antisocial (feat. Travis Scott)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 161
+  - title: "Remember The Name (feat. Eminem & 50 Cent)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 207
+  - title: "Feels (feat. Young Thug & J Hus)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 150
+  - title: "Put It All on Me (feat. Ella Mai)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 197
+  - title: "Nothing On You (feat. Paulo Londra & Dave)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 200
+  - title: "I Don't Want Your Money (feat. H.E.R.)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 204
+  - title: "1000 Nights (feat. Meek Mill & A Boogie Wit da Hoodie)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 212
+  - title: "Way To Break My Heart (feat. Skrillex)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 190
+  - title: "BLOW (feat. Chris Stapleton & Bruno Mars)"
+    artist: "Ed Sheeran"
+    album: "No.6 Collaborations Project"
+    released: "2019-07-12"
+    seconds: 209
+  - title: "The A Team"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 258
+  - title: "Drunk"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 200
+  - title: "U.N.I."
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 228
+  - title: "Grade 8"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 179
+  - title: "Wake Me Up"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 229
+  - title: "Small Bump"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 259
+  - title: "This"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 195
+  - title: "The City"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 234
+  - title: "Lego House"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 185
+  - title: "You Need Me, I Don't Need You"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 220
+  - title: "Kiss Me"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 280
+  - title: "Give Me Love"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 526
+  - title: "Autumn Leaves"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 200
+  - title: "Little Bird"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 224
+  - title: "Gold Rush"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 243
+  - title: "Sunburn"
+    artist: "Ed Sheeran"
+    album: "+"
+    released: "2011-09-09"
+    seconds: 275
+  - title: "Another Public Service Announcement - Intro"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 48
+  - title: "Shit Can Happen"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 291
+  - title: "Pistol Pistol"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 322
+  - title: "Bizzare - Skit"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 71
+  - title: "Nasty Mind (feat. Truth Hurts)"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 283
+  - title: "It Ain't Nothin' But Music"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 311
+  - title: "American Psycho"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 276
+  - title: "That's How - Skit"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 37
+  - title: "That's How People"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 288
+  - title: "Purple Pills"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 304
+  - title: "Fight Music"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 261
+  - title: "Instigator"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 296
+  - title: "Pimp Like Me"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 356
+  - title: "Blow My Buzz"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 309
+  - title: "Obie Trice"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 66
+  - title: "Devils Night"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 259
+  - title: "Steve Berman - Skit"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 49
+  - title: "Revelation"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 348
+  - title: "Girls"
+    artist: "D12"
+    album: "Devils Night"
+    released: "2001-06-19"
+    seconds: 334
+  - title: "It Was Written"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 252
+  - title: "Type of Time"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 356
+  - title: "Again"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 208
+  - title: "Can't Ignore (feat. 2 Chainz)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 240
+  - title: "From the Heart (feat. Sevyn Streeter)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 251
+  - title: "30 Niggaz"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 284
+  - title: "Keisha"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 263
+  - title: "Eyes on Me (feat. Fabolous)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 383
+  - title: "S.D.E. (feat. Cam'ron)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 220
+  - title: "Don Pablo"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 142
+  - title: "The Only Thing"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 223
+  - title: "The Real Is Back (feat. Beanie Sigel)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 264
+  - title: "Slow Down (feat. Jazzy Amra)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 248
+  - title: "Don't Shoot"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 240
+  - title: "Bad Boy on Death Row (feat. The Game)"
+    artist: "Dave East"
+    album: "Kairi Chanel"
+    released: "2016-09-30"
+    seconds: 266
