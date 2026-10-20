@@ -66,7 +66,7 @@ tracks:
     artist: "CORPSE"
     album: "fuK u lol"
     released: "2020-07-01"
-    seconds: 0
+    seconds: 60
   - title: "LIFE SUCKS SO WE FUCK (feat. ZillaKami)"
     artist: "Night Lovell"
     album: "I HOPE YOU'RE HAPPY"
@@ -115,11 +115,126 @@ tracks:
     album: "Eternal Grey"
     released: "2016-09-09"
     seconds: 128
+  - title: "Rockstar Made"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 193
+  - title: "Go2DaMoon (feat. Kanye West)"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 119
+  - title: "Stop Breathing"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 218
+  - title: "Beno!"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 153
+  - title: "JumpOutTheHouse"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 93
+  - title: "M3tamorphosis (feat. Kid Cudi)"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 312
+  - title: "Slay3r"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 164
+  - title: "No Sl33p"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 88
+  - title: "New Tank"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 89
+  - title: "Teen X (feat. Future)"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 205
+  - title: "Meh"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 118
+  - title: "Vamp Anthem"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 124
+  - title: "New N3on"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 116
+  - title: "Control"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 197
+  - title: "Punk Monk"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 229
+  - title: "On That Time"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 102
+  - title: "King Vamp"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 186
+  - title: "Place"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 117
   - title: "Sky"
     artist: "Playboi Carti"
     album: "Whole Lotta Red"
     released: "2020-12-25"
-    seconds: 0
+    seconds: 193
+  - title: "Over"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 166
+  - title: "ILoveUIHateU"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 135
+  - title: "Die4Guy"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 131
+  - title: "Not PLaying"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 130
+  - title: "F33l Lik3 Dyin"
+    artist: "Playboi Carti"
+    album: "Whole Lotta Red"
+    released: "2020-12-25"
+    seconds: 204
   - title: "i like the way you kiss me"
     artist: "Artemas"
     album: "dirty little secret"
@@ -1007,16 +1122,166 @@ tracks:
     album: "So Much Fun"
     released: "2019-08-16"
     seconds: 0
+  - title: "Yuck! (feat. Lil Wayne)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 287
+  - title: "Crack"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 241
+  - title: "Dope Peddler"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 208
+  - title: "No Lie (feat. Drake)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 237
+  - title: "Birthday Song (feat. Kanye West)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 306
   - title: "I'm Different"
     artist: "2 Chainz"
-    album: "Based on a T.R.U. Story"
+    album: "Based On A T.R.U. Story (Deluxe)"
     released: "2012-08-14"
-    seconds: 0
+    seconds: 207
+  - title: "Extremely Blessed (feat. The-Dream)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 245
+  - title: "I Luv Dem Strippers (feat. Nicki Minaj)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 239
+  - title: "Stop Me Now (feat. Dolla Boy)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 277
+  - title: "Money Machine"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 283
+  - title: "In Town (feat. Mike Posner)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 206
+  - title: "Ghetto Dreams (feat. John Legend & Scarface)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 223
+  - title: "Wut We Doin? (feat. Cap-1)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 266
+  - title: "Countdown (feat. Chris Brown)"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 231
+  - title: "Like Me"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 229
+  - title: "I Feel Good"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 141
+  - title: "Riot"
+    artist: "2 Chainz"
+    album: "Based On A T.R.U. Story (Deluxe)"
+    released: "2012-08-14"
+    seconds: 167
+  - title: "Downward Spiral"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 172
+  - title: "Tell Me What I Don't Know"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 151
+  - title: "Rolling Stone (feat. Petite Noir)"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 227
+  - title: "Really Doe (feat. Kendrick Lamar, Ab-Soul & Earl Sweatshirt)"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 319
+  - title: "Lost"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 127
   - title: "Ain't It Funny"
     artist: "Danny Brown"
     album: "Atrocity Exhibition"
     released: "2016-09-27"
-    seconds: 0
+    seconds: 177
+  - title: "Golddust"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 144
+  - title: "White Lines"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 143
+  - title: "Pneumonia"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 219
+  - title: "Dance In The Water"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 157
+  - title: "From The Ground (feat. Kelela)"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 138
+  - title: "When It Rain"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 200
+  - title: "Today"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 187
+  - title: "Get Hi (feat. B-Real)"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 213
+  - title: "Hell For It"
+    artist: "Danny Brown"
+    album: "Atrocity Exhibition"
+    released: "2016-09-27"
+    seconds: 229
   - title: "No Idea"
     artist: "Don Toliver"
     album: "Heaven or Hell"
