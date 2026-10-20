@@ -72,12 +72,6 @@ tracks:
     album: "I HOPE YOU'RE HAPPY"
     released: "2023-12-08"
     seconds: 0
-  - title: "Cinderella"
-    artist: "Future"
-    album: "WE DON'T TRUST YOU"
-    released: "2024-03-22"
-    seconds: 0
-    credits: ["Metro Boomin", "Travis Scott"]
   - title: "HOT DEMON B!TCHES NEAR U ! ! !"
     artist: "CORPSE"
     album: "HOT DEMON B!TCHES NEAR U ! ! !"
@@ -270,18 +264,6 @@ tracks:
     album: "Jamie's Sin"
     released: "2025-01-01"
     seconds: 0
-  - title: "Type Shit"
-    artist: "Future"
-    album: "WE DON'T TRUST YOU"
-    released: "2024-03-22"
-    seconds: 0
-    credits: ["Metro Boomin", "Travis Scott", "Playboi Carti"]
-  - title: "We Don't Trust You"
-    artist: "Future"
-    album: "WE DON'T TRUST YOU"
-    released: "2024-03-22"
-    seconds: 0
-    credits: ["Metro Boomin"]
   - title: "Benz Truck (гелик)"
     artist: "Lil Peep"
     album: "Come Over When You're Sober, Pt. 1"
@@ -1500,11 +1482,6 @@ tracks:
     album: "TESTING"
     released: "2018-05-25"
     seconds: 0
-  - title: "A Milli"
-    artist: "Lil Wayne"
-    album: "Tha Carter III"
-    released: "2008-06-10"
-    seconds: 0
   - title: "BAND4BAND (feat. Lil Baby)"
     artist: "Central Cee"
     album: "CAN'T RUSH GREATNESS"
@@ -1810,11 +1787,99 @@ tracks:
     album: "Goodnight Lovell"
     released: "2019-02-22"
     seconds: 162
+  - title: "Trying to Float"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 135
+  - title: "Smoke Screen"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 129
+  - title: "Bandage"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 122
+  - title: "I Know Your Ways"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 192
+  - title: "You Motherfucker"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 143
+  - title: "Call Me Water"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 166
+  - title: "Sadly I Cannot Control"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 177
+  - title: "Ten Wishes"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 166
+  - title: "Bottom Top"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 120
+  - title: "Puppet"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 157
+  - title: "On the Hill"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 124
+  - title: "Crawl"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 123
+  - title: "Counting Down the List"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 149
+  - title: "Alone"
+    artist: "Night Lovell"
+    album: "Just Say You Don't Care"
+    released: "2021-05-07"
+    seconds: 130
+  - title: "Type Shit"
+    artist: "Future"
+    album: "WE DON'T TRUST YOU"
+    released: "2024-03-22"
+    seconds: 0
+    credits: ["Metro Boomin", "Travis Scott", "Playboi Carti"]
+  - title: "We Don't Trust You"
+    artist: "Future"
+    album: "WE DON'T TRUST YOU"
+    released: "2024-03-22"
+    seconds: 0
+    credits: ["Metro Boomin"]
   - title: "Young Metro"
     artist: "Future"
     album: "WE DON'T TRUST YOU"
     released: "2024-03-22"
     seconds: 0
+  - title: "Cinderella"
+    artist: "Future"
+    album: "WE DON'T TRUST YOU"
+    released: "2024-03-22"
+    seconds: 0
+    credits: ["Metro Boomin", "Travis Scott"]
   - title: "Ice Attack"
     artist: "Future"
     album: "WE DON'T TRUST YOU"
@@ -1925,6 +1990,126 @@ tracks:
     album: "FUTURE"
     released: "2017-02-17"
     seconds: 0
+  - title: "Tic Tac"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 189
+  - title: "My Legacy"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 193
+  - title: "Heart In Pieces"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 196
+  - title: "Because of You"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 216
+  - title: "Bust a Move"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 226
+  - title: "Baby Sasuke"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 210
+  - title: "Stripes Like Burberry"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 274
+  - title: "Marni On Me"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 133
+  - title: "Sleeping On The Floor"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 167
+  - title: "Real Baby Pluto"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 196
+  - title: "Drankin N Smokin"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 213
+  - title: "Million Dollar Play"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 166
+  - title: "Plastic"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 193
+  - title: "That's It"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 228
+  - title: "Bought A Bad Bitch"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 210
+  - title: "Rockstar Chainz"
+    artist: "Future"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 181
+  - title: "Lullaby"
+    artist: "Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 261
+  - title: "She Never Been To Pluto"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 204
+  - title: "Off Dat"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 184
+  - title: "I Don't Wanna Break Up"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 243
+  - title: "Bankroll"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 186
+  - title: "Moment of Clarity"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 222
+  - title: "Patek"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 280
+  - title: "Over Your Head"
+    artist: "Future & Lil Uzi Vert"
+    album: "Pluto x Baby Pluto (Deluxe)"
+    released: "2020-11-13"
+    seconds: 186
   - title: "hellboy"
     artist: "Lil Peep"
     album: "HELLBOY"
@@ -2065,16 +2250,346 @@ tracks:
     album: "HEROES & VILLAINS"
     released: "2022-12-02"
     seconds: 0
-  - title: "Bandz a Make Her Dance"
-    artist: "Juicy J"
-    album: "Stay Trippy"
-    released: "2013-08-27"
-    seconds: 0
-  - title: "Traction Control"
-    artist: "CASISDEAD"
-    album: "Famous Last Words"
-    released: "2023-10-27"
+  - title: "The Top"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 196
+  - title: "Company (feat. Future)"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
     seconds: 213
+  - title: "Love Or Lust"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 176
+  - title: "Outta Pocket"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 146
+  - title: "Coco (feat. DaBaby)"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 142
+  - title: "Butterflies"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 220
+  - title: "Breath Away"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 171
+  - title: "Yellow Lights"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 146
+  - title: "3, 2, 1"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 131
+  - title: "Empty (feat. Swae Lee)"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 163
+  - title: "Cut It Off"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 154
+  - title: "Don't Sleep"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 207
+  - title: "Mood (feat. iann dior)"
+    artist: "24kGoldn"
+    album: "El Dorado"
+    released: "2021-03-26"
+    seconds: 140
+  - title: "Workin'"
+    artist: "24kGoldn"
+    album: "Workin'"
+    released: "2019-09-20"
+    seconds: 132
+  - title: "sorry! (feat. 24kGoldn)"
+    artist: "TOKYO'S REVENGE"
+    album: "sorry! (feat. 24kGoldn)"
+    released: "2020-12-18"
+    seconds: 159
+  - title: "BEST GROUP"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 179
+  - title: "GAH DAMN HIGH (feat. Lex Luger & Wiz Khalifa)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 169
+  - title: "SPEND IT (feat. Lil Baby & 2 Chainz)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 198
+  - title: "PO UP (feat. A$AP Rocky)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 190
+  - title: "KILLA (feat. Conway the Machine)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 172
+  - title: "THAT'S THE WAY IT GOES (feat. Key Glock)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 194
+  - title: "SHOPPING SPREE (feat. Young Dolph)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 197
+  - title: "1995 (feat. Logic)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 169
+  - title: "WHAT I NEED"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 172
+  - title: "SHAWTY BAD (feat. Logic)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 162
+  - title: "LOAD IT UP (feat. NLE Choppa)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 177
+  - title: "SHE GON POP IT (feat. Megan Thee Stallion & Ty Dolla $ign)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 163
+  - title: "MEMPHIS TO LA (feat. Jay Rock & Project Pat)"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 183
+  - title: "DATZ WHAT IT IZ"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 174
+  - title: "IN A MIN"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 200
+  - title: "I CAN'T STOP"
+    artist: "Juicy J"
+    album: "THE HUSTLE CONTINUES"
+    released: "2020-11-27"
+    seconds: 137
+  - title: "Stop It"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 201
+  - title: "Smokin' Rollin' (feat. Pimp C)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 156
+  - title: "No Heart No Love (feat. Project Pat)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 243
+  - title: "So Much Money"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 211
+  - title: "Bounce It (feat. Wale & Trey Songz)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 260
+  - title: "Wax"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 213
+  - title: "Gun Plus A Mask (feat. Yelawolf)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 203
+  - title: "Smoke A Nigga (feat. Wiz Khalifa)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 257
+  - title: "Show Out (feat. Big Sean & Jeezy)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 269
+  - title: "The Woods (feat. Justin Timberlake)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 260
+  - title: "Money A Do It"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 236
+  - title: "Talkin' Bout (feat. Chris Brown & Wiz Khalifa)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 261
+  - title: "All I Blow Is Loud"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 218
+  - title: "Bandz A Make Her Dance (feat. Lil Wayne & 2 Chainz)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 278
+  - title: "Scholarship (feat. A$AP Rocky)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 209
+  - title: "If It Aint"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 223
+  - title: "One Thousand (feat. Wiz Khalifa)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 205
+  - title: "Having Sex (feat. Trina & 2 Chainz)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 224
+  - title: "One of Those Nights (feat. The Weeknd)"
+    artist: "Juicy J"
+    album: "Stay Trippy (Deluxe)"
+    released: "2013-12-06"
+    seconds: 256
+  - title: "Screening Evaluation (Skit)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 169
+  - title: "I Lied (Intro)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 251
+  - title: "Isis (feat. Logic)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 236
+  - title: "The War (feat. Young Thug)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 216
+  - title: "Chris (Skit)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 58
+  - title: "I Love"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 210
+  - title: "Devil's Work"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 285
+  - title: "Lotto"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 230
+  - title: "Kevin (Skit)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 54
+  - title: "Gold Mine"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 190
+  - title: "Finally (feat. Chris Brown)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 215
+  - title: "10 Bands (feat. Timbaland)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 214
+  - title: "Revenge"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 269
+  - title: "Comprehensive Evaluation (Skit)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 125
+  - title: "ADHD"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 205
+  - title: "Still Cant Love (feat. King OSF & Fabolous)"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 236
+  - title: "Will"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 201
+  - title: "Broke and Stupid"
+    artist: "Joyner Lucas"
+    album: "ADHD"
+    released: "2020-03-27"
+    seconds: 238
   - title: "What We Talkin' About (feat. Luke Steele)"
     artist: "Jay-Z"
     album: "The Blueprint 3"
@@ -2875,6 +3390,11 @@ tracks:
     album: "Eternal Grey"
     released: "2016-09-09"
     seconds: 167
+  - title: "Traction Control"
+    artist: "CASISDEAD"
+    album: "Famous Last Words"
+    released: "2023-10-27"
+    seconds: 213
   - title: "Do You Trust Me?"
     artist: "CASISDEAD"
     album: "Famous Last Words"
@@ -4435,3 +4955,1443 @@ tracks:
     album: "Kairi Chanel"
     released: "2016-09-30"
     seconds: 266
+  - title: "E85"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 153
+  - title: "Body"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 155
+  - title: "Rendezvous (feat. Yeat)"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 146
+  - title: "Secondhand (feat. Rema)"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 226
+  - title: "Tiramisu"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 138
+  - title: "ATM"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 180
+  - title: "Long Way To Calabasas"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 99
+  - title: "Rosary (feat. Travis Scott)"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 194
+  - title: "All The Signs (feat. Teezo Touchdown)"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 200
+  - title: "Call Back"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 123
+  - title: "Tuition"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 169
+  - title: "K9 (feat. SahBabii)"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 154
+  - title: "Excavator"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 211
+  - title: "Gemstone"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 121
+  - title: "OPPOSITE"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 157
+  - title: "TMU"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 180
+  - title: "Pleasure's Mine"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 177
+  - title: "Sweet Home"
+    artist: "Don Toliver"
+    album: "OCTANE"
+    released: "2026-01-30"
+    seconds: 200
+  - title: "Neon Hong Kong (feat. Ku$h Drifter & YNG BNZO)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 182
+  - title: "I Want a Ferrari (feat. Wiz Khalifa)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 273
+  - title: "Ain't Giving Up My Truck"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 159
+  - title: "ARCTiC GLOW (feat. Xavier Wulf)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 186
+  - title: "SPIRIT OF THUNDER (feat. Yung Lean, DVRST & Bladee)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 195
+  - title: "Bluejay (feat. Ku$h Drifter)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 271
+  - title: "Shaq Attack"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 115
+  - title: "Intergalactic Icons (feat. Logic & Conway the Machine)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 212
+  - title: "Gucci Sweater"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 195
+  - title: "KONNiCHiWA (feat. E-40)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 173
+  - title: "Sparkling Sportsmanship"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 108
+  - title: "Stars in the Roof of My Car (feat. Mellow Rackz)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 299
+  - title: "houston oilers freestyle (feat. Slim Thug, Killa Kyleon & AD Green)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 647
+  - title: "stacy my dash"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 169
+  - title: "Fendi Floor Mats"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 188
+  - title: "White Spike Lee"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 171
+  - title: "Baby Blue (feat. VØJ & blueberry)"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 208
+  - title: "Husky"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 185
+  - title: "Dreamland"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 164
+  - title: "Strawberry Santa in Shaolin"
+    artist: "Riff Raff"
+    album: "Welcome To Shaolin"
+    released: "2025-01-17"
+    seconds: 183
+  - title: "Haters Broke"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 210
+  - title: "Diamonds (feat. Yung Lean)"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 325
+  - title: "Gtblessgo (feat. Bladee)"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 261
+  - title: "All My Life"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 235
+  - title: "Moon"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 144
+  - title: "N°1"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 203
+  - title: "Shadow Silence"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 184
+  - title: "Yr So Beautiful"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 223
+  - title: "Vän"
+    artist: "Thaiboy Digital"
+    album: "Tiger"
+    released: "2014-11-17"
+    seconds: 160
+  - title: "Benz-Dealer (feat. Quebonafide)"
+    artist: "Tommy Cash"
+    album: "Benz-Dealer"
+    released: "2021-07-13"
+    seconds: 173
+  - title: "Zuccenberg (feat. $uicideboy$ & Diplo)"
+    artist: "Tommy Cash"
+    album: "Zuccenberg"
+    released: "2021-04-02"
+    seconds: 172
+  - title: "TEFLON DON"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 159
+  - title: "LIL DEMON"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 139
+  - title: "SKI"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 147
+  - title: "READY TO COOK UP"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 167
+  - title: "PLUTOSKI"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 179
+  - title: "TOO FAST"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 205
+  - title: "OCEAN"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 203
+  - title: "PRESS THE BUTTON"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 170
+  - title: "MJ"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 114
+  - title: "BRAZZIER"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 188
+  - title: "SOUTH OF FRANCE"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 108
+  - title: "SURFING A TSUNAMI"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 213
+  - title: "MADE MY HOE FAINT"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 115
+  - title: "TOLD MY"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 101
+  - title: "OATH"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 94
+  - title: "LOST MY DOG"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 173
+  - title: "AYE SAY GANG"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-09-20"
+    seconds: 208
+  - title: "SOUTH OF FRANCE (REMIX) (feat. Travis Scott)"
+    artist: "Future"
+    album: "MIXTAPE PLUTO"
+    released: "2024-11-01"
+    seconds: 183
+  - title: "Never Stop"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 291
+  - title: "Jumpin on a Jet"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 137
+  - title: "Rocket Ship"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 116
+  - title: "Temptation"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 167
+  - title: "Crushed Up"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 149
+  - title: "F&N"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 189
+  - title: "Call the Coroner"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 131
+  - title: "Talk Shit Like a Preacher"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 132
+  - title: "Promise U That"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 205
+  - title: "Stick to the Models"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 196
+  - title: "Overdose"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 115
+  - title: "Krazy but True"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 185
+  - title: "Servin Killa Kam"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 186
+  - title: "Baptiize"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 218
+  - title: "Unicorn Purp (feat. Young Thug & Gunna)"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 246
+  - title: "Goin Dummi"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 161
+  - title: "First Off (feat. Travis Scott)"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 228
+  - title: "Faceshot"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 175
+  - title: "Ain't Coming Back"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 219
+  - title: "Tricks on Me"
+    artist: "Future"
+    album: "Future Hndrxx Presents: The WIZRD"
+    released: "2019-01-18"
+    seconds: 262
+  - title: "All Day (feat. Theophilus London, Allan Kingdom & Paul McCartney)"
+    artist: "Kanye West"
+    album: "All Day"
+    released: "2015-03-02"
+    seconds: 310
+  - title: "Interlude"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 81
+  - title: "December 4th"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 272
+  - title: "What More Can I Say"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 295
+  - title: "Encore"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 250
+  - title: "Change Clothes (feat. Pharrell Williams)"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 258
+  - title: "Dirt Off Your Shoulder"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 245
+  - title: "Threat"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 245
+  - title: "Moment Of Clarity"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 264
+  - title: "99 Problems"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 234
+  - title: "Public Service Announcement (Interlude)"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 173
+  - title: "Justify My Thug"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 244
+  - title: "Lucifer"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 192
+  - title: "Allure"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 292
+  - title: "My 1st Song"
+    artist: "Jay-Z"
+    album: "The Black Album"
+    released: "2003-11-14"
+    seconds: 285
+  - title: "Say You Will"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 377
+  - title: "Welcome To Heartbreak (feat. Kid Cudi)"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 262
+  - title: "Heartless"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 211
+  - title: "Amazing (feat. Jeezy)"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 238
+  - title: "Love Lockdown"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 270
+  - title: "Paranoid (feat. Mr Hudson)"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 277
+  - title: "RoboCop"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 274
+  - title: "Street Lights"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 189
+  - title: "Bad News"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 238
+  - title: "See You In My Nightmares (feat. Lil Wayne)"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 258
+  - title: "Coldest Winter"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 164
+  - title: "Pinocchio Story (Freestyle Live From Singapore)"
+    artist: "Kanye West"
+    album: "808s & Heartbreak"
+    released: "2008-11-24"
+    seconds: 361
+  - title: "Gonorrhea (feat. Drake)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 262
+  - title: "Hold Up (feat. T Streets)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 250
+  - title: "With You (feat. Drake)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 229
+  - title: "I Am Not A Human Being"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 244
+  - title: "I'm Single (feat. Drake)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 333
+  - title: "What's Wrong With Them (feat. Nicki Minaj)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 211
+  - title: "Right Above It (feat. Drake)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 271
+  - title: "Popular (feat. Lil Twist)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 280
+  - title: "That Ain't Me (feat. Jay Sean)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 242
+  - title: "Bill Gates"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 258
+  - title: "YM Banger (feat. Jae Millz, Gudda Gudda & Tyga)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 235
+  - title: "YM Salute (feat. Lil Twist, Lil Chuckee, Gudda Gudda, Jae Millz & Nicki Minaj)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 314
+  - title: "I Don't Like The Look Of It (feat. Nicki Minaj)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being"
+    released: "2010-09-27"
+    seconds: 197
+  - title: "IANAHB"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 338
+  - title: "Curtains (feat. Boo)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 271
+  - title: "Days And Days (feat. 2 Chainz)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 193
+  - title: "Gunwalk (feat. Gudda Gudda)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 271
+  - title: "No Worries (feat. Detail)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 222
+  - title: "Back To You"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 329
+  - title: "Trigger Finger (feat. Soulja Boy)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 272
+  - title: "Beat The Shit (feat. Gunplay)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 268
+  - title: "Rich As Fuck (feat. 2 Chainz)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 223
+  - title: "Trippy (feat. Juicy J)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 263
+  - title: "Love Me (feat. Drake & Future)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 255
+  - title: "Romance"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 260
+  - title: "God Bless Amerika"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 303
+  - title: "Wowzerz (feat. Trina)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 225
+  - title: "Hello (feat. Shane Heyl)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 243
+  - title: "Lay It Down (feat. Nicki Minaj & Corey Gunz)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 245
+  - title: "Hot Revolver (feat. Dre)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 200
+  - title: "My Homies Still (feat. Big Sean)"
+    artist: "Lil Wayne"
+    album: "I Am Not A Human Being II (Explicit Deluxe Version)"
+    released: "2013-03-26"
+    seconds: 247
+  - title: "TorcH"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 334
+  - title: "Lord Have Mercy"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 104
+  - title: "THat Part (feat. Kanye West)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 313
+  - title: "Groovy Tony / Eddie Kane (feat. Jadakiss)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 379
+  - title: "Kno Ya Wrong (feat. Lance Skiiiwalker)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 325
+  - title: "Ride Out (feat. Vince Staples)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 287
+  - title: "WHateva U Want (feat. Candice Pillay)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 230
+  - title: "By Any Means"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 214
+  - title: "Dope Dealer (feat. E-40)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 222
+  - title: "JoHn Muir"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 219
+  - title: "Big Body (feat. Tha Dogg Pound)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 223
+  - title: "Neva CHange (feat. SZA)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 269
+  - title: "Str8 Ballin"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 249
+  - title: "Black THougHts"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 222
+  - title: "Blank Face (feat. Anderson .Paak)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 194
+  - title: "Overtime (feat. Miguel & Justine Skye)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 278
+  - title: "Tookie Knows II (feat. Traffic & TF)"
+    artist: "ScHoolboy Q"
+    album: "Blank Face LP"
+    released: "2016-07-08"
+    seconds: 285
+  - title: "STARGAZING"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 270
+  - title: "CAROUSEL (feat. Frank Ocean)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 180
+  - title: "SICKO MODE (feat. Drake & Swae Lee)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 312
+  - title: "R.I.P. SCREW (feat. Swae Lee)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 185
+  - title: "STOP TRYING TO BE GOD (feat. Kid Cudi, James Blake, Philip Bailey & Stevie Wonder)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 338
+  - title: "NO BYSTANDERS (feat. Juice WRLD & Sheck Wes)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 218
+  - title: "SKELETONS (feat. The Weeknd, Pharrell Williams & Tame Impala)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 145
+  - title: "WAKE UP (feat. The Weeknd)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 231
+  - title: "5% TINT"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 196
+  - title: "NC-17 (feat. 21 Savage)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 156
+  - title: "ASTROTHUNDER"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 142
+  - title: "YOSEMITE (feat. Gunna & NAV)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 150
+  - title: "CAN'T SAY (feat. Don Toliver)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 198
+  - title: "WHO? WHAT! (feat. Quavo & Takeoff)"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 176
+  - title: "BUTTERFLY EFFECT"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 190
+  - title: "HOUSTONFORNICATION"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 217
+  - title: "COFFEE BEAN"
+    artist: "Travis Scott"
+    album: "ASTROWORLD"
+    released: "2018-08-03"
+    seconds: 209
+  - title: "Long Live A$AP"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 289
+  - title: "Goldie"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 192
+  - title: "PMW (All I Really Need) (feat. ScHoolboy Q)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 234
+  - title: "LVL"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 220
+  - title: "Hell (feat. Santigold)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 231
+  - title: "Pain (feat. OverDoz.)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 233
+  - title: "F**kin' Problems (feat. Drake, 2 Chainz & Kendrick Lamar)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 233
+  - title: "Wild for the Night (feat. Skrillex & Birdy Nam Nam)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 212
+  - title: "1Train (feat. Kendrick Lamar, Joey Bada$$, Yelawolf, Danny Brown, Action Bronson & Big K.R.I.T.)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 372
+  - title: "Fashion Killa"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 236
+  - title: "Phoenix"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 233
+  - title: "Suddenly"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 270
+  - title: "Jodye"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 260
+  - title: "Ghetto Symphony (feat. Gunplay & A$AP Ferg)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 237
+  - title: "Angels"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 227
+  - title: "I Come Apart (feat. Florence Welch)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 217
+  - title: "Purple Swag REMIX (feat. Bun B, Paul Wall & Killa Kyleon)"
+    artist: "A$AP Rocky"
+    album: "LONG.LIVE.A$AP (Deluxe Version)"
+    released: "2013-01-15"
+    seconds: 252
+  - title: "3 Peat"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 199
+  - title: "Mr. Carter (feat. Jay-Z)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 316
+  - title: "A Milli"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 221
+  - title: "Got Money (feat. T-Pain)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 244
+  - title: "Comfortable (feat. Babyface)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 265
+  - title: "Dr. Carter"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 264
+  - title: "Phone Home"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 191
+  - title: "Tie My Hands (feat. Robin Thicke)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 319
+  - title: "Mrs. Officer (feat. Bobby V. & Kidd Kidd)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 286
+  - title: "Let The Beat Build"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 309
+  - title: "Shoot Me Down (feat. D-Smith)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 269
+  - title: "Lollipop (feat. Static Major)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 299
+  - title: "La La (feat. Brisco & Busta Rhymes)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 262
+  - title: "Pussy Monster"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 313
+  - title: "You Ain't Got Nuthin (feat. Juelz Santana & Fabolous)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 327
+  - title: "DontGetIt"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 592
+  - title: "Action"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 223
+  - title: "Whip It"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 359
+  - title: "I'm Me"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 294
+  - title: "Gossip"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 204
+  - title: "Kush"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 221
+  - title: "Love Me or Hate Me"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 239
+  - title: "Talkin About It"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 210
+  - title: "Playing With Fire (feat. Betty Wright)"
+    artist: "Lil Wayne"
+    album: "Tha Carter III"
+    released: "2008-06-10"
+    seconds: 261
+  - title: "Lolo (Intro) (feat. Xzibit & Tray Deee)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 41
+  - title: "The Watcher (feat. Eminem & Knoc-Turn'al)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 206
+  - title: "Fuck You (feat. Devin the Dude & Snoop Dogg)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 205
+  - title: "Still D.R.E. (feat. Snoop Dogg)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 270
+  - title: "Big Ego's (feat. Hittman)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 238
+  - title: "Xxplosive (feat. Hittman, Kurupt, Nate Dogg & Six-Two)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 215
+  - title: "What's the Difference (feat. Eminem & Xzibit)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 244
+  - title: "Bar One (feat. Traci Nelson, Ms. Roq & Eddie Griffin)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 50
+  - title: "Light Speed (feat. Hittman)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 160
+  - title: "Forgot About Dre (feat. Eminem)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 222
+  - title: "The Next Episode (feat. Snoop Dogg, Kurupt & Nate Dogg)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 161
+  - title: "Let's Get High (feat. Hittman, Ms. Roq & Kurupt)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 147
+  - title: "Bitch Niggaz (feat. Hittman, Six-Two & Snoop Dogg)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 253
+  - title: "The Car Bomb (feat. Mel-Man & Charis Henry)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 60
+  - title: "Murder Ink (feat. Hittman & Ms. Roq)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 148
+  - title: "Ed-Ucation (feat. Eddie Griffin)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 92
+  - title: "Some L.A. Niggaz (feat. Hittman, Defari, Xzibit, Knoc-Turn'al, Time Bomb, King T, MC Ren & Kokane)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 265
+  - title: "Pause 4 Porno (feat. Jake Steed)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 92
+  - title: "Housewife (feat. Hittman & Kurupt)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 242
+  - title: "Ackrite (feat. Hittman)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 219
+  - title: "Bang Bang (feat. Hittman & Knoc-Turn'al)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 222
+  - title: "The Message (feat. Mary J. Blige & Rell)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 304
+  - title: "Outro (feat. Tommy Chong)"
+    artist: "Dr. Dre"
+    album: "2001"
+    released: "1999-11-16"
+    seconds: 25
+  - title: "Public Service Announcement 2000"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 27
+  - title: "Kill You"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 264
+  - title: "Stan (feat. Dido)"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 404
+  - title: "Paul - Skit"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 10
+  - title: "Who Knew"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 227
+  - title: "Steve Berman - Skit"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 53
+  - title: "The Way I Am"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 290
+  - title: "The Real Slim Shady"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 284
+  - title: "Remember Me? (feat. RBX & Sticky Fingaz)"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 218
+  - title: "I'm Back"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 309
+  - title: "Marshall Mathers"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 321
+  - title: "Ken Kaniff - Skit"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 61
+  - title: "Drug Ballad (feat. Dina Rae)"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 300
+  - title: "Amityville (feat. Bizarre)"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 254
+  - title: "Bitch Please II (feat. Dr. Dre, Snoop Dogg, Xzibit & Nate Dogg)"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 288
+  - title: "Kim"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 377
+  - title: "Under The Influence (feat. D12)"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 321
+  - title: "Criminal"
+    artist: "Eminem"
+    album: "The Marshall Mathers LP"
+    released: "2000-05-23"
+    seconds: 319
+  - title: "High For This"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 249
+  - title: "What You Need"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 206
+  - title: "House Of Balloons / Glass Table Girls"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 407
+  - title: "The Morning"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 314
+  - title: "Wicked Games"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 325
+  - title: "The Party & The After Party"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 459
+  - title: "Coming Down"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 295
+  - title: "Loft Music"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 363
+  - title: "The Knowing"
+    artist: "The Weeknd"
+    album: "House Of Balloons (Original)"
+    released: "2011-03-21"
+    seconds: 342
+  - title: "Lonely Star"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 349
+  - title: "Life Of The Party"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 296
+  - title: "Thursday"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 320
+  - title: "The Zone (feat. Drake)"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 418
+  - title: "The Birds Pt. 1"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 214
+  - title: "The Birds Pt. 2"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 350
+  - title: "Gone"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 486
+  - title: "Rolling Stone"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 230
+  - title: "Heaven Or Las Vegas"
+    artist: "The Weeknd"
+    album: "Thursday (Original)"
+    released: "2011-08-18"
+    seconds: 353
+  - title: "D.D."
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 274
+  - title: "Montreal"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 250
+  - title: "Outside"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 259
+  - title: "XO / The Host"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 444
+  - title: "Initiation"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 260
+  - title: "Same Old Song (feat. Juicy J)"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 312
+  - title: "The Fall"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 345
+  - title: "Next"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 361
+  - title: "Echoes Of Silence"
+    artist: "The Weeknd"
+    album: "Echoes Of Silence (Original)"
+    released: "2011-12-21"
+    seconds: 239
