@@ -1382,6 +1382,96 @@ tracks:
     album: "Savage Mode"
     released: "2016-07-15"
     seconds: 227
+  - title: "Paranoid"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 221
+  - title: "Spoil My Night (feat. Swae Lee)"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 194
+  - title: "Rich & Sad"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 206
+  - title: "Zack And Codeine"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 204
+  - title: "Takin' Shots"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 216
+  - title: "rockstar (feat. 21 Savage)"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 218
+  - title: "Over Now"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 246
+  - title: "Psycho (feat. Ty Dolla $ign)"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 221
+  - title: "Better Now"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 231
+  - title: "Ball For Me (feat. Nicki Minaj)"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 206
+  - title: "Otherside"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 228
+  - title: "Stay"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 204
+  - title: "Blame It On Me"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 261
+  - title: "Same Bitches (feat. G-Eazy & YG)"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 212
+  - title: "Jonestown (Interlude)"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 112
+  - title: "92 Explorer"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 211
+  - title: "Candy Paint"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 227
+  - title: "Sugar Wraith"
+    artist: "Post Malone"
+    album: "beerbongs & bentleys"
+    released: "2018-04-27"
+    seconds: 228
   - title: "Intro"
     artist: "Juice WRLD"
     album: "Goodbye & Good Riddance"
@@ -2245,11 +2335,186 @@ tracks:
     album: "Birds in the Trap Sing McKnight"
     released: "2016-09-02"
     seconds: 0
-  - title: "Superhero (Heroes & Villains)"
+  - title: "Wake Up Mr. West"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 41
+  - title: "Heard 'Em Say (feat. Adam Levine)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 203
+  - title: "Touch The Sky (feat. Lupe Fiasco)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 236
+  - title: "Gold Digger (feat. Jamie Foxx)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 207
+  - title: "Skit #1"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 33
+  - title: "Drive Slow (feat. Paul Wall & GLC)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 272
+  - title: "My Way Home (feat. Common)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 103
+  - title: "Crack Music (feat. The Game)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 270
+  - title: "Roses"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 245
+  - title: "Bring Me Down (feat. Brandy)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 198
+  - title: "Addiction"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 267
+  - title: "Skit #2"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 31
+  - title: "Diamonds From Sierra Leone - Remix (feat. Jay-Z)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 233
+  - title: "We Major (feat. Nas & Really Doe)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 448
+  - title: "Skit #3"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 24
+  - title: "Hey Mama"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 305
+  - title: "Celebration"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 198
+  - title: "Skit #4"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 78
+  - title: "Gone (feat. Consequence & Cam'ron)"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 333
+  - title: "Diamonds From Sierra Leone - Bonus Track"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 238
+  - title: "Late"
+    artist: "Kanye West"
+    album: "Late Registration"
+    released: "2005-08-30"
+    seconds: 230
+  - title: "On Time (feat. John Legend)"
     artist: "Metro Boomin"
     album: "HEROES & VILLAINS"
     released: "2022-12-02"
-    seconds: 0
+    seconds: 168
+  - title: "Superhero (Heroes & Villains) (feat. Future & Chris Brown)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 182
+  - title: "Too Many Nights (feat. Don Toliver & Future)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 199
+  - title: "Raindrops (Insane) (feat. Travis Scott)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 188
+  - title: "Umbrella (feat. 21 Savage & Young Nudy)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 222
+  - title: "Trance (feat. Travis Scott & Young Thug)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 194
+  - title: "Around Me (feat. Don Toliver)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 191
+  - title: "Metro Spider (feat. Young Thug)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 174
+  - title: "I Can't Save You (Interlude) (feat. Future & Don Toliver)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 90
+  - title: "Creepin' (feat. The Weeknd & 21 Savage)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 221
+  - title: "Niagara Falls (Foot or 2) (feat. Travis Scott & 21 Savage)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 207
+  - title: "Walk Em Down (Don't Kill Civilians) (feat. 21 Savage & Mustafa)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 310
+  - title: "Lock On Me (feat. Travis Scott & Future)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 174
+  - title: "Feel The Fiyaaaah (feat. A$AP Rocky & Takeoff)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 189
+  - title: "All The Money (feat. Gunna)"
+    artist: "Metro Boomin"
+    album: "HEROES & VILLAINS"
+    released: "2022-12-02"
+    seconds: 167
   - title: "The Top"
     artist: "24kGoldn"
     album: "El Dorado"
@@ -3390,6 +3655,66 @@ tracks:
     album: "Eternal Grey"
     released: "2016-09-09"
     seconds: 167
+  - title: "Psycho"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 248
+  - title: "Streatham"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 205
+  - title: "Black"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 228
+  - title: "Purple Heart"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 164
+  - title: "Location (feat. Burna Boy)"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 241
+  - title: "Disaster (feat. J Hus)"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 240
+  - title: "Screwface Capital"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 253
+  - title: "Environment"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 202
+  - title: "Lesley (feat. Ruelle)"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 667
+  - title: "Voices"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 198
+  - title: "Drama"
+    artist: "Dave"
+    album: "PSYCHODRAMA"
+    released: "2019-03-08"
+    seconds: 423
+  - title: "The Grid"
+    artist: "CASISDEAD"
+    album: "The Grid"
+    released: "2017-06-02"
+    seconds: 187
   - title: "Traction Control"
     artist: "CASISDEAD"
     album: "Famous Last Words"
@@ -6395,3 +6720,98 @@ tracks:
     album: "Echoes Of Silence (Original)"
     released: "2011-12-21"
     seconds: 239
+  - title: "The Library (Intro)"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 4
+  - title: "I. Crawl"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 209
+  - title: "II. Worldstar"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 244
+  - title: "Dial Up"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 44
+  - title: "I. The Worst Guys (feat. Chance the Rapper)"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 219
+  - title: "II. Shadows"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 231
+  - title: "III. Telegraph Ave. (\"Oakland\" by Lloyd)"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 210
+  - title: "IV. Sweatpants (feat. Problem)"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 180
+  - title: "V. 3005"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 234
+  - title: "Playing Around Before the Party Starts"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 54
+  - title: "I. The Party"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 91
+  - title: "II. No Exit"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 171
+  - title: "Death by Numbers"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 43
+  - title: "I. Flight of the Navigator"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 344
+  - title: "II. Zealots of Stockholm [Free Information]"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 290
+  - title: "III. Urn"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 73
+  - title: "I. Pink Toes (feat. Jhené Aiko)"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 207
+  - title: "II. Earth: The Oldest Computer (The Last Night) (feat. Azealia Banks)"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 282
+  - title: "III. Life: The Biggest Troll [Andrew Auernheimer]"
+    artist: "Childish Gambino"
+    album: "Because the Internet"
+    released: "2013-12-10"
+    seconds: 342
