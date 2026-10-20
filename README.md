@@ -1,6 +1,6 @@
 # Wrapped 365
 
-<img width="3192" height="1881" alt="image" src="https://github.com/user-attachments/assets/0922d370-9d05-4efd-8088-b2e1817e14a4" />
+<img width="2868" height="1881" alt="image" src="https://github.com/user-attachments/assets/cc0fd5ed-8d9c-46b5-99e4-6204b4a7db44" />
 
 ## Deploy with Docker Compose
 
