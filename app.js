@@ -8,6 +8,9 @@
   const DB_NAME = 'wrapped365-listening-reports';
   const DB_VERSION = 1;
   const COOKIE_NAME = 'wrapped365_browser_id';
+  const THEME_KEY = 'wrapped365_accent_theme';
+  const THEMES = new Set(['green', 'blue', 'red', 'purple', 'pink', 'gold']);
+  let themeTimer;
   const formatter = new Intl.NumberFormat('en-GB');
   const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -541,7 +544,7 @@
       for (let h = 0; h < 24; h++) {
         const v = p.heat[day][h];
         const opacity = v ? 0.12 + (v / max) * .88 : 0;
-        heatmap += `<span class="heat-cell" style="background:${v ? `rgba(30,215,96,${opacity.toFixed(3)})` : '#17231a'}" title="${weekdayLabels[day]} ${String(h).padStart(2, '0')}:00 UTC · ${hours(v)} hours"></span>`;
+        heatmap += `<span class="heat-cell" style="background:${v ? `rgba(var(--accent-rgb),${opacity.toFixed(3)})` : '#17231a'}" title="${weekdayLabels[day]} ${String(h).padStart(2, '0')}:00 UTC · ${hours(v)} hours"></span>`;
       }
     }
     $('heatmap').innerHTML = heatmap + '</div>';
@@ -1250,7 +1253,56 @@
     }
   }
 
+  function setTheme(theme, persist = true) {
+    const chosen = THEMES.has(theme) ? theme : 'green';
+    const root = document.documentElement;
+    if (root.dataset.theme !== chosen && persist && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      root.classList.add('theme-animating');
+      clearTimeout(themeTimer);
+      themeTimer = setTimeout(() => root.classList.remove('theme-animating'), 500);
+    }
+    root.dataset.theme = chosen;
+    document.querySelectorAll('[data-theme-choice]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.themeChoice === chosen));
+    });
+    $('theme-toggle').title = `Accent colour: ${chosen}`;
+    if (persist) {
+      try { localStorage.setItem(THEME_KEY, chosen); } catch { /* optional preference */ }
+    }
+  }
+
+  function closeThemeMenu() {
+    $('theme-menu').classList.add('hidden');
+    $('theme-toggle').setAttribute('aria-expanded', 'false');
+  }
+
+  function initialiseTheme() {
+    let saved = 'green';
+    try { saved = localStorage.getItem(THEME_KEY) || 'green'; } catch { /* optional preference */ }
+    setTheme(saved, false);
+  }
+
   function attachEvents() {
+    $('theme-toggle').addEventListener('click', () => {
+      const menu = $('theme-menu');
+      const open = menu.classList.toggle('hidden') === false;
+      $('theme-toggle').setAttribute('aria-expanded', String(open));
+    });
+    $('theme-menu').addEventListener('click', event => {
+      const button = event.target.closest('[data-theme-choice]');
+      if (!button) return;
+      setTheme(button.dataset.themeChoice);
+      closeThemeMenu();
+      $('theme-toggle').focus();
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#theme-picker')) closeThemeMenu();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || $('theme-menu').classList.contains('hidden')) return;
+      closeThemeMenu();
+      $('theme-toggle').focus();
+    });
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', () => openView(link.dataset.nav)));
     document.querySelectorAll('[data-go]').forEach(link => link.addEventListener('click', () => openView(link.dataset.go)));
     document.addEventListener('click', event => {
@@ -1402,6 +1454,7 @@
   }
 
   async function initialise() {
+    initialiseTheme();
     attachEvents();
     void loadAppVersion();
     try { state.owner = getOwner(); }
