@@ -8,13 +8,52 @@
   const DB_NAME = 'wrapped365-listening-reports';
   const DB_VERSION = 1;
   const COOKIE_NAME = 'wrapped365_browser_id';
+  const THEME_KEY = 'wrapped365_accent_theme';
+  const THEMES = new Set(['green', 'blue', 'red', 'purple', 'pink', 'gold']);
+  let themeTimer;
   const formatter = new Intl.NumberFormat('en-GB');
   const dateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const ERA_SPARK_ICON = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M12 2v5m0 10v5M2 12h5m10 0h5M4.93 4.93l3.54 3.54m7.06 7.06 3.54 3.54m0-14.14-3.54 3.54m-7.06 7.06-3.54 3.54"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>';
   const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history'];
   const $ = id => document.getElementById(id);
   const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
+  const navigationStack = [];
+  const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports' };
+
+  function saveNavigation() {
+    navigationStack.push({
+      view: state.view, year: state.year, count: state.count, sorts: { ...state.sorts },
+      eras: { month: state.eras.month, sort: state.eras.sort, limits: { ...state.eras.limits } },
+      search: { query: state.search.query, filter: state.search.filter, selected: state.search.selected && { ...state.search.selected }, limit: state.search.limit },
+      listings: Object.fromEntries(['artists', 'tracks', 'albums'].map(type => [type, $(type.slice(0, -1) + '-search').value])),
+      scrollY: window.scrollY
+    });
+    if (navigationStack.length > 80) navigationStack.shift();
+    updateBackButton();
+  }
+
+  function updateBackButton() { $('nav-back').classList.toggle('hidden', navigationStack.length === 0); }
+
+  function goBack() {
+    const previous = navigationStack.pop();
+    if (!previous) return;
+    state.year = previous.year;
+    state.count = previous.count;
+    state.sorts = previous.sorts;
+    state.eras = previous.eras;
+    state.search = { ...previous.search, matches: [] };
+    $('year-filter').value = state.year;
+    $('unified-search').value = state.search.query;
+    $('search-filter').value = state.search.filter;
+    for (const [type, query] of Object.entries(previous.listings)) $(type.slice(0, -1) + '-search').value = query;
+    closeMobileActions();
+    openView(previous.view, false);
+    updateBackButton();
+    requestAnimationFrame(() => window.scrollTo({ top: previous.scrollY, behavior: 'instant' }));
+  }
+
 
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const number = value => formatter.format(Math.round(value || 0));
@@ -270,10 +309,11 @@
       reasonStart: row.reason_start || '', reasonEnd: row.reason_end || ''
     };
   }
-  function ingest(builder, rows) {
+  async function ingest(builder, rows) {
     if (!Array.isArray(rows)) throw new Error('A history file does not contain a JSON array of playback events.');
-    for (const row of rows) {
-      const play = readPlay(row);
+    for (let i = 0; i < rows.length; i++) {
+      if (i && i % 1500 === 0) await sleep();
+      const play = readPlay(rows[i]);
       if (!play) { builder.ignored++; continue; }
       const duplicateKey = [play.ts, play.ms, play.uri || keyOf(play.artist, play.title), play.platform, play.reasonStart, play.reasonEnd].join('|');
       if (builder.seen.has(duplicateKey)) { builder.duplicates++; continue; }
@@ -334,8 +374,26 @@
     $('import-status').classList.remove('hidden');
     $('import-status-title').textContent = label;
     $('import-status-detail').textContent = detail;
+    updateLoading(label, detail);
     $('progress-fill').style.width = `${Math.max(2, Math.min(100, fraction * 100))}%`;
   }
+  function showLoading(label, detail) {
+    $('loading-label').textContent = label;
+    $('loading-detail').textContent = detail;
+    $('loading-overlay').classList.remove('hidden');
+    $('main-content').setAttribute('aria-busy', 'true');
+  }
+  function updateLoading(label, detail) {
+    if ($('loading-overlay').classList.contains('hidden')) return;
+    if (label) $('loading-label').textContent = label;
+    if (detail) $('loading-detail').textContent = detail;
+  }
+  function hideLoading() {
+    $('loading-overlay').classList.add('hidden');
+    $('main-content').removeAttribute('aria-busy');
+  }
+  const letLoadingPaint = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
+
   function showError(message) {
     const el = $('error-box');
     el.classList.remove('hidden');
@@ -349,7 +407,9 @@
     $('error-box').classList.add('hidden');
     $('browse-button').disabled = true;
     $('demo-button').disabled = true;
+    showLoading('Opening your Spotify history…', 'Processing everything locally.');
     try {
+      await letLoadingPaint();
       const builder = makeBuilder();
       let type;
       if (isZip) {
@@ -381,7 +441,7 @@
           let rows;
           try { rows = JSON.parse(content.replace(/^\uFEFF/, '')); }
           catch { throw new Error(`Could not parse ${baseName(entry.name)}. Make sure this is an unmodified Spotify export.`); }
-          ingest(builder, rows);
+          await ingest(builder, rows);
           rows = null;
         }
       } else {
@@ -390,7 +450,7 @@
         await sleep();
         const content = await file.text();
         const rows = JSON.parse(content.replace(/^\uFEFF/, ''));
-        ingest(builder, rows);
+        await ingest(builder, rows);
         builder.sourceFiles = 1;
       }
       if (!builder.imported) throw new Error('The files contained no valid music listening events. Check you selected the audio history, rather than podcast or video files.');
@@ -415,23 +475,31 @@
       $('demo-button').disabled = false;
       $('file-input').value = '';
       state.loading = false;
+      hideLoading();
     }
   }
 
-  function openView(view) {
+  function openView(view, record = true) {
     if (!views.includes(view)) return;
     if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search'].includes(view)) view = 'home';
+    if (record && state.view !== view) saveNavigation();
+    closeMobileActions();
+    closeThemeMenu();
     state.view = view;
     for (const section of document.querySelectorAll('.view')) section.classList.toggle('active', section.id === `view-${view}`);
     for (const nav of document.querySelectorAll('[data-nav]')) nav.classList.toggle('active', nav.dataset.nav === view);
-    $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports' }[view];
+    $('page-name').textContent = pageNames[view];
     $('report-controls').classList.toggle('hidden', !state.report || view === 'history');
-    $('randomise-demo').classList.toggle('hidden', !state.report?.isDemo || view === 'home' || view === 'history');
+    const canRandomise = !!state.report?.isDemo && view !== 'home' && view !== 'history';
+    $('randomise-demo').classList.toggle('hidden', !canRandomise);
+    $('mobile-randomise').classList.toggle('hidden', !canRandomise);
     if (view === 'history') renderHistory();
     else if (view !== 'home') renderCurrent();
+    updateBackButton();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   function activateReport(report) {
+    navigationStack.length = 0;
     state.report = report;
     state.year = 'all';
     state.eras = { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } };
@@ -444,7 +512,7 @@
     $('year-filter').value = 'all';
     $('storage-warning').classList.toggle('hidden', !report.unsaved);
     document.querySelectorAll('.nav-link.report-only').forEach(nav => nav.classList.add('ready'));
-    openView('overview');
+    openView('overview', false);
   }
   function period() { return state.report?.periods?.[state.year] || state.report?.periods?.all; }
   function sortedRecords(category) {
@@ -541,7 +609,7 @@
       for (let h = 0; h < 24; h++) {
         const v = p.heat[day][h];
         const opacity = v ? 0.12 + (v / max) * .88 : 0;
-        heatmap += `<span class="heat-cell" style="background:${v ? `rgba(30,215,96,${opacity.toFixed(3)})` : '#17231a'}" title="${weekdayLabels[day]} ${String(h).padStart(2, '0')}:00 UTC · ${hours(v)} hours"></span>`;
+        heatmap += `<span class="heat-cell" style="background:${v ? `rgba(var(--accent-rgb),${opacity.toFixed(3)})` : 'var(--heat-idle)'}" title="${weekdayLabels[day]} ${String(h).padStart(2, '0')}:00 UTC · ${hours(v)} hours"></span>`;
       }
     }
     $('heatmap').innerHTML = heatmap + '</div>';
@@ -691,7 +759,7 @@
   function renderEraChapterDetail(chapter) {
     const categoryBlock = (heading, icon, entries, cat) => `<div class="era-chapter-toplist"><span class="era-chapter-toplabel">${icon} ${escapeHtml(heading)}</span>${entries.slice(0, 4).map((item, i) =>
       `<div class="era-chapter-item"><span>${i + 1}.</span><span title="${escapeHtml(item.name)}">${escapeHtml(item.name)}${cat !== 'artists' ? `<small>${escapeHtml(cat === 'tracks' ? artistCreditLabel(item) : item.artist)}</small>` : ''}</span><b>${number(item.plays)}</b></div>`).join('') || emptyMessage('No album information for this chapter.')}</div>`;
-    return `<div class="era-feature"><div class="era-feature-heading"><div><div class="kicker">SELECTED CHAPTER · ${escapeHtml(monthSpan(chapter.from, chapter.to))}</div><h3>${escapeHtml(chapter.title)} era</h3><p>${number(chapter.qualified)} qualifying plays across ${number(chapter.months.length)} ${chapter.months.length === 1 ? 'month' : 'months'} · ${hours(chapter.ms)} listening hours</p></div><span class="era-feature-disc" aria-hidden="true">✳</span></div><div class="era-chapter-toplists">${categoryBlock('Defining artists', '◉', chapter.artists, 'artists')}${categoryBlock('On repeat', '♫', chapter.tracks, 'tracks')}${categoryBlock('Defining albums', '▤', chapter.albums, 'albums')}</div></div>`;
+    return `<div class="era-feature"><div class="era-feature-heading"><div><div class="kicker">SELECTED CHAPTER · ${escapeHtml(monthSpan(chapter.from, chapter.to))}</div><h3>${escapeHtml(chapter.title)} era</h3><p>${number(chapter.qualified)} qualifying plays across ${number(chapter.months.length)} ${chapter.months.length === 1 ? 'month' : 'months'} · ${hours(chapter.ms)} listening hours</p></div><span class="era-feature-disc" aria-hidden="true">${ERA_SPARK_ICON}</span></div><div class="era-chapter-toplists">${categoryBlock('Defining artists', '◉', chapter.artists, 'artists')}${categoryBlock('On repeat', '♫', chapter.tracks, 'tracks')}${categoryBlock('Defining albums', '▤', chapter.albums, 'albums')}</div></div>`;
   }
   function renderEraRanks(category, month) {
     const items = month[category] || [];
@@ -735,7 +803,7 @@
     const firsts = months.reduce((sum, month) => sum + month.qualified, 0);
     $('era-stats').innerHTML = [
       statCard('Months explored', number(months.length), `${monthShort(months[0].key)} – ${monthShort(months.at(-1).key)}`, '◷'),
-      statCard('Listening chapters', number(chapters.length), 'Detected from shifting music tastes', '✳'),
+      statCard('Listening chapters', number(chapters.length), 'Detected from shifting music tastes', ERA_SPARK_ICON),
       statCard('Recorded plays', number(firsts), 'Streams of at least 30 seconds', '♫'),
       statCard('Busiest month', monthShort(mostActive.key), `${hours(mostActive.ms)} hours listened`, '▥')
     ].join('');
@@ -774,13 +842,14 @@
   // the rest of the app. It never sends a query to Spotify or an external API.
   const searchCategories = { artists: 'Artist', tracks: 'Track', albums: 'Album' };
   function exploreItem(category, item) {
+    saveNavigation();
     state.search.query = item.name;
     state.search.filter = category;
     state.search.selected = { category, key: recordKey(category, item) };
     state.search.limit = 30;
     $('unified-search').value = item.name;
     $('search-filter').value = category;
-    openView('search');
+    openView('search', false);
   }
   function searchScore(item, category, query) {
     if (!query) return 0;
@@ -884,11 +953,27 @@
     const shares = (data.messages || []).filter(message => message.trackId === track.id && message.direction === 'received');
     const senders = [...new Set(shares.map(message => (data.friends || []).find(friend => friend.id === message.friendId)?.name).filter(Boolean))];
     const saved = (data.savedTrackIds || []).includes(track.id);
+    const outcomes = {
+      'new-favourite': 'Became a new favourite',
+      'new-discovery': 'Discovered after the recommendation',
+      rediscovered: 'Rediscovered after a long break',
+      'already-loved': 'Already in your rotation',
+      'followed-up': 'Listened again after the recommendation',
+      'not-followed-up': 'No listening soon after the recommendation'
+    };
+    const story = [...shares].sort((a, b) => b.ts.localeCompare(a.ts)).slice(0, 4).map(message => {
+      const friend = (data.friends || []).find(person => person.id === message.friendId);
+      const detail = outcomes[message.outcome] || 'Recommended';
+      const followUp = message.playsIn90Days ? ` · ${number(message.playsIn90Days)} ${message.playsIn90Days === 1 ? 'play' : 'plays'} in 90 days` : '';
+      return `<div><strong>${escapeHtml(friend?.name || 'A friend')} · ${escapeHtml(dateLabel(message.ts))}</strong><p>${escapeHtml(detail)}${followUp}</p></div>`;
+    }).join('');
     return `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">EXAMPLE SOCIAL & LIBRARY DATA</div><h2>Connections</h2></div></div>
       <div class="search-connections">
       <div><strong>${saved ? 'Saved in your library' : 'Not saved in your library'}</strong><p>Demo library snapshot</p></div>
       <div><strong>${number(playlists.length)} ${playlists.length === 1 ? 'playlist' : 'playlists'}</strong><p>${escapeHtml(playlists.map(list => list.name).join(', ') || 'Not in any demo playlists')}</p></div>
-      <div><strong>${number(senders.length)} recommending ${senders.length === 1 ? 'friend' : 'friends'}</strong><p>${escapeHtml(senders.join(', ') || 'No recommendations recorded')} · ${number(shares.length)} total shares</p></div>
+      <div><strong>${number(senders.length)} recommending ${senders.length === 1 ? 'friend' : 'friends'}</strong><p>${number(shares.length)} simulated recommendations · chronological listening outcomes</p></div>
+      ${story}
+      ${shares.length > 4 ? `<p class="search-muted">And ${number(shares.length - 4)} earlier recommendations.</p>` : ''}
       </div></article>`;
   }
   function renderSearchDetail() {
@@ -1007,8 +1092,12 @@
     state.loading = true;
     $('randomise-demo').disabled = true;
     $('demo-button').disabled = true;
+    const randomising = state.report?.isDemo && state.view !== 'home';
+    showLoading(randomising ? 'Randomising your demo…' : 'Preparing your demo…', 'Generating a listening history in your browser.');
     try {
+      await letLoadingPaint();
       const tracks = await loadDemoTracks();
+      updateLoading(randomising ? 'Randomising your demo…' : 'Building your demo…', 'Creating years of listening activity.');
       let seed = crypto.getRandomValues(new Uint32Array(1))[0];
       const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
       const randomInt = (min, max) => min + Math.floor(rand() * (max - min + 1));
@@ -1117,6 +1206,7 @@
         let planned = 0;
         let attempts = 0;
         while (planned < goal && attempts++ < goal) {
+          if (attempts % 24 === 0) await sleep();
           const sessionSize = Math.min(goal - planned, randomInt(3, 18));
           const latestStart = Math.max(begin, end - 4 * 3600_000);
           const sessionStart = begin + Math.floor(rand() * (latestStart - begin + 1));
@@ -1208,23 +1298,175 @@
         years.push({ year, artists: eraArtists, sessions: sessions.length });
         byYear.set(String(year), yearRows.length);
         rows.push(...yearRows);
+        await sleep();
       }
-      const friends = ['Alex', 'Sam', 'Charlie', 'Jordan', 'Taylor', 'Morgan'].map((name, id) => ({ id: `friend-${id + 1}`, name }));
+      const day = 86400_000;
+      const listenTimes = new Map();
+      const indexPlays = () => {
+        listenTimes.clear();
+        for (const row of rows) {
+          if (row.ms_played < MIN_PLAY_MS) continue;
+          const list = listenTimes.get(row.demo_track_id) || [];
+          list.push(Date.parse(row.ts));
+          listenTimes.set(row.demo_track_id, list);
+        }
+        for (const list of listenTimes.values()) list.sort((a, b) => a - b);
+      };
+      indexPlays();
+      const popularArtists = [...artistWeights.entries()].sort((a, b) => b[1] - a[1]).map(([artist]) => artist);
+      const friends = ['Alex', 'Sam', 'Charlie', 'Jordan', 'Taylor', 'Morgan'].map((name, id) => ({
+        id: `friend-${id + 1}`, name,
+        favouriteArtists: shuffled(popularArtists.slice(0, Math.max(8, Math.ceil(popularArtists.length * .55)))).slice(0, 4)
+      }));
       const playlists = ['Night Drives', 'On Repeat', 'Underground', 'Late Night', 'Gym Rotation', 'Old Favourites', 'Discoveries', 'Weekend'].map((name, id) => ({
         id: `playlist-${id + 1}`, name, trackIds: shuffled(catalogue).slice(0, randomInt(18, 55)).map(track => track.id)
       }));
       const messages = [];
-      const shared = shuffled(catalogue).slice(0, Math.min(85, catalogue.length));
+      const sharedPairs = new Set();
+      const seededTracks = new Set();
+      const availableTo = (track, timestamp) => track.length >= 70_000 && track.releasedAt <= timestamp && timestamp < cutoff;
+      const pickForFriend = (friend, predicate) => {
+        const possible = catalogue.filter(track => !sharedPairs.has(`${friend.id}:${track.id}`) && predicate(track));
+        if (!possible.length) return null;
+        const favourites = possible.filter(track => friend.favouriteArtists.includes(track.artist));
+        return choose(favourites.length && rand() < .72 ? favourites : possible);
+      };
+      const recommend = (friend, track, timestamp) => {
+        if (!track || !availableTo(track, timestamp) || timestamp < minDate) return false;
+        const pair = `${friend.id}:${track.id}`;
+        if (sharedPairs.has(pair)) return false;
+        sharedPairs.add(pair);
+        messages.push({ friendId: friend.id, trackId: track.id, ts: new Date(timestamp).toISOString(), direction: 'received' });
+        return true;
+      };
+      const simulateFollowUp = (track, timestamp, obsession) => {
+        const count = obsession ? randomInt(8, 15) : randomInt(2, 4);
+        const start = timestamp + randomInt(2, 8) * day;
+        const span = (obsession ? randomInt(17, 32) : randomInt(6, 14)) * day;
+        for (let i = 0; i < count; i++) {
+          const finishedAt = Math.min(cutoff - 60_000,
+            start + Math.round(span * i / Math.max(1, count - 1)) + randomInt(0, 180) * 1000);
+          if (finishedAt <= timestamp || finishedAt <= track.releasedAt) continue;
+          const platform = choose(platforms);
+          rows.push({
+            ts: new Date(finishedAt).toISOString(),
+            master_metadata_album_artist_name: track.artist,
+            credited_artists: [track.artist, ...track.credits],
+            master_metadata_track_name: track.title,
+            master_metadata_album_album_name: track.album,
+            ms_played: track.length, platform, skipped: false,
+            shuffle: rand() < .16, offline: false,
+            reason_start: 'clickrow', reason_end: 'trackdone', demo_track_id: track.id
+          });
+          allSessions.push({ started: new Date(finishedAt - track.length).toISOString(),
+            ended: new Date(finishedAt).toISOString(), platform, trackIds: [track.id] });
+          const year = String(new Date(finishedAt).getUTCFullYear());
+          byYear.set(year, (byYear.get(year) || 0) + 1);
+          const summary = years.find(item => String(item.year) === year);
+          if (summary) summary.sessions++;
+        }
+      };
+      // Seed real post-recommendation listens; all other outcomes are inferred from the playback timeline.
       for (const friend of friends) {
-        const recommendations = shuffled(shared).slice(0, randomInt(8, 22));
-        for (const track of recommendations) {
-          if (track.releasedAt >= cutoff) continue;
-          const timestamp = track.releasedAt + Math.floor(rand() * (cutoff - track.releasedAt));
-          messages.push({ friendId: friend.id, trackId: track.id, ts: new Date(timestamp).toISOString(), direction: 'received' });
+        for (let i = 0; i < 2; i++) {
+          const unheard = track => !seededTracks.has(track.id) && !storyKeys.has(storyKey(track)) &&
+            track.length >= 70_000 && track.releasedAt < cutoff - 120 * day &&
+            !(listenTimes.get(track.id)?.length);
+          let track = pickForFriend(friend, unheard);
+          if (track) {
+            const earliest = Math.max(minDate, track.releasedAt) + 3 * day;
+            const latest = cutoff - 90 * day;
+            if (earliest > latest) continue;
+            const timestamp = earliest + Math.floor(rand() * (latest - earliest));
+            if (recommend(friend, track, timestamp)) {
+              seededTracks.add(track.id);
+              simulateFollowUp(track, timestamp, i === 0);
+            }
+          } else {
+            track = pickForFriend(friend, item => !seededTracks.has(item.id) &&
+              !storyKeys.has(storyKey(item)) && item.length >= 70_000 &&
+              (listenTimes.get(item.id)?.[0] || 0) > Math.max(minDate, item.releasedAt) + 12 * day);
+            if (!track) continue;
+            const first = listenTimes.get(track.id)[0];
+            const timestamp = first - randomInt(3, 10) * day;
+            if (recommend(friend, track, timestamp)) {
+              seededTracks.add(track.id);
+              simulateFollowUp(track, timestamp, i === 0);
+            }
+          }
         }
       }
+      indexPlays();
+      for (const friend of friends) {
+        const target = randomInt(12, 18);
+        // Genuine quiet gaps make a friend's recommendation precede a rediscovery.
+        for (let i = 0; i < 2; i++) {
+          const gaps = [];
+          for (const track of catalogue) {
+            if (!availableTo(track, cutoff - day) || sharedPairs.has(`${friend.id}:${track.id}`)) continue;
+            const times = listenTimes.get(track.id) || [];
+            for (let j = 1; j < times.length; j++) {
+              if (times[j] - times[j - 1] < 180 * day) continue;
+              const timestamp = times[j] - randomInt(3, 12) * day;
+              if (timestamp > times[j - 1] + 30 * day && availableTo(track, timestamp)) {
+                gaps.push({ track, timestamp });
+                break;
+              }
+            }
+          }
+          if (!gaps.length) break;
+          const preferred = gaps.filter(({track}) => friend.favouriteArtists.includes(track.artist));
+          const option = choose(preferred.length && rand() < .72 ? preferred : gaps);
+          recommend(friend, option.track, option.timestamp);
+        }
+        // Some friends share songs you already love; some tips never get played.
+        for (let i = 0; i < 3; i++) {
+          const track = pickForFriend(friend, item => (listenTimes.get(item.id)?.length || 0) >= 5 &&
+            availableTo(item, cutoff - day));
+          if (!track) break;
+          const times = listenTimes.get(track.id);
+          const timestamp = times[randomInt(3, times.length - 1)] + 60_000;
+          recommend(friend, track, Math.min(timestamp, cutoff - 1));
+        }
+        for (let i = 0; i < 3; i++) {
+          const track = pickForFriend(friend, item => item.length >= 70_000 && item.releasedAt < cutoff - 22 * day &&
+            (listenTimes.get(item.id)?.at(-1) || minDate) < cutoff - 18 * day);
+          if (!track) break;
+          const earliest = Math.max(minDate, track.releasedAt, (listenTimes.get(track.id)?.at(-1) || minDate)) + 2 * day;
+          const latest = cutoff - 1 * day;
+          if (earliest <= latest) recommend(friend, track, earliest + Math.floor(rand() * (latest - earliest)));
+        }
+        let attempts = 0;
+        while (messages.filter(message => message.friendId === friend.id).length < target && attempts++ < 120) {
+          const track = pickForFriend(friend, item => item.length >= 70_000 && item.releasedAt < cutoff - 15 * day);
+          if (!track) break;
+          const times = listenTimes.get(track.id) || [];
+          const anchor = times.length && rand() < .72 ? choose(times) : cutoff - randomInt(20, 1800) * day;
+          const earliest = Math.max(minDate, track.releasedAt);
+          const timestamp = Math.min(cutoff - 1, Math.max(earliest, anchor - randomInt(1, 20) * day));
+          recommend(friend, track, timestamp);
+        }
+      }
+      messages.sort((a, b) => a.ts.localeCompare(b.ts));
+      for (const message of messages) {
+        const plays = listenTimes.get(message.trackId) || [];
+        const sent = Date.parse(message.ts);
+        const prior = plays.filter(time => time < sent);
+        const after = plays.filter(time => time >= sent);
+        message.playsBefore = prior.length;
+        message.playsAfter = after.length;
+        message.playsIn30Days = after.filter(time => time <= sent + 30 * day).length;
+        message.playsIn90Days = after.filter(time => time <= sent + 90 * day).length;
+        message.firstPlayedAfter = after.length ? new Date(after[0]).toISOString() : null;
+        message.daysToFirstPlay = after.length ? Math.max(0, Math.ceil((after[0] - sent) / day)) : null;
+        if (!message.playsIn90Days) message.outcome = 'not-followed-up';
+        else if (!prior.length) message.outcome = message.playsIn90Days >= 6 ? 'new-favourite' : 'new-discovery';
+        else if (sent - prior.at(-1) >= 180 * day) message.outcome = 'rediscovered';
+        else message.outcome = prior.length >= 5 ? 'already-loved' : 'followed-up';
+      }
+      updateLoading('Finishing your demo…', 'Building your listening statistics.');
       const builder = makeBuilder();
-      ingest(builder, rows);
+      await ingest(builder, rows);
       builder.sourceFiles = 1;
       const report = finishBuilder(builder, 'Randomised demo · not your data', 'Demo data', true);
       report.demoData = {
@@ -1235,7 +1477,8 @@
         playlists,
         friends,
         messages,
-        savedTrackIds: catalogue.filter(() => rand() < 0.48).map(track => track.id),
+        savedTrackIds: catalogue.filter(track => rand() < (messages.some(message =>
+          message.trackId === track.id && message.outcome === 'new-favourite') ? .85 : .48)).map(track => track.id),
         yearTotals: [...byYear.entries()]
       };
       activateReport(report);
@@ -1247,10 +1490,106 @@
       state.loading = false;
       $('randomise-demo').disabled = false;
       $('demo-button').disabled = false;
+      hideLoading();
     }
   }
 
+  function setTheme(theme, persist = true, origin = null) {
+    const chosen = THEMES.has(theme) ? theme : 'green';
+    const root = document.documentElement;
+    const apply = () => {
+      root.dataset.theme = chosen;
+      document.querySelectorAll('[data-theme-choice]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.themeChoice === chosen));
+      });
+      $('theme-toggle').title = `Accent colour: ${chosen}`;
+      if (persist) {
+        try { localStorage.setItem(THEME_KEY, chosen); } catch { /* optional preference */ }
+      }
+    };
+    if (!persist || root.dataset.theme === chosen || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      apply();
+      return;
+    }
+    const x = origin?.x ?? innerWidth / 2;
+    const y = origin?.y ?? innerHeight / 2;
+    root.style.setProperty('--theme-reveal-x', `${x}px`);
+    root.style.setProperty('--theme-reveal-y', `${y}px`);
+    root.style.setProperty('--theme-reveal-radius', `${Math.ceil(Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)))}px`);
+    if (typeof document.startViewTransition === 'function') {
+      document.startViewTransition(apply);
+    } else {
+      clearTimeout(themeTimer);
+      root.classList.remove('theme-animating');
+      void root.offsetWidth;
+      root.classList.add('theme-animating');
+      apply();
+      themeTimer = setTimeout(() => root.classList.remove('theme-animating'), 720);
+    }
+  }
+
+  function closeThemeMenu() {
+    $('theme-menu').classList.add('hidden');
+    $('theme-toggle').setAttribute('aria-expanded', 'false');
+  }
+
+  function closeMobileActions() {
+    $('mobile-actions-menu').classList.add('hidden');
+    $('mobile-actions-toggle').setAttribute('aria-expanded', 'false');
+  }
+
+  function chooseTheme(event) {
+    const button = event.target.closest('[data-theme-choice]');
+    if (!button) return;
+    const rect = button.getBoundingClientRect();
+    const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    const fromMobile = !!button.closest('#mobile-actions-menu');
+    closeThemeMenu();
+    closeMobileActions();
+    (fromMobile ? $('mobile-actions-toggle') : $('theme-toggle')).focus();
+    setTheme(button.dataset.themeChoice, true, origin);
+  }
+
+  function initialiseTheme() {
+    let saved = 'green';
+    try { saved = localStorage.getItem(THEME_KEY) || 'green'; } catch { /* optional preference */ }
+    setTheme(saved, false);
+  }
+
   function attachEvents() {
+    $('theme-toggle').addEventListener('click', () => {
+      const menu = $('theme-menu');
+      const open = menu.classList.toggle('hidden') === false;
+      $('theme-toggle').setAttribute('aria-expanded', String(open));
+    });
+    $('theme-menu').addEventListener('click', chooseTheme);
+    $('mobile-actions-menu').addEventListener('click', chooseTheme);
+    $('mobile-actions-toggle').addEventListener('click', () => {
+      const open = $('mobile-actions-menu').classList.toggle('hidden') === false;
+      $('mobile-actions-toggle').setAttribute('aria-expanded', String(open));
+      if (open) closeThemeMenu();
+    });
+    $('mobile-import').addEventListener('click', () => {
+      closeMobileActions();
+      openView('home');
+      $('file-input').click();
+    });
+    $('mobile-randomise').addEventListener('click', () => { closeMobileActions(); makeDemo(); });
+    $('nav-back').addEventListener('click', goBack);
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#theme-picker')) closeThemeMenu();
+      if (!event.target.closest('#mobile-actions')) closeMobileActions();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      if (!$('mobile-actions-menu').classList.contains('hidden')) {
+        closeMobileActions();
+        $('mobile-actions-toggle').focus();
+      } else if (!$('theme-menu').classList.contains('hidden')) {
+        closeThemeMenu();
+        $('theme-toggle').focus();
+      }
+    });
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', () => openView(link.dataset.nav)));
     document.querySelectorAll('[data-go]').forEach(link => link.addEventListener('click', () => openView(link.dataset.go)));
     document.addEventListener('click', event => {
@@ -1286,12 +1625,21 @@
       const item = event.target.closest('[data-search-result]');
       if (!item) return;
       const result = state.search.matches[Number(item.dataset.searchResult)];
-      if (result) { state.search.selected = { category: result.category, key: recordKey(result.category, result.item) }; renderSearchResults(); renderSearchDetail(); }
+      if (result) {
+        const key = recordKey(result.category, result.item);
+        if (state.search.selected?.category !== result.category || state.search.selected.key !== key) saveNavigation();
+        state.search.selected = { category: result.category, key };
+        renderSearchResults(); renderSearchDetail();
+      }
     });
     $('search-more').addEventListener('click', () => { state.search.limit += 30; renderSearchResults(); });
     $('search-detail').addEventListener('click', event => {
       const month = event.target.closest('[data-search-era-month]');
-      if (month) { state.eras.month = month.dataset.searchEraMonth; openView('eras'); }
+      if (month) {
+        saveNavigation();
+        state.eras.month = month.dataset.searchEraMonth;
+        openView('eras', false);
+      }
     });
     $('browse-button').addEventListener('click', event => { event.stopPropagation(); $('file-input').click(); });
     $('file-input').addEventListener('change', event => { if (event.target.files[0]) importHistory(event.target.files[0]); });
@@ -1306,7 +1654,7 @@
     ['dragleave', 'drop'].forEach(name => $('dropzone').addEventListener(name, event => { event.preventDefault(); $('dropzone').classList.remove('dragging'); }));
     $('dropzone').addEventListener('drop', event => { const file = event.dataTransfer.files[0]; if (file) importHistory(file); });
     $('new-upload').addEventListener('click', () => openView('home'));
-    $('year-filter').addEventListener('change', event => { state.year = event.target.value; state.count = 25; state.search.selected = null; state.search.limit = 30; state.eras.month = null; state.eras.limits = { artists: 8, tracks: 10, albums: 8 }; renderCurrent(); });
+    $('year-filter').addEventListener('change', event => { if (state.year !== event.target.value) saveNavigation(); state.year = event.target.value; state.count = 25; state.search.selected = null; state.search.limit = 30; state.eras.month = null; state.eras.limits = { artists: 8, tracks: 10, albums: 8 }; renderCurrent(); });
     for (const type of ['artist', 'track', 'album']) $(type + '-search').addEventListener('input', () => { state.count = 25; renderListing({ artist: 'artists', track: 'tracks', album: 'albums' }[type]); });
     document.querySelectorAll('[data-sort-for]').forEach(group => group.addEventListener('click', event => {
       const button = event.target.closest('[data-sort]');
@@ -1322,6 +1670,7 @@
       const sortButton = event.target.closest('[data-era-sort]');
       const moreButton = event.target.closest('[data-era-more]');
       if (monthButton) {
+        if (state.eras.month === monthButton.dataset.eraMonth) return;
         state.eras.month = monthButton.dataset.eraMonth;
         state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
         renderEras();
@@ -1402,6 +1751,7 @@
   }
 
   async function initialise() {
+    initialiseTheme();
     attachEvents();
     void loadAppVersion();
     try { state.owner = getOwner(); }
