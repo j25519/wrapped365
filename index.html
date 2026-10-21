@@ -44,7 +44,7 @@
 
   <div class="main-wrap">
     <header class="topbar">
-      <div class="breadcrumb"><span class="breadcrumb-root">YOUR SPACE</span><span class="crumb-slash">/</span><span id="page-name">Home</span></div>
+      <div class="breadcrumb"><button id="nav-back" class="nav-back hidden" type="button" title="Go back one step" aria-label="Go back one step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><span class="breadcrumb-root">YOUR SPACE</span><span class="crumb-slash">/</span><span id="page-name">Home</span></div>
       <div class="topbar-actions">
 <div class="theme-picker" id="theme-picker">
           <button class="theme-toggle" id="theme-toggle" type="button" title="Choose accent colour" aria-label="Choose accent colour" aria-haspopup="true" aria-controls="theme-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.5a2.5 2.5 0 0 0 0-5h-.5a1.75 1.75 0 0 1 0-3.5h2.5A5.5 5.5 0 0 0 21 7.5 9.2 9.2 0 0 0 12 3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="16" cy="7.5" r="1"/></svg><span class="theme-current-dot" aria-hidden="true"></span></button>
@@ -62,6 +62,25 @@
         </div>
         <span class="live-pill"><span class="live-dot"></span> On your device</span>
         <div id="report-controls" class="report-controls hidden"><button id="randomise-demo" type="button" class="demo-randomise hidden" title="Generate a new random demo" aria-label="Randomise demo"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h2.5a6 6 0 0 0 5.2-3l4.6-8A6 6 0 0 1 19.5 4H22"/><path d="M2 6h2.5a6 6 0 0 1 5.2 3"/><path d="M14 16a6 6 0 0 0 5.5 2H22"/></svg><span>Randomise</span></button><label for="year-filter" class="sr-only">Select listening year</label><select id="year-filter" class="select"><option value="all">All time</option></select><button class="small-icon-btn" id="new-upload" title="Import another ZIP" aria-label="Import another ZIP">＋</button></div>
+        <div class="mobile-actions" id="mobile-actions">
+          <button id="mobile-actions-toggle" class="mobile-actions-toggle" type="button" title="More options" aria-label="More options" aria-haspopup="true" aria-controls="mobile-actions-menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg></button>
+          <div id="mobile-actions-menu" class="mobile-actions-menu hidden" role="group" aria-label="More options">
+            <div class="mobile-actions-heading">YOUR CONTROLS</div>
+            <button id="mobile-import" class="mobile-action-row" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m-5 5 5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg> Import ZIP / JSON</button>
+            <button id="mobile-randomise" class="mobile-action-row hidden" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 14 4 4-4 4M18 2l4 4-4 4M2 18h2.5a6 6 0 0 0 5.2-3l4.6-8A6 6 0 0 1 19.5 4H22M2 6h2.5a6 6 0 0 1 5.2 3M14 16a6 6 0 0 0 5.5 2H22"/></svg> Randomise demo</button>
+            <div class="mobile-actions-divider"></div>
+            <div class="mobile-actions-heading">ACCENT COLOUR</div>
+            <div class="theme-options mobile-theme-options" role="group" aria-label="Accent colour selection">
+              <button type="button" class="theme-option" data-theme-choice="green" aria-pressed="true"><span class="theme-swatch" style="--swatch:#1ed760"></span>Green</button>
+              <button type="button" class="theme-option" data-theme-choice="blue" aria-pressed="false"><span class="theme-swatch" style="--swatch:#3b82f6"></span>Blue</button>
+              <button type="button" class="theme-option" data-theme-choice="red" aria-pressed="false"><span class="theme-swatch" style="--swatch:#fb5d69"></span>Red</button>
+              <button type="button" class="theme-option" data-theme-choice="purple" aria-pressed="false"><span class="theme-swatch" style="--swatch:#a78bfa"></span>Purple</button>
+              <button type="button" class="theme-option" data-theme-choice="pink" aria-pressed="false"><span class="theme-swatch" style="--swatch:#f472b6"></span>Pink</button>
+              <button type="button" class="theme-option" data-theme-choice="gold" aria-pressed="false"><span class="theme-swatch" style="--swatch:#eabf53"></span>Gold</button>
+            </div>
+            <div class="mobile-actions-note"><span class="live-dot"></span> All processing stays on your device</div>
+          </div>
+        </div>
       </div>
     </header>
 

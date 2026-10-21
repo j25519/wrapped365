@@ -19,6 +19,41 @@
   const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history'];
   const $ = id => document.getElementById(id);
   const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
+  const navigationStack = [];
+  const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports' };
+
+  function saveNavigation() {
+    navigationStack.push({
+      view: state.view, year: state.year, count: state.count, sorts: { ...state.sorts },
+      eras: { month: state.eras.month, sort: state.eras.sort, limits: { ...state.eras.limits } },
+      search: { query: state.search.query, filter: state.search.filter, selected: state.search.selected && { ...state.search.selected }, limit: state.search.limit },
+      listings: Object.fromEntries(['artists', 'tracks', 'albums'].map(type => [type, $(type.slice(0, -1) + '-search').value])),
+      scrollY: window.scrollY
+    });
+    if (navigationStack.length > 80) navigationStack.shift();
+    updateBackButton();
+  }
+
+  function updateBackButton() { $('nav-back').classList.toggle('hidden', navigationStack.length === 0); }
+
+  function goBack() {
+    const previous = navigationStack.pop();
+    if (!previous) return;
+    state.year = previous.year;
+    state.count = previous.count;
+    state.sorts = previous.sorts;
+    state.eras = previous.eras;
+    state.search = { ...previous.search, matches: [] };
+    $('year-filter').value = state.year;
+    $('unified-search').value = state.search.query;
+    $('search-filter').value = state.search.filter;
+    for (const [type, query] of Object.entries(previous.listings)) $(type.slice(0, -1) + '-search').value = query;
+    closeMobileActions();
+    openView(previous.view, false);
+    updateBackButton();
+    requestAnimationFrame(() => window.scrollTo({ top: previous.scrollY, behavior: 'instant' }));
+  }
+
 
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const number = value => formatter.format(Math.round(value || 0));
@@ -444,20 +479,27 @@
     }
   }
 
-  function openView(view) {
+  function openView(view, record = true) {
     if (!views.includes(view)) return;
     if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search'].includes(view)) view = 'home';
+    if (record && state.view !== view) saveNavigation();
+    closeMobileActions();
+    closeThemeMenu();
     state.view = view;
     for (const section of document.querySelectorAll('.view')) section.classList.toggle('active', section.id === `view-${view}`);
     for (const nav of document.querySelectorAll('[data-nav]')) nav.classList.toggle('active', nav.dataset.nav === view);
-    $('page-name').textContent = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports' }[view];
+    $('page-name').textContent = pageNames[view];
     $('report-controls').classList.toggle('hidden', !state.report || view === 'history');
-    $('randomise-demo').classList.toggle('hidden', !state.report?.isDemo || view === 'home' || view === 'history');
+    const canRandomise = !!state.report?.isDemo && view !== 'home' && view !== 'history';
+    $('randomise-demo').classList.toggle('hidden', !canRandomise);
+    $('mobile-randomise').classList.toggle('hidden', !canRandomise);
     if (view === 'history') renderHistory();
     else if (view !== 'home') renderCurrent();
+    updateBackButton();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   function activateReport(report) {
+    navigationStack.length = 0;
     state.report = report;
     state.year = 'all';
     state.eras = { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } };
@@ -470,7 +512,7 @@
     $('year-filter').value = 'all';
     $('storage-warning').classList.toggle('hidden', !report.unsaved);
     document.querySelectorAll('.nav-link.report-only').forEach(nav => nav.classList.add('ready'));
-    openView('overview');
+    openView('overview', false);
   }
   function period() { return state.report?.periods?.[state.year] || state.report?.periods?.all; }
   function sortedRecords(category) {
@@ -800,13 +842,14 @@
   // the rest of the app. It never sends a query to Spotify or an external API.
   const searchCategories = { artists: 'Artist', tracks: 'Track', albums: 'Album' };
   function exploreItem(category, item) {
+    saveNavigation();
     state.search.query = item.name;
     state.search.filter = category;
     state.search.selected = { category, key: recordKey(category, item) };
     state.search.limit = 30;
     $('unified-search').value = item.name;
     $('search-filter').value = category;
-    openView('search');
+    openView('search', false);
   }
   function searchScore(item, category, query) {
     if (!query) return 0;
@@ -1323,6 +1366,23 @@
     $('theme-toggle').setAttribute('aria-expanded', 'false');
   }
 
+  function closeMobileActions() {
+    $('mobile-actions-menu').classList.add('hidden');
+    $('mobile-actions-toggle').setAttribute('aria-expanded', 'false');
+  }
+
+  function chooseTheme(event) {
+    const button = event.target.closest('[data-theme-choice]');
+    if (!button) return;
+    const rect = button.getBoundingClientRect();
+    const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    const fromMobile = !!button.closest('#mobile-actions-menu');
+    closeThemeMenu();
+    closeMobileActions();
+    (fromMobile ? $('mobile-actions-toggle') : $('theme-toggle')).focus();
+    setTheme(button.dataset.themeChoice, true, origin);
+  }
+
   function initialiseTheme() {
     let saved = 'green';
     try { saved = localStorage.getItem(THEME_KEY) || 'green'; } catch { /* optional preference */ }
@@ -1335,22 +1395,33 @@
       const open = menu.classList.toggle('hidden') === false;
       $('theme-toggle').setAttribute('aria-expanded', String(open));
     });
-    $('theme-menu').addEventListener('click', event => {
-      const button = event.target.closest('[data-theme-choice]');
-      if (!button) return;
-      const rect = button.getBoundingClientRect();
-      const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-      closeThemeMenu();
-      $('theme-toggle').focus();
-      setTheme(button.dataset.themeChoice, true, origin);
+    $('theme-menu').addEventListener('click', chooseTheme);
+    $('mobile-actions-menu').addEventListener('click', chooseTheme);
+    $('mobile-actions-toggle').addEventListener('click', () => {
+      const open = $('mobile-actions-menu').classList.toggle('hidden') === false;
+      $('mobile-actions-toggle').setAttribute('aria-expanded', String(open));
+      if (open) closeThemeMenu();
     });
+    $('mobile-import').addEventListener('click', () => {
+      closeMobileActions();
+      openView('home');
+      $('file-input').click();
+    });
+    $('mobile-randomise').addEventListener('click', () => { closeMobileActions(); makeDemo(); });
+    $('nav-back').addEventListener('click', goBack);
     document.addEventListener('click', event => {
       if (!event.target.closest('#theme-picker')) closeThemeMenu();
+      if (!event.target.closest('#mobile-actions')) closeMobileActions();
     });
     document.addEventListener('keydown', event => {
-      if (event.key !== 'Escape' || $('theme-menu').classList.contains('hidden')) return;
-      closeThemeMenu();
-      $('theme-toggle').focus();
+      if (event.key !== 'Escape') return;
+      if (!$('mobile-actions-menu').classList.contains('hidden')) {
+        closeMobileActions();
+        $('mobile-actions-toggle').focus();
+      } else if (!$('theme-menu').classList.contains('hidden')) {
+        closeThemeMenu();
+        $('theme-toggle').focus();
+      }
     });
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', () => openView(link.dataset.nav)));
     document.querySelectorAll('[data-go]').forEach(link => link.addEventListener('click', () => openView(link.dataset.go)));
@@ -1387,12 +1458,21 @@
       const item = event.target.closest('[data-search-result]');
       if (!item) return;
       const result = state.search.matches[Number(item.dataset.searchResult)];
-      if (result) { state.search.selected = { category: result.category, key: recordKey(result.category, result.item) }; renderSearchResults(); renderSearchDetail(); }
+      if (result) {
+        const key = recordKey(result.category, result.item);
+        if (state.search.selected?.category !== result.category || state.search.selected.key !== key) saveNavigation();
+        state.search.selected = { category: result.category, key };
+        renderSearchResults(); renderSearchDetail();
+      }
     });
     $('search-more').addEventListener('click', () => { state.search.limit += 30; renderSearchResults(); });
     $('search-detail').addEventListener('click', event => {
       const month = event.target.closest('[data-search-era-month]');
-      if (month) { state.eras.month = month.dataset.searchEraMonth; openView('eras'); }
+      if (month) {
+        saveNavigation();
+        state.eras.month = month.dataset.searchEraMonth;
+        openView('eras', false);
+      }
     });
     $('browse-button').addEventListener('click', event => { event.stopPropagation(); $('file-input').click(); });
     $('file-input').addEventListener('change', event => { if (event.target.files[0]) importHistory(event.target.files[0]); });
@@ -1407,7 +1487,7 @@
     ['dragleave', 'drop'].forEach(name => $('dropzone').addEventListener(name, event => { event.preventDefault(); $('dropzone').classList.remove('dragging'); }));
     $('dropzone').addEventListener('drop', event => { const file = event.dataTransfer.files[0]; if (file) importHistory(file); });
     $('new-upload').addEventListener('click', () => openView('home'));
-    $('year-filter').addEventListener('change', event => { state.year = event.target.value; state.count = 25; state.search.selected = null; state.search.limit = 30; state.eras.month = null; state.eras.limits = { artists: 8, tracks: 10, albums: 8 }; renderCurrent(); });
+    $('year-filter').addEventListener('change', event => { if (state.year !== event.target.value) saveNavigation(); state.year = event.target.value; state.count = 25; state.search.selected = null; state.search.limit = 30; state.eras.month = null; state.eras.limits = { artists: 8, tracks: 10, albums: 8 }; renderCurrent(); });
     for (const type of ['artist', 'track', 'album']) $(type + '-search').addEventListener('input', () => { state.count = 25; renderListing({ artist: 'artists', track: 'tracks', album: 'albums' }[type]); });
     document.querySelectorAll('[data-sort-for]').forEach(group => group.addEventListener('click', event => {
       const button = event.target.closest('[data-sort]');
@@ -1423,6 +1503,8 @@
       const sortButton = event.target.closest('[data-era-sort]');
       const moreButton = event.target.closest('[data-era-more]');
       if (monthButton) {
+        if (state.eras.month === monthButton.dataset.eraMonth) return;
+        saveNavigation();
         state.eras.month = monthButton.dataset.eraMonth;
         state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
         renderEras();
@@ -1431,6 +1513,7 @@
         const index = months.findIndex(row => row.key === state.eras.month);
         const next = months[index + Number(stepButton.dataset.eraStep)];
         if (next) {
+          saveNavigation();
           state.eras.month = next.key;
           state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
           renderEras();
