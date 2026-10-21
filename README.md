@@ -1,6 +1,14 @@
 # Wrapped 365
 
-<img width="2868" height="1881" alt="image" src="https://github.com/user-attachments/assets/cc0fd5ed-8d9c-46b5-99e4-6204b4a7db44" />
+Deep dive into your Spotify analytics locally within your browser.
+
+## Now with themes!
+
+<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/4b011141-bcd0-4a4d-84cb-5e5962978b74" />
+
+<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/1ef1ed1a-b228-484d-969a-026519ec14a7" />
+
+<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/43f00486-78fd-43eb-b049-121f4afde3dd" />
 
 ## Deploy with Docker Compose
 
