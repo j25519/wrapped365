@@ -1504,7 +1504,6 @@
       const moreButton = event.target.closest('[data-era-more]');
       if (monthButton) {
         if (state.eras.month === monthButton.dataset.eraMonth) return;
-        saveNavigation();
         state.eras.month = monthButton.dataset.eraMonth;
         state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
         renderEras();
@@ -1513,7 +1512,6 @@
         const index = months.findIndex(row => row.key === state.eras.month);
         const next = months[index + Number(stepButton.dataset.eraStep)];
         if (next) {
-          saveNavigation();
           state.eras.month = next.key;
           state.eras.limits = { artists: 8, tracks: 10, albums: 8 };
           renderEras();
