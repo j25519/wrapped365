@@ -544,7 +544,7 @@
       for (let h = 0; h < 24; h++) {
         const v = p.heat[day][h];
         const opacity = v ? 0.12 + (v / max) * .88 : 0;
-        heatmap += `<span class="heat-cell" style="background:${v ? `rgba(var(--accent-rgb),${opacity.toFixed(3)})` : '#17231a'}" title="${weekdayLabels[day]} ${String(h).padStart(2, '0')}:00 UTC · ${hours(v)} hours"></span>`;
+        heatmap += `<span class="heat-cell" style="background:${v ? `rgba(var(--accent-rgb),${opacity.toFixed(3)})` : 'var(--heat-idle)'}" title="${weekdayLabels[day]} ${String(h).padStart(2, '0')}:00 UTC · ${hours(v)} hours"></span>`;
       }
     }
     $('heatmap').innerHTML = heatmap + '</div>';
@@ -564,7 +564,7 @@
   }
 
   // The Eras explorer is built from the same qualified music plays as the main
-  // rankings. Its month-level data is saved at import time; no raw history is kept.
+  // rankings. Its month level data is saved at import time; no raw history is kept.
   const monthNumber = key => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7));
   const monthTitle = key => new Date(`${key}-01T00:00:00Z`).toLocaleDateString('en-GB', {
     month: 'long', year: 'numeric', timeZone: 'UTC'
@@ -1253,21 +1253,37 @@
     }
   }
 
-  function setTheme(theme, persist = true) {
+  function setTheme(theme, persist = true, origin = null) {
     const chosen = THEMES.has(theme) ? theme : 'green';
     const root = document.documentElement;
-    if (root.dataset.theme !== chosen && persist && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      root.classList.add('theme-animating');
-      clearTimeout(themeTimer);
-      themeTimer = setTimeout(() => root.classList.remove('theme-animating'), 500);
+    const apply = () => {
+      root.dataset.theme = chosen;
+      document.querySelectorAll('[data-theme-choice]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.themeChoice === chosen));
+      });
+      $('theme-toggle').title = `Accent colour: ${chosen}`;
+      if (persist) {
+        try { localStorage.setItem(THEME_KEY, chosen); } catch { /* optional preference */ }
+      }
+    };
+    if (!persist || root.dataset.theme === chosen || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      apply();
+      return;
     }
-    root.dataset.theme = chosen;
-    document.querySelectorAll('[data-theme-choice]').forEach(button => {
-      button.setAttribute('aria-pressed', String(button.dataset.themeChoice === chosen));
-    });
-    $('theme-toggle').title = `Accent colour: ${chosen}`;
-    if (persist) {
-      try { localStorage.setItem(THEME_KEY, chosen); } catch { /* optional preference */ }
+    const x = origin?.x ?? innerWidth / 2;
+    const y = origin?.y ?? innerHeight / 2;
+    root.style.setProperty('--theme-reveal-x', `${x}px`);
+    root.style.setProperty('--theme-reveal-y', `${y}px`);
+    root.style.setProperty('--theme-reveal-radius', `${Math.ceil(Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)))}px`);
+    if (typeof document.startViewTransition === 'function') {
+      document.startViewTransition(apply);
+    } else {
+      clearTimeout(themeTimer);
+      root.classList.remove('theme-animating');
+      void root.offsetWidth;
+      root.classList.add('theme-animating');
+      apply();
+      themeTimer = setTimeout(() => root.classList.remove('theme-animating'), 720);
     }
   }
 
@@ -1291,9 +1307,11 @@
     $('theme-menu').addEventListener('click', event => {
       const button = event.target.closest('[data-theme-choice]');
       if (!button) return;
-      setTheme(button.dataset.themeChoice);
+      const rect = button.getBoundingClientRect();
+      const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
       closeThemeMenu();
       $('theme-toggle').focus();
+      setTheme(button.dataset.themeChoice, true, origin);
     });
     document.addEventListener('click', event => {
       if (!event.target.closest('#theme-picker')) closeThemeMenu();
