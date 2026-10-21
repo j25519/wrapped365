@@ -167,7 +167,7 @@ tracks:
     artist: "CORPSE"
     album: "MISA MISA!"
     released: "2022-08-26"
-    seconds: 0
+    seconds: 85
     credits: ["Scarlxrd", "Kordhell"]
   - title: "Sorry 4 What? // LV BELT"
     artist: "Tory Lanez"
@@ -525,7 +525,7 @@ tracks:
     artist: "CORPSE"
     album: "White Tee"
     released: "2020-08-01"
-    seconds: 0
+    seconds: 120
   - title: "Mask Off"
     artist: "Future"
     album: "FUTURE"
