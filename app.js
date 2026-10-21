@@ -953,11 +953,27 @@
     const shares = (data.messages || []).filter(message => message.trackId === track.id && message.direction === 'received');
     const senders = [...new Set(shares.map(message => (data.friends || []).find(friend => friend.id === message.friendId)?.name).filter(Boolean))];
     const saved = (data.savedTrackIds || []).includes(track.id);
+    const outcomes = {
+      'new-favourite': 'Became a new favourite',
+      'new-discovery': 'Discovered after the recommendation',
+      rediscovered: 'Rediscovered after a long break',
+      'already-loved': 'Already in your rotation',
+      'followed-up': 'Listened again after the recommendation',
+      'not-followed-up': 'No listening soon after the recommendation'
+    };
+    const story = [...shares].sort((a, b) => b.ts.localeCompare(a.ts)).slice(0, 4).map(message => {
+      const friend = (data.friends || []).find(person => person.id === message.friendId);
+      const detail = outcomes[message.outcome] || 'Recommended';
+      const followUp = message.playsIn90Days ? ` · ${number(message.playsIn90Days)} ${message.playsIn90Days === 1 ? 'play' : 'plays'} in 90 days` : '';
+      return `<div><strong>${escapeHtml(friend?.name || 'A friend')} · ${escapeHtml(dateLabel(message.ts))}</strong><p>${escapeHtml(detail)}${followUp}</p></div>`;
+    }).join('');
     return `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">EXAMPLE SOCIAL & LIBRARY DATA</div><h2>Connections</h2></div></div>
       <div class="search-connections">
       <div><strong>${saved ? 'Saved in your library' : 'Not saved in your library'}</strong><p>Demo library snapshot</p></div>
       <div><strong>${number(playlists.length)} ${playlists.length === 1 ? 'playlist' : 'playlists'}</strong><p>${escapeHtml(playlists.map(list => list.name).join(', ') || 'Not in any demo playlists')}</p></div>
-      <div><strong>${number(senders.length)} recommending ${senders.length === 1 ? 'friend' : 'friends'}</strong><p>${escapeHtml(senders.join(', ') || 'No recommendations recorded')} · ${number(shares.length)} total shares</p></div>
+      <div><strong>${number(senders.length)} recommending ${senders.length === 1 ? 'friend' : 'friends'}</strong><p>${number(shares.length)} simulated recommendations · chronological listening outcomes</p></div>
+      ${story}
+      ${shares.length > 4 ? `<p class="search-muted">And ${number(shares.length - 4)} earlier recommendations.</p>` : ''}
       </div></article>`;
   }
   function renderSearchDetail() {
@@ -1284,19 +1300,169 @@
         rows.push(...yearRows);
         await sleep();
       }
-      const friends = ['Alex', 'Sam', 'Charlie', 'Jordan', 'Taylor', 'Morgan'].map((name, id) => ({ id: `friend-${id + 1}`, name }));
+      const day = 86400_000;
+      const listenTimes = new Map();
+      const indexPlays = () => {
+        listenTimes.clear();
+        for (const row of rows) {
+          if (row.ms_played < MIN_PLAY_MS) continue;
+          const list = listenTimes.get(row.demo_track_id) || [];
+          list.push(Date.parse(row.ts));
+          listenTimes.set(row.demo_track_id, list);
+        }
+        for (const list of listenTimes.values()) list.sort((a, b) => a - b);
+      };
+      indexPlays();
+      const popularArtists = [...artistWeights.entries()].sort((a, b) => b[1] - a[1]).map(([artist]) => artist);
+      const friends = ['Alex', 'Sam', 'Charlie', 'Jordan', 'Taylor', 'Morgan'].map((name, id) => ({
+        id: `friend-${id + 1}`, name,
+        favouriteArtists: shuffled(popularArtists.slice(0, Math.max(8, Math.ceil(popularArtists.length * .55)))).slice(0, 4)
+      }));
       const playlists = ['Night Drives', 'On Repeat', 'Underground', 'Late Night', 'Gym Rotation', 'Old Favourites', 'Discoveries', 'Weekend'].map((name, id) => ({
         id: `playlist-${id + 1}`, name, trackIds: shuffled(catalogue).slice(0, randomInt(18, 55)).map(track => track.id)
       }));
       const messages = [];
-      const shared = shuffled(catalogue).slice(0, Math.min(85, catalogue.length));
-      for (const friend of friends) {
-        const recommendations = shuffled(shared).slice(0, randomInt(8, 22));
-        for (const track of recommendations) {
-          if (track.releasedAt >= cutoff) continue;
-          const timestamp = track.releasedAt + Math.floor(rand() * (cutoff - track.releasedAt));
-          messages.push({ friendId: friend.id, trackId: track.id, ts: new Date(timestamp).toISOString(), direction: 'received' });
+      const sharedPairs = new Set();
+      const seededTracks = new Set();
+      const availableTo = (track, timestamp) => track.length >= 70_000 && track.releasedAt <= timestamp && timestamp < cutoff;
+      const pickForFriend = (friend, predicate) => {
+        const possible = catalogue.filter(track => !sharedPairs.has(`${friend.id}:${track.id}`) && predicate(track));
+        if (!possible.length) return null;
+        const favourites = possible.filter(track => friend.favouriteArtists.includes(track.artist));
+        return choose(favourites.length && rand() < .72 ? favourites : possible);
+      };
+      const recommend = (friend, track, timestamp) => {
+        if (!track || !availableTo(track, timestamp) || timestamp < minDate) return false;
+        const pair = `${friend.id}:${track.id}`;
+        if (sharedPairs.has(pair)) return false;
+        sharedPairs.add(pair);
+        messages.push({ friendId: friend.id, trackId: track.id, ts: new Date(timestamp).toISOString(), direction: 'received' });
+        return true;
+      };
+      const simulateFollowUp = (track, timestamp, obsession) => {
+        const count = obsession ? randomInt(8, 15) : randomInt(2, 4);
+        const start = timestamp + randomInt(2, 8) * day;
+        const span = (obsession ? randomInt(17, 32) : randomInt(6, 14)) * day;
+        for (let i = 0; i < count; i++) {
+          const finishedAt = Math.min(cutoff - 60_000,
+            start + Math.round(span * i / Math.max(1, count - 1)) + randomInt(0, 180) * 1000);
+          if (finishedAt <= timestamp || finishedAt <= track.releasedAt) continue;
+          const platform = choose(platforms);
+          rows.push({
+            ts: new Date(finishedAt).toISOString(),
+            master_metadata_album_artist_name: track.artist,
+            credited_artists: [track.artist, ...track.credits],
+            master_metadata_track_name: track.title,
+            master_metadata_album_album_name: track.album,
+            ms_played: track.length, platform, skipped: false,
+            shuffle: rand() < .16, offline: false,
+            reason_start: 'clickrow', reason_end: 'trackdone', demo_track_id: track.id
+          });
+          allSessions.push({ started: new Date(finishedAt - track.length).toISOString(),
+            ended: new Date(finishedAt).toISOString(), platform, trackIds: [track.id] });
+          const year = String(new Date(finishedAt).getUTCFullYear());
+          byYear.set(year, (byYear.get(year) || 0) + 1);
+          const summary = years.find(item => String(item.year) === year);
+          if (summary) summary.sessions++;
         }
+      };
+      // Seed real post-recommendation listens; all other outcomes are inferred from the playback timeline.
+      for (const friend of friends) {
+        for (let i = 0; i < 2; i++) {
+          const unheard = track => !seededTracks.has(track.id) && !storyKeys.has(storyKey(track)) &&
+            track.length >= 70_000 && track.releasedAt < cutoff - 120 * day &&
+            !(listenTimes.get(track.id)?.length);
+          let track = pickForFriend(friend, unheard);
+          if (track) {
+            const earliest = Math.max(minDate, track.releasedAt) + 3 * day;
+            const latest = cutoff - 90 * day;
+            if (earliest > latest) continue;
+            const timestamp = earliest + Math.floor(rand() * (latest - earliest));
+            if (recommend(friend, track, timestamp)) {
+              seededTracks.add(track.id);
+              simulateFollowUp(track, timestamp, i === 0);
+            }
+          } else {
+            track = pickForFriend(friend, item => !seededTracks.has(item.id) &&
+              !storyKeys.has(storyKey(item)) && item.length >= 70_000 &&
+              (listenTimes.get(item.id)?.[0] || 0) > Math.max(minDate, item.releasedAt) + 12 * day);
+            if (!track) continue;
+            const first = listenTimes.get(track.id)[0];
+            const timestamp = first - randomInt(3, 10) * day;
+            if (recommend(friend, track, timestamp)) {
+              seededTracks.add(track.id);
+              simulateFollowUp(track, timestamp, i === 0);
+            }
+          }
+        }
+      }
+      indexPlays();
+      for (const friend of friends) {
+        const target = randomInt(12, 18);
+        // Genuine quiet gaps make a friend's recommendation precede a rediscovery.
+        for (let i = 0; i < 2; i++) {
+          const gaps = [];
+          for (const track of catalogue) {
+            if (!availableTo(track, cutoff - day) || sharedPairs.has(`${friend.id}:${track.id}`)) continue;
+            const times = listenTimes.get(track.id) || [];
+            for (let j = 1; j < times.length; j++) {
+              if (times[j] - times[j - 1] < 180 * day) continue;
+              const timestamp = times[j] - randomInt(3, 12) * day;
+              if (timestamp > times[j - 1] + 30 * day && availableTo(track, timestamp)) {
+                gaps.push({ track, timestamp });
+                break;
+              }
+            }
+          }
+          if (!gaps.length) break;
+          const preferred = gaps.filter(({track}) => friend.favouriteArtists.includes(track.artist));
+          const option = choose(preferred.length && rand() < .72 ? preferred : gaps);
+          recommend(friend, option.track, option.timestamp);
+        }
+        // Some friends share songs you already love; some tips never get played.
+        for (let i = 0; i < 3; i++) {
+          const track = pickForFriend(friend, item => (listenTimes.get(item.id)?.length || 0) >= 5 &&
+            availableTo(item, cutoff - day));
+          if (!track) break;
+          const times = listenTimes.get(track.id);
+          const timestamp = times[randomInt(3, times.length - 1)] + 60_000;
+          recommend(friend, track, Math.min(timestamp, cutoff - 1));
+        }
+        for (let i = 0; i < 3; i++) {
+          const track = pickForFriend(friend, item => item.length >= 70_000 && item.releasedAt < cutoff - 22 * day &&
+            (listenTimes.get(item.id)?.at(-1) || minDate) < cutoff - 18 * day);
+          if (!track) break;
+          const earliest = Math.max(minDate, track.releasedAt, (listenTimes.get(track.id)?.at(-1) || minDate)) + 2 * day;
+          const latest = cutoff - 1 * day;
+          if (earliest <= latest) recommend(friend, track, earliest + Math.floor(rand() * (latest - earliest)));
+        }
+        let attempts = 0;
+        while (messages.filter(message => message.friendId === friend.id).length < target && attempts++ < 120) {
+          const track = pickForFriend(friend, item => item.length >= 70_000 && item.releasedAt < cutoff - 15 * day);
+          if (!track) break;
+          const times = listenTimes.get(track.id) || [];
+          const anchor = times.length && rand() < .72 ? choose(times) : cutoff - randomInt(20, 1800) * day;
+          const earliest = Math.max(minDate, track.releasedAt);
+          const timestamp = Math.min(cutoff - 1, Math.max(earliest, anchor - randomInt(1, 20) * day));
+          recommend(friend, track, timestamp);
+        }
+      }
+      messages.sort((a, b) => a.ts.localeCompare(b.ts));
+      for (const message of messages) {
+        const plays = listenTimes.get(message.trackId) || [];
+        const sent = Date.parse(message.ts);
+        const prior = plays.filter(time => time < sent);
+        const after = plays.filter(time => time >= sent);
+        message.playsBefore = prior.length;
+        message.playsAfter = after.length;
+        message.playsIn30Days = after.filter(time => time <= sent + 30 * day).length;
+        message.playsIn90Days = after.filter(time => time <= sent + 90 * day).length;
+        message.firstPlayedAfter = after.length ? new Date(after[0]).toISOString() : null;
+        message.daysToFirstPlay = after.length ? Math.max(0, Math.ceil((after[0] - sent) / day)) : null;
+        if (!message.playsIn90Days) message.outcome = 'not-followed-up';
+        else if (!prior.length) message.outcome = message.playsIn90Days >= 6 ? 'new-favourite' : 'new-discovery';
+        else if (sent - prior.at(-1) >= 180 * day) message.outcome = 'rediscovered';
+        else message.outcome = prior.length >= 5 ? 'already-loved' : 'followed-up';
       }
       updateLoading('Finishing your demo…', 'Building your listening statistics.');
       const builder = makeBuilder();
@@ -1311,7 +1477,8 @@
         playlists,
         friends,
         messages,
-        savedTrackIds: catalogue.filter(() => rand() < 0.48).map(track => track.id),
+        savedTrackIds: catalogue.filter(track => rand() < (messages.some(message =>
+          message.trackId === track.id && message.outcome === 'new-favourite') ? .85 : .48)).map(track => track.id),
         yearTotals: [...byYear.entries()]
       };
       activateReport(report);
