@@ -2,17 +2,151 @@
 # the non-deterministic makeDemo() function picks random tracks from this list to create data when the user clicks "Explore demo"
 # i'm also using it for development purposes so i'm using tracks from many different eras to test deep analytics
 tracks:
-  - title: "Misery in Waking Hours"
+  - title: "German Whip (feat. Big H & JME)"
+    artist: "Meridian Dan"
+    album: "German Whip"
+    released: "2014-04-13"
+    seconds: 196
+  - title: "Rari WorkOut (feat. JME & Tempa T)"
+    artist: "Lethal Bizzle"
+    album: "Rari WorkOut"
+    released: "2014-08-31"
+    seconds: 206
+  - title: "That's Not Me (feat. JME)"
+    artist: "Skepta"
+    album: "That's Not Me"
+    released: "2014-06-08"
+    seconds: 184
+  - title: "Shutdown"
+    artist: "Skepta"
+    album: "Shutdown"
+    released: "2015-04-26"
+    seconds: 188
+  - title: "Man Don't Care (feat. Giggs)"
+    artist: "JME"
+    album: "Man Don't Care"
+    released: "2015-05-04"
+    seconds: 213
+  - title: "Let Me See (feat. Kevin Gates & Lil Skies)"
+    artist: "Juicy J"
+    album: "Let Me See"
+    released: "2019-02-15"
+    seconds: 248
+  - title: "Vincent Van Gogh Ain't Got Shit on Me"
     artist: "$uicideboy$"
-    album: "New World Depression"
-    released: "2024-06-14"
-    seconds: 219
-  - title: "LIKE YXU WXULD KNXW (AUTUMN TREES)"
-    artist: "Kordhell"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 134
+  - title: "Reign in Blood"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 173
+  - title: "Shattered Amethyst"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 126
+  - title: "Fold"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 164
+  - title: "Tulane"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 108
+  - title: "Cherish the Dead"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 119
+  - title: "Opal Ring"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 120
+  - title: "T.R.U. (Totally Rotten Underground)"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 127
+  - title: "Whoa, I'm Woeful"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 157
+  - title: "A Death in the Ocean Would Be Beautiful"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 118
+  - title: "Fuckthepopulation"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 150
+  - title: "Kill Yourself (Part III)"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 145
+  - title: "Iron Veil"
+    artist: "$uicideboy$"
+    album: "My Liver Will Handle What My Heart Can't"
+    released: "2015-09-21"
+    seconds: 116
+  - title: "MISS ME?"
+    artist: "Kordhell & Scarlxrd"
     album: "PSYCHX"
     released: "2022-10-28"
-    seconds: 0
-    credits: ["Scarlxrd", "CORPSE"]
+    seconds: 133
+  - title: "KILLING THE SURFACE"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 158
+  - title: "I FEEL ALIVE"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 122
+  - title: "MADEINHELL, PT. 1"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 150
+  - title: "THIS IS MY LIFE"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 127
+  - title: "I'M THE DEVIL"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 120
+  - title: "JEKYLL & HYDE"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 112
+  - title: "FIND YXURSELF"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 155
+  - title: "MADEINHELL, PT. 2"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 107
+  - title: "LIKE YXU WXULD KNXW (AUTUMN TREES) (feat. CORPSE)"
+    artist: "Kordhell & Scarlxrd"
+    album: "PSYCHX"
+    released: "2022-10-28"
+    seconds: 210
   - title: "MORRISON"
     artist: "Night Lovell"
     album: "I HOPE YOU'RE HAPPY"
@@ -45,21 +179,6 @@ tracks:
     album: "ICEMAN"
     released: "2026-05-15"
     seconds: 0
-  - title: "The Light at the End of the Tunnel for $9.99 a Month"
-    artist: "$uicideboy$"
-    album: "New World Depression"
-    released: "2024-06-14"
-    seconds: 139
-  - title: "Napoleon"
-    artist: "$uicideboy$"
-    album: "THY KINGDOM COME"
-    released: "2025-07-31"
-    seconds: 156
-  - title: "Now and at the Hour of Our Death (feat. BONES)"
-    artist: "$uicideboy$"
-    album: "THY KINGDOM COME"
-    released: "2025-07-31"
-    seconds: 254
   - title: "Mood Swing Misery"
     artist: "Pouya"
     album: "The South Got Something to Say"
@@ -2625,6 +2744,31 @@ tracks:
     album: "New World Depression"
     released: "2024-06-14"
     seconds: 107
+  - title: "Misery in Waking Hours"
+    artist: "$uicideboy$"
+    album: "New World Depression"
+    released: "2024-06-14"
+    seconds: 219
+  - title: "The Light at the End of the Tunnel for $9.99 a Month"
+    artist: "$uicideboy$"
+    album: "New World Depression"
+    released: "2024-06-14"
+    seconds: 139
+  - title: "Kill Yourself V"
+    artist: "$uicideboy$"
+    album: "New World Depression"
+    released: "2024-06-14"
+    seconds: 116
+  - title: "Mental Clarity Is a Luxury I Can't Afford"
+    artist: "$uicideboy$"
+    album: "New World Depression"
+    released: "2024-06-14"
+    seconds: 145
+  - title: "Drag 'Em to the River (Totalitarian Remix)"
+    artist: "$uicideboy$"
+    album: "New World Depression"
+    released: "2024-06-14"
+    seconds: 227
   - title: "The Thin Grey Line"
     artist: "$uicideboy$"
     album: "New World Depression"
@@ -4373,16 +4517,116 @@ tracks:
     album: "XXX"
     released: "2011-08-15"
     seconds: 148
+  - title: "Heaven or Hell"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 183
+  - title: "Euphoria (feat. Travis Scott & Kaash Paige)"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 216
+  - title: "Cardigan"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 158
+  - title: "After Party"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 167
+  - title: "Wasted"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 171
+  - title: "Can't Feel My Legs"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 180
+  - title: "Candy"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 236
+  - title: "Company"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 204
+  - title: "Had Enough (feat. Quavo & Offset)"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 157
+  - title: "Spaceship (feat. Sheck Wes)"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 185
+  - title: "No Photos"
+    artist: "Don Toliver"
+    album: "Heaven Or Hell"
+    released: "2020-03-13"
+    seconds: 175
   - title: "No Idea"
     artist: "Don Toliver"
-    album: "Heaven or Hell"
+    album: "Heaven Or Hell"
     released: "2020-03-13"
-    seconds: 0
+    seconds: 154
+  - title: "Intro.Decadence"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 59
+  - title: "Hexada"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 135
+  - title: "Rake"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 92
   - title: "Mercury: Retrograde"
     artist: "Ghostemane"
-    album: "HEXADA"
+    album: "Hexada"
     released: "2017-09-05"
-    seconds: 0
+    seconds: 124
+  - title: "D(R)Own"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 107
+  - title: "Smog (City of Angeles)"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 105
+  - title: "Changing of the Tides"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 172
+  - title: "Idle Hands"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 181
+  - title: "Squeeze"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 140
+  - title: "Polaris"
+    artist: "Ghostemane"
+    album: "Hexada"
+    released: "2017-09-05"
+    seconds: 219
   - title: "HDMI"
     artist: "BONES"
     album: "Rotten"
@@ -4398,36 +4642,291 @@ tracks:
     album: "BAD SHIT"
     released: "2016-11-01"
     seconds: 0
+  - title: "Come Back to Earth"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 161
+  - title: "Hurt Feelings"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 245
+  - title: "What's the Use?"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 288
+  - title: "Perfecto"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 215
   - title: "Self Care"
     artist: "Mac Miller"
     album: "Swimming"
     released: "2018-08-03"
-    seconds: 0
-  - title: "EARFQUAKE"
-    artist: "Tyler, the Creator"
+    seconds: 345
+  - title: "Wings"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 250
+  - title: "Ladders"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 287
+  - title: "Small Worlds"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 271
+  - title: "Conversation Pt. 1"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 210
+  - title: "Dunno"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 237
+  - title: "Jet Fuel"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 345
+  - title: "2009"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 347
+  - title: "So It Goes"
+    artist: "Mac Miller"
+    album: "Swimming"
+    released: "2018-08-03"
+    seconds: 312
+  - title: "IGOR'S THEME"
+    artist: "Tyler, The Creator"
     album: "IGOR"
     released: "2019-05-17"
-    seconds: 0
+    seconds: 200
+  - title: "EARFQUAKE"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 190
+  - title: "I THINK"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 212
+  - title: "EXACTLY WHAT YOU RUN FROM YOU END UP CHASING"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 14
+  - title: "RUNNING OUT OF TIME"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 177
+  - title: "NEW MAGIC WAND"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 195
+  - title: "A BOY IS A GUN*"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 210
+  - title: "PUPPET"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 179
+  - title: "WHAT'S GOOD"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 205
+  - title: "GONE, GONE / THANK YOU"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 375
+  - title: "I DON'T LOVE YOU ANYMORE"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 161
+  - title: "ARE WE STILL FRIENDS?"
+    artist: "Tyler, The Creator"
+    album: "IGOR"
+    released: "2019-05-17"
+    seconds: 265
+  - title: "Goblin"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 408
+  - title: "Yonkers"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 249
+  - title: "Radicals"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 438
+  - title: "She (feat. Frank Ocean)"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 253
+  - title: "Transylvania"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 192
+  - title: "Nightmare"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 322
+  - title: "Tron Cat"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 253
+  - title: "Her"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 211
+  - title: "Sandwitches (feat. Hodgy)"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 291
+  - title: "Fish"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 379
+  - title: "Analog (feat. Hodgy)"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 174
+  - title: "B.S.D. (feat. Jasper Dolphin & Taco)"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 216
+  - title: "Window (feat. Domo Genesis, Frank Ocean, Hodgy & Mike G)"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 480
+  - title: "AU79"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 220
+  - title: "Golden"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 343
+  - title: "Burger (feat. Hodgy)"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 229
+  - title: "Untitled 63"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 66
+  - title: "Steak Sauce"
+    artist: "Tyler, The Creator"
+    album: "Goblin"
+    released: "2011-05-09"
+    seconds: 202
+  - title: "Muddy Sea"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 164
+  - title: "Red Bottom Sky"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 303
+  - title: "Skimask"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 196
+  - title: "Silver Arrows"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 186
+  - title: "Metallic Intuition"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 215
+  - title: "Push / Lost Weekend"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 174
+  - title: "Salute / Pacman"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 197
+  - title: "Drop It / Scooter"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 245
+  - title: "Hunting My Own Skin"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 182
+  - title: "Iceman"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 194
+  - title: "Snakeskin / Bullets"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 67
+  - title: "Fallen Demon"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 167
   - title: "Agony"
     artist: "Yung Lean"
     album: "Stranger"
     released: "2017-11-10"
-    seconds: 0
-  - title: "Mental Clarity Is a Luxury I Can't Afford"
-    artist: "$uicideboy$"
-    album: "New World Depression"
-    released: "2024-06-14"
-    seconds: 145
-  - title: "Drag 'Em to the River (Totalitarian Remix)"
-    artist: "$uicideboy$"
-    album: "New World Depression"
-    released: "2024-06-14"
-    seconds: 227
-  - title: "Kill Yourself V"
-    artist: "$uicideboy$"
-    album: "New World Depression"
-    released: "2024-06-14"
-    seconds: 116
+    seconds: 214
+  - title: "Yellowman"
+    artist: "Yung Lean"
+    album: "Stranger"
+    released: "2017-11-10"
+    seconds: 282
   - title: "2009 Reggie Bush"
     artist: "$uicideboy$"
     album: "THY WILL BE DONE"
@@ -4473,6 +4972,16 @@ tracks:
     album: "THY WILL BE DONE"
     released: "2025-12-25"
     seconds: 280
+  - title: "Napoleon"
+    artist: "$uicideboy$"
+    album: "THY KINGDOM COME"
+    released: "2025-07-31"
+    seconds: 156
+  - title: "Now and at the Hour of Our Death (feat. BONES)"
+    artist: "$uicideboy$"
+    album: "THY KINGDOM COME"
+    released: "2025-07-31"
+    seconds: 254
   - title: "COUNT YOUR BLESSINGS"
     artist: "$uicideboy$"
     album: "THY KINGDOM COME"
@@ -9008,3 +9517,308 @@ tracks:
     album: "The Filthiest Hits...So Far"
     released: "2011-07-26"
     seconds: 194
+  - title: "[ost] dreamseeker"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 19
+  - title: "YOUtopia"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 242
+  - title: "Kool-Aid"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 228
+  - title: "Top 10 staTues tHat CriEd bloOd"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 240
+  - title: "liMOusIne (feat. AURORA)"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 251
+  - title: "DArkSide"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 165
+  - title: "a bulleT w/ my namE On (feat. Underoath)"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 260
+  - title: "[ost] (spi)ritual"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 114
+  - title: "n/A"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 200
+  - title: "LosT"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 205
+  - title: "sTraNgeRs"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 195
+  - title: "R.i.p. (duskCOre RemIx)"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 203
+  - title: "AmEN! (feat. Lil Uzi Vert & Daryl Palumbo of Glassjaw)"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 189
+  - title: "[ost] p.u.s.s.-e"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 169
+  - title: "DiE4u"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 207
+  - title: "DIg It"
+    artist: "Bring Me The Horizon"
+    album: "POST HUMAN: NeX GEn"
+    released: "2024-05-24"
+    seconds: 432
+  - title: "Summer Knights"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 116
+  - title: "Waves"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 211
+  - title: "FromdaTomb$ (feat. Chuck Strangers)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 204
+  - title: "Survival Tactics (feat. Capital STEEZ)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 202
+  - title: "Killuminati (feat. Capital STEEZ)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 153
+  - title: "Hardknock (feat. CJ Fly)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 318
+  - title: "World Domination"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 162
+  - title: "Pennyroyal"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 169
+  - title: "Funky Ho'$"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 269
+  - title: "Daily Routine"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 177
+  - title: "Snakes (feat. T'nah Apex)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 259
+  - title: "Don't Front (feat. CJ Fly)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 261
+  - title: "Righteous Minds"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 224
+  - title: "Where It'$ At? (feat. Kirk Knight)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 248
+  - title: "Third Eye Sh*t (feat. Pro Era, Capital STEEZ, CJ Fly, Chuck Strangers, Dyemond Lewis, Nyck Caution, Kirk Knight, Rokamouth, T'nah Apex & Dessy Hinds)"
+    artist: "Joey Bada$$"
+    album: "1999"
+    released: "2012-06-12"
+    seconds: 706
+  - title: "GOOD MORNING AMERIKKKA"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 98
+  - title: "FOR MY PEOPLE"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 232
+  - title: "TEMPTATION"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 244
+  - title: "LAND OF THE FREE"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 283
+  - title: "DEVASTATED"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 207
+  - title: "Y U DON'T LOVE ME? (MISS AMERIKKKA)"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 199
+  - title: "ROCKABYE BABY (feat. ScHoolboy Q)"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 223
+  - title: "RING THE ALARM (feat. Nyck Caution, Kirk Knight & Meechy Darko)"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 260
+  - title: "SUPER PREDATOR (feat. Styles P)"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 251
+  - title: "BABYLON (feat. Chronixx)"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 336
+  - title: "LEGENDARY (feat. J. Cole)"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 278
+  - title: "AMERIKKKAN IDOL"
+    artist: "Joey Bada$$"
+    album: "ALL-AMERIKKKAN BADA$$"
+    released: "2017-04-07"
+    seconds: 371
+  - title: "Introduction (instructions)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 117
+  - title: "ALONE, PART 3"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 109
+  - title: "Moonlight"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 135
+  - title: "SAD!"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 166
+  - title: "the remedy for a broken heart (why am I so in love)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 160
+  - title: "Floor 555"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 93
+  - title: "NUMB"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 186
+  - title: "infinity (888) (feat. Joey Bada$$)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 176
+  - title: "going down!"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 115
+  - title: "Pain = BESTFRIEND (feat. Travis Barker)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 101
+  - title: "$$$ (feat. Matt Ox)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 130
+  - title: "love yourself (interlude)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 48
+  - title: "SMASH! (feat. PnB Rock)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 109
+  - title: "I don’t even speak spanish lol (feat. Rio Santana, Judah & Andrez Babii)"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 192
+  - title: "changes"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 121
+  - title: "Hope"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 110
+  - title: "schizophrenia"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 80
+  - title: "before I close my eyes"
+    artist: "XXXTENTACION"
+    album: "?"
+    released: "2018-03-16"
+    seconds: 99
