@@ -1,3 +1,6 @@
+# demo tracks for Wrapped 365
+# the non-deterministic makeDemo() function picks random tracks from this list to create data when the user clicks "Explore demo"
+# i'm also using it for development purposes so i'm using tracks from many different eras to test deep analytics
 tracks:
   - title: "Misery in Waking Hours"
     artist: "$uicideboy$"
@@ -1622,56 +1625,911 @@ tracks:
     album: "Goodbye & Good Riddance"
     released: "2018-05-23"
     seconds: 75
-  - title: "Jocelyn Flores"
-    artist: "XXXTentacion"
+  - title: "The Explanation"
+    artist: "XXXTENTACION"
     album: "17"
     released: "2017-08-25"
-    seconds: 0
+    seconds: 50
+  - title: "Jocelyn Flores"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 119
+  - title: "Depression & Obsession"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 144
+  - title: "Everybody Dies In Their Nightmares"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 95
+  - title: "Revenge"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 120
+  - title: "Save Me"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 163
+  - title: "Dead Inside (Interlude)"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 86
+  - title: "Fuck Love (feat. Trippie Redd)"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 146
+  - title: "Carry On"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 129
+  - title: "Orlando"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 163
+  - title: "Ayala (Outro)"
+    artist: "XXXTENTACION"
+    album: "17"
+    released: "2017-08-25"
+    seconds: 99
+  - title: "Alone Again"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 250
+  - title: "Too Late"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 239
+  - title: "Hardest To Love"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 211
+  - title: "Scared To Live"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 191
+  - title: "Snowchild"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 247
+  - title: "Escape From LA"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 355
+  - title: "Heartless"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 198
+  - title: "Faith"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 283
   - title: "Blinding Lights"
     artist: "The Weeknd"
-    album: "After Hours"
+    album: "After Hours (Deluxe)"
     released: "2020-03-20"
-    seconds: 0
+    seconds: 200
+  - title: "In Your Eyes"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 237
+  - title: "Save Your Tears"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 215
+  - title: "Repeat After Me (Interlude)"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 195
+  - title: "After Hours"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 361
+  - title: "Until I Bleed Out"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 192
+  - title: "Nothing Compares - Bonus Track"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 222
+  - title: "Missed You - Bonus Track"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 144
+  - title: "Final Lullaby - Bonus Track"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 185
+  - title: "Save Your Tears (Remix) (feat. Ariana Grande) - Bonus Track"
+    artist: "The Weeknd"
+    album: "After Hours (Deluxe)"
+    released: "2020-03-20"
+    seconds: 191
+  - title: "Distorted Records"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 140
+  - title: "A$AP Forever REMIX (feat. Moby, T.I. & Kid Cudi)"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 315
+  - title: "Tony Tone"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 208
+  - title: "Fukk Sleep (feat. FKA twigs)"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 192
   - title: "Praise The Lord (Da Shine) (feat. Skepta)"
     artist: "A$AP Rocky"
     album: "TESTING"
     released: "2018-05-25"
-    seconds: 0
+    seconds: 205
+  - title: "CALLDROPS (feat. Kodak Black)"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 162
+  - title: "Buck Shots"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 167
+  - title: "Gunz N Butter (feat. Juicy J)"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 213
+  - title: "Brotha Man (feat. French Montana)"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 216
+  - title: "OG Beeper"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 155
+  - title: "Kids Turned Out Fine"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 183
+  - title: "Hun43rd"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 242
+  - title: "Changes"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 314
+  - title: "Black Tux, White Collar"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 162
+  - title: "Purity (feat. Frank Ocean)"
+    artist: "A$AP Rocky"
+    album: "TESTING"
+    released: "2018-05-25"
+    seconds: 262
+  - title: "No Introduction"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 161
+  - title: "5 Star"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 160
+  - title: "Gata (feat. Young Miko)"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 205
+  - title: "St. Patrick's"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 160
+  - title: "GBP (feat. 21 Savage)"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 154
+  - title: "Top Freestyle"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 184
+  - title: "Up North"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 163
+  - title: "CRG (feat. Dave)"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 182
+  - title: "Limitless"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 201
+  - title: "Now We're Strangers"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 206
+  - title: "Truth In The Lies (feat. Lil Durk)"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 142
+  - title: "Ten (feat. Skepta)"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 122
   - title: "BAND4BAND (feat. Lil Baby)"
     artist: "Central Cee"
     album: "CAN'T RUSH GREATNESS"
     released: "2025-01-24"
-    seconds: 0
+    seconds: 140
+  - title: "Gen Z Luv"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 153
+  - title: "Walk In Wardrobe"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 198
+  - title: "Must Be"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 165
+  - title: "Don't Know Anymore"
+    artist: "Central Cee"
+    album: "CAN'T RUSH GREATNESS"
+    released: "2025-01-24"
+    seconds: 227
+  - title: "Cmon"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 102
+  - title: "Morning mudd"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 144
+  - title: "Got rich"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 121
+  - title: "Lët ya know"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 153
+  - title: "Stayëd tha same"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 155
+  - title: "Gët Busy"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 157
+  - title: "Rokstar"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 133
+  - title: "Trëndy way (feat. SeptembersRich)"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 200
+  - title: "Swërved It"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 137
+  - title: "Ya Ya"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 138
+  - title: "U could tëll"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 148
+  - title: "Factz"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 161
+  - title: "Bak on ëm"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 120
+  - title: "Hëy"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 157
+  - title: "Turban"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 155
+  - title: "Twizzy Rich"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 161
+  - title: "Told ya"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 188
   - title: "Monëy so big"
     artist: "Yeat"
     album: "Up 2 Më"
     released: "2021-09-10"
-    seconds: 0
+    seconds: 160
+  - title: "Dëserve it"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 110
+  - title: "Kant changë"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 130
+  - title: "Callin më"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 155
+  - title: "Lying 4 fun"
+    artist: "Yeat"
+    album: "Up 2 Më"
+    released: "2021-09-10"
+    seconds: 303
+  - title: "Intro"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 172
+  - title: "Blunt Blowin"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 312
+  - title: "MegaMan"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 198
+  - title: "6 Foot 7 Foot (feat. Cory Gunz)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 248
+  - title: "Nightmares Of The Bottom"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 281
+  - title: "She Will (feat. Drake)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 305
+  - title: "How To Hate (feat. T-Pain)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 278
+  - title: "Interlude (feat. Tech N9ne)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 121
+  - title: "John (feat. Rick Ross)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 286
+  - title: "Abortion"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 223
+  - title: "So Special (feat. John Legend)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 232
+  - title: "How To Love"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 240
+  - title: "President Carter"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 255
+  - title: "It's Good (feat. Drake & Jadakiss)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 241
+  - title: "Outro (feat. Bun B, Nas, Shyne & Busta Rhymes)"
+    artist: "Lil Wayne"
+    album: "Tha Carter IV"
+    released: "2011-08-29"
+    seconds: 232
+  - title: "MONTERO (Call Me By Your Name)"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 137
+  - title: "DEAD RIGHT NOW"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 221
   - title: "INDUSTRY BABY (feat. Jack Harlow)"
     artist: "Lil Nas X"
     album: "MONTERO"
     released: "2021-09-17"
-    seconds: 0
-  - title: "XO TOUR Llif3"
+    seconds: 212
+  - title: "THATS WHAT I WANT"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 143
+  - title: "THE ART OF REALIZATION"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 24
+  - title: "SCOOP (feat. Doja Cat)"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 174
+  - title: "ONE OF ME (feat. Elton John)"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 161
+  - title: "LOST IN THE CITADEL"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 170
+  - title: "DOLLA SIGN SLIME (feat. Megan Thee Stallion)"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 145
+  - title: "TALES OF DOMINICA"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 146
+  - title: "SUN GOES DOWN"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 168
+  - title: "VOID"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 248
+  - title: "DONT WANT IT"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 130
+  - title: "LIFE AFTER SALEM"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 210
+  - title: "AM I DREAMING (feat. Miley Cyrus)"
+    artist: "Lil Nas X"
+    album: "MONTERO"
+    released: "2021-09-17"
+    seconds: 183
+  - title: "Two®"
     artist: "Lil Uzi Vert"
     album: "Luv Is Rage 2"
     released: "2017-08-25"
-    seconds: 0
+    seconds: 185
+  - title: "444+222"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 247
+  - title: "Sauce It Up"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 207
+  - title: "No Sleep Leak"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 189
+  - title: "The Way Life Goes (feat. Oh Wonder)"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 221
+  - title: "For Real"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 177
+  - title: "Feelings Mutual"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 233
+  - title: "Neon Guts (feat. Pharrell Williams)"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 258
+  - title: "Early 20 Rager"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 274
+  - title: "UnFazed (feat. The Weeknd)"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 190
+  - title: "Pretty Mami"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 264
+  - title: "How to Talk"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 201
+  - title: "X"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 173
+  - title: "Malfunction"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 199
+  - title: "Dark Queen"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 173
+  - title: "XO Tour Llif3"
+    artist: "Lil Uzi Vert"
+    album: "Luv Is Rage 2"
+    released: "2017-08-25"
+    seconds: 182
+  - title: "Love Sosa"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 246
+  - title: "Hallelujah"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 182
   - title: "I Don't Like (feat. Lil Reese)"
     artist: "Chief Keef"
     album: "Finally Rich"
     released: "2012-12-18"
-    seconds: 0
-  - title: "Day 'N' Nite (nightmare)"
+    seconds: 293
+  - title: "No Tomorrow"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 190
+  - title: "Hate Bein' Sober (feat. 50 Cent & Wiz Khalifa)"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 280
+  - title: "Kay Kay"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 187
+  - title: "Laughin' To The Bank"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 227
+  - title: "Diamonds (feat. French Montana)"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 185
+  - title: "Ballin'"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 218
+  - title: "Understand Me (feat. Jeezy)"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 244
+  - title: "3Hunna (feat. Rick Ross)"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 208
+  - title: "Finally Rich"
+    artist: "Chief Keef"
+    album: "Finally Rich"
+    released: "2012-12-18"
+    seconds: 248
+  - title: "In My Dreams (Cudder Anthem)"
     artist: "Kid Cudi"
     album: "Man on the Moon: The End of Day"
     released: "2009-09-15"
-    seconds: 0
-  - title: "CLOUT COBAIN"
+    seconds: 199
+  - title: "Soundtrack 2 My Life"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 235
+  - title: "Simple As..."
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 151
+  - title: "Solo Dolo (Nightmare)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 266
+  - title: "Heart Of A Lion (Kid Cudi Theme Music)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 261
+  - title: "My World (feat. Billy Craven)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 243
+  - title: "Day 'N' Nite (Nightmare)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 221
+  - title: "Sky Might Fall"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 220
+  - title: "Enter Galactic (Love Connection Part I)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 260
+  - title: "Alive (Nightmare) (feat. Ratatat)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 246
+  - title: "Cudi Zone"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 259
+  - title: "Make Her Say (feat. Kanye West & Common)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 216
+  - title: "Pursuit Of Happiness (Nightmare) (feat. MGMT & Ratatat)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 295
+  - title: "Hyyerr (feat. Chip Tha Ripper)"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 212
+  - title: "Up Up & Away"
+    artist: "Kid Cudi"
+    album: "Man on the Moon: The End of Day"
+    released: "2009-09-15"
+    seconds: 227
+  - title: "TABOO | TA13OO"
     artist: "Denzel Curry"
     album: "TA13OO"
     released: "2018-07-27"
-    seconds: 0
+    seconds: 197
+  - title: "BLACK BALLOONS | 13LACK 13ALLOONZ (feat. Twelve'len & GoldLink)"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 211
+  - title: "CASH MANIAC | CAZH MAN1AC (feat. Nyyjerya)"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 199
+  - title: "SUMO | ZUMO"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 227
+  - title: "SUPER SAIYAN SUPERMAN | ZUPER ZA1YAN ZUPERMAN"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 133
+  - title: "SWITCH IT UP | ZWITCH 1T UP"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 176
+  - title: "MAD I GOT IT | MAD 1 GOT 1T"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 232
+  - title: "SIRENS | Z1RENZ (feat. JID)"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 236
+  - title: "CLOUT COBAIN | CLOUT CO13A1N"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 231
+  - title: "THE BLACKEST BALLOON | THE 13LACKEZT 13ALLOON"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 175
+  - title: "PERCS | PERCZ"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 187
+  - title: "VENGEANCE | VENGEANCE (feat. JPEGMAFIA & ZillaKami)"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 240
+  - title: "BLACK METAL TERRORIST | 13 M T"
+    artist: "Denzel Curry"
+    album: "TA13OO"
+    released: "2018-07-27"
+    seconds: 162
+  - title: "Ain't No Time"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 202
+  - title: "In Her Mouth"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 192
+  - title: "Maybach"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 220
+  - title: "Xanny Family"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 185
+  - title: "Lil Haiti Baby"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 277
+  - title: "Photo Copied"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 172
+  - title: "Seven Rings"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 205
+  - title: "Lie to Me"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 212
+  - title: "Program"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 176
+  - title: "Low Life (feat. The Weeknd)"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 313
+  - title: "Fly Shit Only"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 212
+  - title: "Wicked"
+    artist: "Future"
+    album: "EVOL"
+    released: "2016-02-06"
+    seconds: 173
   - title: "Thought It Was a Drought"
     artist: "Future"
     album: "DS2 (Deluxe)"
@@ -5345,6 +6203,81 @@ tracks:
     album: "Kairi Chanel"
     released: "2016-09-30"
     seconds: 266
+  - title: "Not the Only One"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 281
+  - title: "Really Really"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 232
+  - title: "2 Phones"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 240
+  - title: "Pride"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 245
+  - title: "La Familia"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 230
+  - title: "Time for That"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 208
+  - title: "Thought I Heard (Bread Winners' Anthem)"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 204
+  - title: "Hard For"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 247
+  - title: "Ask for More"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 207
+  - title: "One Thing"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 199
+  - title: "The Truth"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 210
+  - title: "Kno One"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 214
+  - title: "Told Me"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 184
+  - title: "Ain't Too Hard"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 205
+  - title: "I Love It"
+    artist: "Kevin Gates"
+    album: "Islah"
+    released: "2016-01-29"
+    seconds: 211
   - title: "E85"
     artist: "Don Toliver"
     album: "OCTANE"
@@ -7520,3 +8453,558 @@ tracks:
     album: "Blue Dream & Lean"
     released: "2011-11-29"
     seconds: 150
+  - title: "Intro"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 44
+  - title: "Stoners Night"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 250
+  - title: "Throw Dem Racks"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 227
+  - title: "I'm Sicka"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 223
+  - title: "Already (feat. Rae Sremmurd)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 232
+  - title: "Don't Trust"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 202
+  - title: "Workin' Hard"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 218
+  - title: "Denna Bitch (feat. Project Pat)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 220
+  - title: "Film (feat. Future)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 220
+  - title: "All I Need (feat. K Camp)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 262
+  - title: "Smoked Out Dabbed Out"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 205
+  - title: "Don't"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 129
+  - title: "Anybody"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 224
+  - title: "Do It to Em (feat. Elle Varner)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 281
+  - title: "Deep Down South (feat. Project Pat)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 221
+  - title: "Whole Thang (feat. Wiz Khalifa)"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 251
+  - title: "Outro"
+    artist: "Juicy J"
+    album: "Blue Dream & Lean 2"
+    released: "2015-02-16"
+    seconds: 55
+  - title: "DIEMONDS"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 192
+  - title: "Ugly"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 155
+  - title: "$outh $ide $uicide (feat. Pouya)"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 169
+  - title: "Mount Sinai"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 145
+  - title: "Lincoln Continental Memorial (feat. Slug Christ)"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 183
+  - title: "Mannequins Are My Best of Friends"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 116
+  - title: "Sunshine"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 116
+  - title: "Rotten and Paralyzed in a Tropical Paradise"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 151
+  - title: "Fake Pontchartrain (feat. Key Nyata)"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 195
+  - title: "Exodus"
+    artist: "$uicideboy$"
+    album: "High Tide in the Snake's Nest"
+    released: "2015-06-15"
+    seconds: 126
+  - title: "The End."
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 112
+  - title: "Dead!"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 195
+  - title: "This Is How I Disappear"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 239
+  - title: "The Sharpest Lives"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 200
+  - title: "Welcome to the Black Parade"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 311
+  - title: "I Don't Love You"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 238
+  - title: "House of Wolves"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 184
+  - title: "Cancer"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 142
+  - title: "Mama (feat. Liza Minnelli)"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 279
+  - title: "Sleep"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 283
+  - title: "Teenagers"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 161
+  - title: "Disenchanted"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 295
+  - title: "Famous Last Words"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 299
+  - title: "Blood - Hidden Track"
+    artist: "My Chemical Romance"
+    album: "The Black Parade"
+    released: "2006-10-20"
+    seconds: 173
+  - title: "Papercut"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 184
+  - title: "One Step Closer"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 157
+  - title: "With You"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 203
+  - title: "Points of Authority"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 200
+  - title: "Crawling"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 208
+  - title: "Runaway"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 183
+  - title: "By Myself"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 189
+  - title: "In the End"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 216
+  - title: "A Place for My Head"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 184
+  - title: "Forgotten"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 194
+  - title: "Cure for the Itch"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 157
+  - title: "Pushing Me Away"
+    artist: "Linkin Park"
+    album: "Hybrid Theory"
+    released: "2000-10-24"
+    seconds: 191
+  - title: "Foreword"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 13
+  - title: "Don't Stay"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 187
+  - title: "Somewhere I Belong"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 213
+  - title: "Lying from You"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 175
+  - title: "Hit the Floor"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 164
+  - title: "Easier to Run"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 204
+  - title: "Faint"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 162
+  - title: "Figure.09"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 197
+  - title: "Breaking the Habit"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 196
+  - title: "From the Inside"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 175
+  - title: "Nobody's Listening"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 178
+  - title: "Session"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 144
+  - title: "Numb"
+    artist: "Linkin Park"
+    album: "Meteora"
+    released: "2003-03-25"
+    seconds: 187
+  - title: "Dirt Off Your Shoulder / Lying From You"
+    artist: "Jay-Z & Linkin Park"
+    album: "Collision Course"
+    released: "2004-11-30"
+    seconds: 244
+  - title: "Big Pimpin' / Papercut"
+    artist: "Jay-Z & Linkin Park"
+    album: "Collision Course"
+    released: "2004-11-30"
+    seconds: 156
+  - title: "Jigga What / Faint"
+    artist: "Jay-Z & Linkin Park"
+    album: "Collision Course"
+    released: "2004-11-30"
+    seconds: 211
+  - title: "Numb / Encore"
+    artist: "Jay-Z & Linkin Park"
+    album: "Collision Course"
+    released: "2004-11-30"
+    seconds: 205
+  - title: "Izzo / In the End"
+    artist: "Jay-Z & Linkin Park"
+    album: "Collision Course"
+    released: "2004-11-30"
+    seconds: 164
+  - title: "Points of Authority / 99 Problems / One Step Closer"
+    artist: "Jay-Z & Linkin Park"
+    album: "Collision Course"
+    released: "2004-11-30"
+    seconds: 295
+  - title: "The Comedown"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 249
+  - title: "Chelsea Smile"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 302
+  - title: "It Was Written in Blood"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 242
+  - title: "Death Breath"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 260
+  - title: "Football Season is Over (feat. JJ Peters)"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 115
+  - title: "Sleep with One Eye Open"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 256
+  - title: "Diamonds Aren't Forever"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 228
+  - title: "The Sadness Will Never End (feat. Sam Carter)"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 322
+  - title: "No Need for Introductions, I've Read About Girls Like You on the Backs of Toilet Doors"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 59
+  - title: "Suicide Season"
+    artist: "Bring Me The Horizon"
+    album: "Suicide Season"
+    released: "2008-09-29"
+    seconds: 497
+  - title: "Crucify Me (feat. Lights)"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 379
+  - title: "Anthem"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 289
+  - title: "It Never Ends"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 274
+  - title: "Fuck (feat. Josh Franceschi)"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 295
+  - title: "Don't Go (feat. Lights)"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 298
+  - title: "Home Sweet Hole"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 277
+  - title: "Alligator Blood"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 271
+  - title: "Visions"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 248
+  - title: "Blacklist"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 240
+  - title: "Memorial"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 189
+  - title: "Blessed with a Curse"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 308
+  - title: "The Fox and the Wolf (feat. Josh Scogin)"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 102
+  - title: "It Never Ends (Borgore Remix)"
+    artist: "Bring Me The Horizon"
+    album: "There Is a Hell Believe Me I've Seen It. There Is a Heaven Let's Keep It a Secret"
+    released: "2010-10-04"
+    seconds: 263
+  - title: "Nympho"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 236
+  - title: "Ice Cream"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 238
+  - title: "Glory Hole"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 248
+  - title: "Someone Else's"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 187
+  - title: "Sex Instructor (Dub)"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 288
+  - title: "Act Like A Ho!"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 231
+  - title: "Delicious"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 304
+  - title: "Final Episode (Borgore Remix)"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 251
+  - title: "Money"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 253
+  - title: "Broken Rulez"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 251
+  - title: "Love"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 260
+  - title: "Casablanca"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 221
+  - title: "Sunsets (feat. Diplo)"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 251
+  - title: "Cry Me A River"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 273
+  - title: "Foes (16 Bit Remix)"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 275
+  - title: "The Bitter Orchestra Girl"
+    artist: "Borgore"
+    album: "The Filthiest Hits...So Far"
+    released: "2011-07-26"
+    seconds: 194
