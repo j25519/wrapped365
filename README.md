@@ -1,14 +1,16 @@
 # Wrapped 365
 
-Deep dive into your Spotify analytics locally within your browser.
+Deep dive into your Spotify analytics locally within your browser. Discover the music that defined eras of your life.
 
 ## Now with themes!
 
 <img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/4b011141-bcd0-4a4d-84cb-5e5962978b74" />
 
-<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/1ef1ed1a-b228-484d-969a-026519ec14a7" />
+<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/55c98477-00be-44a8-b594-1eddeca8ab48" />
 
-<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/43f00486-78fd-43eb-b049-121f4afde3dd" />
+<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/420bbd61-d2fe-4636-a974-6ef3cd5b7cfe" />
+
+<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/654e36c8-7595-40d5-b690-52078e2e4b34" />
 
 ## Deploy with Docker Compose
 
