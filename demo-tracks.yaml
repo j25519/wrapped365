@@ -32,6 +32,191 @@ tracks:
     album: "Let Me See"
     released: "2019-02-15"
     seconds: 248
+  - title: "Chokehold"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 304
+  - title: "The Summoning"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 395
+  - title: "Granite"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 225
+  - title: "Aqua Regia"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 236
+  - title: "Vore"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 339
+  - title: "Ascensionism"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 428
+  - title: "Are You Really Okay?"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 306
+  - title: "The Apparition"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 268
+  - title: "DYWTYLM"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 240
+  - title: "Rain"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 252
+  - title: "Take Me Back To Eden"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 500
+  - title: "Euclid"
+    artist: "Sleep Token"
+    album: "Take Me Back To Eden"
+    released: "2023-05-19"
+    seconds: 313
+  - title: "Look To Windward"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 466
+  - title: "Emergence"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 386
+  - title: "Past Self"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 214
+  - title: "Dangerous"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 251
+  - title: "Caramel"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 290
+  - title: "Even In Arcadia"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 268
+  - title: "Provider"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 365
+  - title: "Damocles"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 264
+  - title: "Gethsemane"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 383
+  - title: "Infinite Baths"
+    artist: "Sleep Token"
+    album: "Even In Arcadia"
+    released: "2025-05-09"
+    seconds: 503
+  - title: "CONCRETE JUNGLE"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 220
+  - title: "Nowhere To Go"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 246
+  - title: "Take Me First"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 199
+  - title: "THE DEATH OF PEACE OF MIND"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 241
+  - title: "What It Cost"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 103
+  - title: "Like A Villain"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 210
+  - title: "bad decisions"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 261
+  - title: "Just Pretend"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 204
+  - title: "The Grey"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 246
+  - title: "Who are you?"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 217
+  - title: "Somebody else."
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 236
+  - title: "IDWT$"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 202
+  - title: "What do you want from me?"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 175
+  - title: "ARTIFICIAL SUICIDE"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 195
+  - title: "Miracle"
+    artist: "Bad Omens"
+    album: "THE DEATH OF PEACE OF MIND"
+    released: "2022-02-25"
+    seconds: 225
   - title: "Vincent Van Gogh Ain't Got Shit on Me"
     artist: "$uicideboy$"
     album: "My Liver Will Handle What My Heart Can't"
