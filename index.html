@@ -11,6 +11,12 @@
 </head>
 <body>
 <div class="glow glow-a" aria-hidden="true"></div><div class="glow glow-b" aria-hidden="true"></div>
+<div id="loading-overlay" class="loading-overlay hidden" role="status" aria-live="polite" aria-atomic="true">
+  <div class="loading-card">
+    <span class="loading-wheel" aria-hidden="true"></span>
+    <div class="loading-copy"><strong id="loading-label">Working on your music…</strong><span id="loading-detail">Processing locally. Shouldn't take long.</span></div>
+  </div>
+</div>
 <div class="app-shell">
   <aside class="sidebar">
     <a class="brand" href="#home" aria-label="Wrapped 365 home"><span class="brand-mark"><span></span><span></span><span></span></span><span class="brand-name">Wrapped<span class="brand-dot">365</span></span></a>

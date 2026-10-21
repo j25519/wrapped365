@@ -273,10 +273,11 @@
       reasonStart: row.reason_start || '', reasonEnd: row.reason_end || ''
     };
   }
-  function ingest(builder, rows) {
+  async function ingest(builder, rows) {
     if (!Array.isArray(rows)) throw new Error('A history file does not contain a JSON array of playback events.');
-    for (const row of rows) {
-      const play = readPlay(row);
+    for (let i = 0; i < rows.length; i++) {
+      if (i && i % 1500 === 0) await sleep();
+      const play = readPlay(rows[i]);
       if (!play) { builder.ignored++; continue; }
       const duplicateKey = [play.ts, play.ms, play.uri || keyOf(play.artist, play.title), play.platform, play.reasonStart, play.reasonEnd].join('|');
       if (builder.seen.has(duplicateKey)) { builder.duplicates++; continue; }
@@ -337,8 +338,26 @@
     $('import-status').classList.remove('hidden');
     $('import-status-title').textContent = label;
     $('import-status-detail').textContent = detail;
+    updateLoading(label, detail);
     $('progress-fill').style.width = `${Math.max(2, Math.min(100, fraction * 100))}%`;
   }
+  function showLoading(label, detail) {
+    $('loading-label').textContent = label;
+    $('loading-detail').textContent = detail;
+    $('loading-overlay').classList.remove('hidden');
+    $('main-content').setAttribute('aria-busy', 'true');
+  }
+  function updateLoading(label, detail) {
+    if ($('loading-overlay').classList.contains('hidden')) return;
+    if (label) $('loading-label').textContent = label;
+    if (detail) $('loading-detail').textContent = detail;
+  }
+  function hideLoading() {
+    $('loading-overlay').classList.add('hidden');
+    $('main-content').removeAttribute('aria-busy');
+  }
+  const letLoadingPaint = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
+
   function showError(message) {
     const el = $('error-box');
     el.classList.remove('hidden');
@@ -352,7 +371,9 @@
     $('error-box').classList.add('hidden');
     $('browse-button').disabled = true;
     $('demo-button').disabled = true;
+    showLoading('Opening your Spotify history…', 'Processing everything locally.');
     try {
+      await letLoadingPaint();
       const builder = makeBuilder();
       let type;
       if (isZip) {
@@ -384,7 +405,7 @@
           let rows;
           try { rows = JSON.parse(content.replace(/^\uFEFF/, '')); }
           catch { throw new Error(`Could not parse ${baseName(entry.name)}. Make sure this is an unmodified Spotify export.`); }
-          ingest(builder, rows);
+          await ingest(builder, rows);
           rows = null;
         }
       } else {
@@ -393,7 +414,7 @@
         await sleep();
         const content = await file.text();
         const rows = JSON.parse(content.replace(/^\uFEFF/, ''));
-        ingest(builder, rows);
+        await ingest(builder, rows);
         builder.sourceFiles = 1;
       }
       if (!builder.imported) throw new Error('The files contained no valid music listening events. Check you selected the audio history, rather than podcast or video files.');
@@ -418,6 +439,7 @@
       $('demo-button').disabled = false;
       $('file-input').value = '';
       state.loading = false;
+      hideLoading();
     }
   }
 
@@ -564,7 +586,7 @@
   }
 
   // The Eras explorer is built from the same qualified music plays as the main
-  // rankings. Its month level data is saved at import time; no raw history is kept.
+  // rankings. Its month-level data is saved at import time; no raw history is kept.
   const monthNumber = key => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7));
   const monthTitle = key => new Date(`${key}-01T00:00:00Z`).toLocaleDateString('en-GB', {
     month: 'long', year: 'numeric', timeZone: 'UTC'
@@ -1010,8 +1032,12 @@
     state.loading = true;
     $('randomise-demo').disabled = true;
     $('demo-button').disabled = true;
+    const randomising = state.report?.isDemo && state.view !== 'home';
+    showLoading(randomising ? 'Randomising your demo…' : 'Preparing your demo…', 'Generating a listening history in your browser.');
     try {
+      await letLoadingPaint();
       const tracks = await loadDemoTracks();
+      updateLoading(randomising ? 'Randomising your demo…' : 'Building your demo…', 'Creating years of listening activity.');
       let seed = crypto.getRandomValues(new Uint32Array(1))[0];
       const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
       const randomInt = (min, max) => min + Math.floor(rand() * (max - min + 1));
@@ -1120,6 +1146,7 @@
         let planned = 0;
         let attempts = 0;
         while (planned < goal && attempts++ < goal) {
+          if (attempts % 24 === 0) await sleep();
           const sessionSize = Math.min(goal - planned, randomInt(3, 18));
           const latestStart = Math.max(begin, end - 4 * 3600_000);
           const sessionStart = begin + Math.floor(rand() * (latestStart - begin + 1));
@@ -1211,6 +1238,7 @@
         years.push({ year, artists: eraArtists, sessions: sessions.length });
         byYear.set(String(year), yearRows.length);
         rows.push(...yearRows);
+        await sleep();
       }
       const friends = ['Alex', 'Sam', 'Charlie', 'Jordan', 'Taylor', 'Morgan'].map((name, id) => ({ id: `friend-${id + 1}`, name }));
       const playlists = ['Night Drives', 'On Repeat', 'Underground', 'Late Night', 'Gym Rotation', 'Old Favourites', 'Discoveries', 'Weekend'].map((name, id) => ({
@@ -1226,8 +1254,9 @@
           messages.push({ friendId: friend.id, trackId: track.id, ts: new Date(timestamp).toISOString(), direction: 'received' });
         }
       }
+      updateLoading('Finishing your demo…', 'Building your listening statistics.');
       const builder = makeBuilder();
-      ingest(builder, rows);
+      await ingest(builder, rows);
       builder.sourceFiles = 1;
       const report = finishBuilder(builder, 'Randomised demo · not your data', 'Demo data', true);
       report.demoData = {
@@ -1250,6 +1279,7 @@
       state.loading = false;
       $('randomise-demo').disabled = false;
       $('demo-button').disabled = false;
+      hideLoading();
     }
   }
 
