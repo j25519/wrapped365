@@ -536,11 +536,231 @@ tracks:
     album: "That's It (feat. Future & Metro Boomin) [from GTAVI: The Album]"
     released: "2026-09-17"
     seconds: 0
+  - title: "Leray"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 122
   - title: "Who Needs Love"
     artist: "Trippie Redd"
     album: "A Love Letter to You 4"
     released: "2019-11-22"
-    seconds: 0
+    seconds: 158
+  - title: "Love Sick"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 177
+  - title: "Love Me More"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 143
+  - title: "Real Feel"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 258
+  - title: "This Ain't That (feat. Lil Mosey)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 207
+  - title: "6 Kiss (feat. Juice WRLD & YNW Melly)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 199
+  - title: "Til the End of Time"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 174
+  - title: "U Deserve It (feat. Chris King & Quan'ta)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 244
+  - title: "Hate Me (feat. YoungBoy Never Broke Again)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 144
+  - title: "All for Me (feat. Smokepurpp)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 164
+  - title: "Sickening (feat. Tory Lanez)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 193
+  - title: "The Grinch"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 91
+  - title: "Death (feat. DaBaby)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 172
+  - title: "RMP"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 129
+  - title: "M's (feat. Lil Yachty & Pi'erre Bourne)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 113
+  - title: "Bust Down Deux (feat. Youv Dee)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 135
+  - title: "The Jungle Book (feat. Lil Wop)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 159
+  - title: "Chosen"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 184
+  - title: "Abandoned (feat. Mariah the Scientist)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 240
+  - title: "Can You Rap Like Me, Pt. 2 (feat. Chris King)"
+    artist: "Trippie Redd"
+    album: "A Love Letter to You 4"
+    released: "2019-11-22"
+    seconds: 132
+  - title: "Watch Out (Intro)"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 146
+  - title: "Revenge"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 148
+  - title: "\"Life\""
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 144
+  - title: "Demanding"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 152
+  - title: "Who Do I Trust"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 145
+  - title: "Like Me (feat. iann dior)"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 167
+  - title: "Toni Braxton"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 129
+  - title: "4"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 137
+  - title: "Sangria (feat. Denzel Curry)"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 126
+  - title: "Mean (feat. Flo Milli)"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 125
+  - title: "Havoc"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 126
+  - title: "Horizon"
+    artist: "$NOT"
+    album: "Beautiful Havoc"
+    released: "2020-10-30"
+    seconds: 152
+  - title: "YOU KNOW (INTRO)"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 150
+  - title: "PRESSURE"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 137
+  - title: "FALL IN LOVE"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 145
+  - title: "Moon & Stars (feat. Maggie Lindemann)"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 187
+  - title: "ROADRUNNER +"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 120
+  - title: "WHAT'S THE PROBLEM"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 154
+  - title: "MISTAKE (CHOPPA BOY)"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 137
+  - title: "MONARCH"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 179
+  - title: "MEGAN"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 133
+  - title: "BERETTA (feat. Wifisfuneral)"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 160
+  - title: "GOSHA"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 120
+  - title: "STRANDED *"
+    artist: "$NOT"
+    album: "- TRAGEDY +"
+    released: "2020-03-06"
+    seconds: 130
   - title: "Jamie's Sin"
     artist: "Night Lovell"
     album: "Jamie's Sin"
