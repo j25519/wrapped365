@@ -19,7 +19,7 @@
   const ERA_SPARK_ICON = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M12 2v5m0 10v5M2 12h5m10 0h5M4.93 4.93l3.54 3.54m7.06 7.06 3.54 3.54m0-14.14-3.54 3.54m-7.06 7.06-3.54 3.54"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>';
   const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history', 'soundcheck'];
   const $ = id => document.getElementById(id);
-  const state = { owner: null, db: null, report: null, soundcheckUnlocked: false, soundcheckSelected: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
+  const state = { owner: null, db: null, report: null, soundcheckUnlocked: false, soundcheckSelected: null, soundcheckDisplayed: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
   const navigationStack = [];
   const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports', soundcheck: 'Soundcheck' };
 
@@ -156,15 +156,32 @@
       await dbRequest(deletion, deletion.objectStore('soundchecks').delete(record.id));
     }
   }
-  async function deleteSoundchecks(reportId = null) {
+  async function clearAllSoundcheckData() {
     if (!state.db) return;
-    const tx = state.db.transaction('soundchecks', 'readonly');
-    const records = await dbRequest(tx, tx.objectStore('soundchecks').index('owner').getAll(state.owner));
-    for (const record of records) {
-      if (reportId !== null && record.diagnostic?.reportId !== reportId) continue;
-      const deletion = state.db.transaction('soundchecks', 'readwrite');
-      await dbRequest(deletion, deletion.objectStore('soundchecks').delete(record.id));
-    }
+    await new Promise((resolve, reject) => {
+      const tx = state.db.transaction(['soundchecks', 'reports'], 'readwrite');
+      tx.oncomplete = resolve;
+      tx.onerror = () => reject(tx.error || new Error('Could not clear Soundcheck diagnostics.'));
+      tx.onabort = () => reject(tx.error || new Error('Could not clear Soundcheck diagnostics.'));
+      const clearHistory = tx.objectStore('soundchecks').index('owner').openCursor(IDBKeyRange.only(state.owner));
+      clearHistory.onsuccess = () => {
+        const cursor = clearHistory.result;
+        if (!cursor) return;
+        cursor.delete();
+        cursor.continue();
+      };
+      const clearAttachments = tx.objectStore('reports').index('owner').openCursor(IDBKeyRange.only(state.owner));
+      clearAttachments.onsuccess = () => {
+        const cursor = clearAttachments.result;
+        if (!cursor) return;
+        if (cursor.value.report?.soundcheck) {
+          const saved = cursor.value;
+          delete saved.report.soundcheck;
+          cursor.update(saved);
+        }
+        cursor.continue();
+      };
+    });
   }
   async function listSoundchecks() {
     if (!state.db) return [];
@@ -2144,14 +2161,91 @@
        ${soundcheckRow('OS / device class', `${data.environment?.os || 'Unknown'} / ${data.environment?.deviceClass || 'Unknown'}`)}
        ${soundcheckRow('Recorded', dateLabel(data.createdAt))}</div></div>`;
   }
+  function soundcheckDebugExport(diagnostic) {
+    const numeric = value => typeof value === 'number' && Number.isFinite(value) ? value : null;
+    const pickNumbers = (source, keys) => Object.fromEntries(keys.map(key => [key, numeric(source?.[key])]));
+    const isoTime = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value) && Number.isFinite(Date.parse(value)) ? new Date(value).toISOString() : null;
+    const recognised = (value, choices) => choices.includes(value) ? value : 'Unknown';
+    const environment = diagnostic.environment || {};
+    const stages = ['Open ZIP', 'Read JSON', 'Parse JSON', 'Aggregate events', 'Build report', 'Save report', 'Load catalogue', 'Generate listening history', 'Generate social activity'];
+    const performanceData = diagnostic.performance || {};
+    const payload = {
+      schema: 1,
+      status: recognised(diagnostic.status, ['completed', 'failed']),
+      source: recognised(diagnostic.source, ['demo', 'import']),
+      sourceType: recognised(diagnostic.sourceType, ['Demo data', 'Spotify import', 'Extended Streaming History', 'Account streaming history', 'Spotify listening history']),
+      createdAt: isoTime(diagnostic.createdAt),
+      environment: {
+        version: typeof environment.version === 'string' && /^[a-zA-Z0-9._+\-]{1,64}$/.test(environment.version) ? environment.version : 'Unknown',
+        browser: recognised(environment.browser, ['Firefox', 'Edge', 'Opera', 'Chrome', 'Safari', 'Other']),
+        os: recognised(environment.os, ['Android', 'iOS / iPadOS', 'Windows', 'macOS', 'Linux', 'Other']),
+        deviceClass: recognised(environment.deviceClass, ['Mobile', 'Tablet', 'Desktop'])
+      },
+      performance: {
+        ...pickNumbers(performanceData, ['totalMs', 'inputBytes', 'parsedJsonBytes', 'sourceFiles']),
+        stages: Object.fromEntries(stages.filter(key => numeric(performanceData.stages?.[key]) !== null).map(key => [key, numeric(performanceData.stages[key])]))
+      }
+    };
+    if (payload.status === 'failed') {
+      payload.failureStage = recognised(diagnostic.failureStage, ['Opening archive', 'Read and parse JSON', 'Parse JSON', 'Aggregate listening data', 'Build report', 'Save report', 'Load demo catalogue', 'Generate listening history', 'Generate social activity']);
+    }
+    if (diagnostic.events) {
+      payload.events = {
+        ...pickNumbers(diagnostic.events, ['scanned', 'accepted', 'qualifying', 'under30s', 'duplicatesRemoved', 'excluded']),
+        exclusions: pickNumbers(diagnostic.events.exclusions, ['episodes', 'missingMetadata', 'invalidTimestamp', 'invalidDuration', 'malformedRow'])
+      };
+    }
+    if (diagnostic.grouping) payload.grouping = pickNumbers(diagnostic.grouping, ['sourceTrackVariants', 'groupedTracks', 'consolidatedVariants', 'uniqueArtists', 'uniqueAlbums']);
+    if (diagnostic.enrichment) payload.enrichment = pickNumbers(diagnostic.enrichment, ['tracksWithInferredFeatures', 'distinctInferredArtists']);
+    if (diagnostic.listening) {
+      payload.listening = {
+        ...pickNumbers(diagnostic.listening, ['years', 'activeDays', 'hours', 'topTenPercentPlayShare']),
+        firstTs: isoTime(diagnostic.listening.firstTs),
+        lastTs: isoTime(diagnostic.listening.lastTs),
+        annual: Array.isArray(diagnostic.listening.annual) ? diagnostic.listening.annual.filter(row => /^\d{4}$/.test(String(row.year))).map(row => ({ year: String(row.year), ...pickNumbers(row, ['plays', 'hours']) })) : []
+      };
+    }
+    if (diagnostic.source === 'demo' && diagnostic.demo) {
+      payload.demo = {
+        ...pickNumbers(diagnostic.demo, ['catalogueTracks', 'distinctCatalogueTracks', 'catalogueArtists', 'catalogueAlbums', 'eligibleTracks', 'playedTracks', 'sessions', 'multiTrackSessions', 'chapters', 'friends', 'playlists', 'recommendations']),
+        recommendationOutcomes: Object.fromEntries(['new-discovery', 'new-favourite', 'rediscovered', 'already-loved', 'followed-up', 'not-followed-up', 'unknown'].filter(key => numeric(diagnostic.demo.recommendationOutcomes?.[key]) !== null).map(key => [key, numeric(diagnostic.demo.recommendationOutcomes[key])]))
+      };
+    }
+    return {
+      format: 'wrapped365-soundcheck-debug',
+      exportSchema: 1,
+      exportedAt: new Date().toISOString(),
+      privacy: {
+        contains: ['Aggregated processing and listening statistics', 'Listening date range and annual totals', 'Diagnostic timestamps and processing durations', 'Browser, operating system, and device type', 'Wrapped 365 version'],
+        excludes: ['IP address', 'Spotify account details or email address', 'Spotify subscription or billing data', 'Contents of Spotify messages', 'Source filenames', 'Track, artist, or album names', 'Raw playback records', 'Browser user agent string', 'Cookie, browser, or report identifiers']
+      },
+      diagnostic: payload
+    };
+  }
+  function downloadSoundcheckReport() {
+    const diagnostic = state.soundcheckDisplayed;
+    if (!diagnostic || !state.soundcheckUnlocked) return;
+    const report = soundcheckDebugExport(diagnostic);
+    const blob = new Blob([JSON.stringify(report, null, 2) + '\n'], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `wrapped365-soundcheck-${report.diagnostic.source}-${(report.diagnostic.createdAt || report.exportedAt).replace(/[:.]/g, '-')}.json`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
   async function renderSoundcheck() {
     if (state.view !== 'soundcheck' || !state.soundcheckUnlocked) return;
     let history = [];
     try { history = await listSoundchecks(); } catch (error) { console.warn('Could not read Soundcheck history:', error); }
     if (state.view !== 'soundcheck') return;
     const selected = state.soundcheckSelected || state.report?.soundcheck || (!state.report ? history[0] : null) || null;
+    state.soundcheckDisplayed = selected;
+    $('soundcheck-download').disabled = !selected;
     $('soundcheck-type').textContent = selected ? `${selected.source === 'demo' ? 'DEMO SIMULATION' : 'SPOTIFY IMPORT'} · ${selected.status.toUpperCase()}` : 'NO DIAGNOSTICS YET';
-    $('soundcheck-dashboard').innerHTML = !selected && state.report && !state.report.soundcheck ? '<div class="panel sc-empty"><h2>Older saved report</h2><p>This report was created before Soundcheck could collect diagnostics. No processing measurements were recorded at that time. You can inspect other runs below or reimport the original archive to generate a diagnostic report.</p></div>' : soundcheckView(selected);
+    $('soundcheck-dashboard').innerHTML = !selected && state.report && !state.report.soundcheck ? '<div class="panel sc-empty"><h2>No diagnostics for this report</h2><p>This report either predates Soundcheck or its diagnostic data was deleted. You can inspect other runs below or reimport the original archive to generate fresh diagnostics.</p></div>' : soundcheckView(selected);
     $('soundcheck-recent').innerHTML = history.length ? history.map(item => `<button type="button" class="sc-history-item ${selected?.id === item.id ? 'selected' : ''}" data-soundcheck-id="${escapeHtml(item.id)}"><span><strong>${item.source === 'demo' ? 'Demo simulation' : 'Spotify import'}</strong><small>${dateLabel(item.createdAt)} · ${item.status === 'failed' ? `Stopped: ${escapeHtml(item.failureStage || 'processing')}` : `${number(item.events?.qualifying)} qualifying plays`}</small></span><span>${item.status === 'failed' ? '!' : '↗'}</span></button>`).join('') : '<p class="search-muted">No locally saved diagnostic runs yet. Diagnostics are collected whether Soundcheck is unlocked or not.</p>';
   }
   function setSoundcheckUnlocked(unlocked) {
@@ -2167,6 +2261,7 @@
       openView('soundcheck');
     } else {
       state.soundcheckSelected = null;
+      state.soundcheckDisplayed = null;
       navigationStack.length = 0;
       if (state.view === 'soundcheck') openView(state.report ? 'overview' : 'home', false);
       updateBackButton();
@@ -2201,6 +2296,33 @@
       }
     });
     $('soundcheck-disable').addEventListener('click', () => setSoundcheckUnlocked(false));
+    $('soundcheck-download').addEventListener('click', () => {
+      if (state.soundcheckDisplayed) $('soundcheck-export-dialog').showModal();
+    });
+    $('soundcheck-export-cancel').addEventListener('click', () => $('soundcheck-export-dialog').close());
+    $('soundcheck-export-back').addEventListener('click', () => $('soundcheck-export-dialog').close());
+    $('soundcheck-export-confirm').addEventListener('click', () => {
+      $('soundcheck-export-dialog').close();
+      downloadSoundcheckReport();
+    });
+    $('soundcheck-export-dialog').addEventListener('click', event => {
+      if (event.target === $('soundcheck-export-dialog')) $('soundcheck-export-dialog').close();
+    });
+    $('soundcheck-clear').addEventListener('click', async () => {
+      if (!confirm('Permanently delete ALL Soundcheck diagnostics from this browser, including copies attached to saved reports? Your listening reports and Soundcheck unlock setting will be preserved. This cannot be undone.')) return;
+      const button = $('soundcheck-clear');
+      button.disabled = true;
+      try {
+        await clearAllSoundcheckData();
+        if (state.report) delete state.report.soundcheck;
+        state.soundcheckSelected = null;
+        state.soundcheckDisplayed = null;
+        await renderSoundcheck();
+      } catch (error) {
+        console.error('Could not delete Soundcheck diagnostics:', error);
+        alert('Soundcheck diagnostics could not be cleared. Please try again.');
+      } finally { button.disabled = false; }
+    });
     $('soundcheck-recent').addEventListener('click', async event => {
       const row = event.target.closest('[data-soundcheck-id]');
       if (!row) return;
