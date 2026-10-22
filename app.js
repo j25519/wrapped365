@@ -1308,7 +1308,7 @@
         // Keep individual favourites without letting a few lucky weights dominate the catalogue.
         trackWeights.set(track.id, (0.65 + 1.5 * rand() ** 2) * artistWeights.get(track.artist) * albumWeights.get(albumKey));
       }
-      // Give demo-only tracks believable listening stories instead of relying on
+      // Give demo only tracks believable listening stories instead of relying on
       // incidental random repeats. These records pass through the normal importer;
       // the Eras thresholds and genuine Spotify data are deliberately unchanged.
       const storyBursts = new Map();
@@ -2182,14 +2182,23 @@
       else position = key === code[0] ? 1 : 0;
       if (position === code.length) { position = 0; if (!state.soundcheckUnlocked) setSoundcheckUnlocked(true); else openView('soundcheck'); }
     });
-    let taps = 0, lastTap = 0;
-    document.querySelector('.brand-dot').addEventListener('click', event => {
-      if (!matchMedia('(max-width: 700px)').matches) return;
+    let taps = 0, lastTap = 0, homeTapTimer;
+    document.querySelector('.brand-mark').addEventListener('click', event => {
+      if (!matchMedia('(max-width: 900px)').matches) return;
       event.preventDefault();
+      clearTimeout(homeTapTimer);
       const now = Date.now();
       taps = now - lastTap > 2200 ? 1 : taps + 1;
       lastTap = now;
-      if (taps >= 7) { taps = 0; if (!state.soundcheckUnlocked) setSoundcheckUnlocked(true); else openView('soundcheck'); }
+      if (taps >= 7) {
+        taps = 0;
+        if (!state.soundcheckUnlocked) setSoundcheckUnlocked(true);
+        else openView('soundcheck');
+      } else if (taps === 1) {
+        homeTapTimer = setTimeout(() => {
+          if (taps === 1) openView('home');
+        }, 550);
+      }
     });
     $('soundcheck-disable').addEventListener('click', () => setSoundcheckUnlocked(false));
     $('soundcheck-recent').addEventListener('click', async event => {

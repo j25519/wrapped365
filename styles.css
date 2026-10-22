@@ -249,3 +249,5 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
 @media(max-width:700px){.sc-panels{grid-template-columns:1fr;gap:10px}.sc-privacy{align-items:flex-start;flex-direction:column}.sc-history-list{grid-template-columns:1fr}.sc-intro h1{font-size:40px}.soundcheck-toast{bottom:14px;left:14px;right:14px}.sc-metric{padding:15px}}
 @media(max-width:400px){.sc-cards{gap:8px}.sc-metric strong{font-size:23px}.sc-metric{padding:13px}.sc-panels .panel{padding:15px}}
 @media(prefers-reduced-motion:reduce){.soundcheck-toast{animation:none}}
+
+.brand-mark{touch-action:manipulation;user-select:none;-webkit-user-select:none}
