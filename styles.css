@@ -260,3 +260,15 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
 .sc-dialog-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px}
 .sc-dialog-actions .btn{margin-top:0}.sc-export-caution{border-left:3px solid var(--accent);padding-left:13px}
 @media(max-width:700px){.sc-privacy-actions{width:100%;justify-content:flex-start}.sc-privacy-actions .btn{white-space:normal}.sc-export-actions{align-items:flex-start;flex-direction:column;gap:8px}}
+
+/* Soundcheck privacy checklist, sourced from the exported JSON. */
+#soundcheck-export-dialog{max-height:calc(100dvh - 24px);overflow-y:auto}
+.sc-export-checklist{display:grid;gap:17px;background:#080b0a;border:1px solid hsl(from #2a3b2f calc(h + var(--theme-hue-shift)) s l);border-radius:15px;padding:17px;margin:17px 0 20px}
+.sc-export-checklist section+section{border-top:1px solid hsl(from #26332a calc(h + var(--theme-hue-shift)) s l);padding-top:16px}
+.sc-export-checklist h3{font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--text);margin:0 0 11px}
+.sc-export-list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.sc-export-item{display:flex;align-items:flex-start;gap:10px;color:hsl(from #b8c6bb calc(h + var(--theme-hue-shift)) s l);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.sc-export-indicator{display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;border-radius:6px;font-size:15px;font-weight:850;line-height:1}
+.sc-export-included .sc-export-indicator{color:#6fea9a;background:#10291a;border:1px solid #245b36}
+.sc-export-excluded .sc-export-indicator{color:#ff8587;background:#301719;border:1px solid #6a3037}
+@media(max-width:500px){#soundcheck-export-dialog .dialog-body{padding:24px 19px}.sc-export-checklist{padding:14px}.sc-export-item{font-size:11px}}

@@ -2222,6 +2222,24 @@
       diagnostic: payload
     };
   }
+  function renderSoundcheckPrivacyChecklist(privacy) {
+    for (const [key, id] of [['contains', 'soundcheck-export-includes'], ['excludes', 'soundcheck-export-excludes']]) {
+      const list = $(id);
+      const entries = Array.isArray(privacy?.[key]) ? privacy[key] : [];
+      list.replaceChildren(...entries.map(label => {
+        const item = document.createElement('li');
+        item.className = `sc-export-item ${key === 'contains' ? 'sc-export-included' : 'sc-export-excluded'}`;
+        const indicator = document.createElement('span');
+        indicator.className = 'sc-export-indicator';
+        indicator.setAttribute('aria-hidden', 'true');
+        indicator.textContent = key === 'contains' ? '✓' : '×';
+        const content = document.createElement('span');
+        content.textContent = label;
+        item.append(indicator, content);
+        return item;
+      }));
+    }
+  }
   function downloadSoundcheckReport() {
     const diagnostic = state.soundcheckDisplayed;
     if (!diagnostic || !state.soundcheckUnlocked) return;
@@ -2297,7 +2315,9 @@
     });
     $('soundcheck-disable').addEventListener('click', () => setSoundcheckUnlocked(false));
     $('soundcheck-download').addEventListener('click', () => {
-      if (state.soundcheckDisplayed) $('soundcheck-export-dialog').showModal();
+      if (!state.soundcheckDisplayed) return;
+      renderSoundcheckPrivacyChecklist(soundcheckDebugExport(state.soundcheckDisplayed).privacy);
+      $('soundcheck-export-dialog').showModal();
     });
     $('soundcheck-export-cancel').addEventListener('click', () => $('soundcheck-export-dialog').close());
     $('soundcheck-export-back').addEventListener('click', () => $('soundcheck-export-dialog').close());
