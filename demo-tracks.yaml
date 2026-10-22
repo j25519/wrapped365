@@ -1584,6 +1584,316 @@ tracks:
     album: "Encore"
     released: "2004-11-12"
     seconds: 348
+  - title: "Intro"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 6
+  - title: "What Up Gangsta"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 179
+  - title: "Patiently Waiting (feat. Eminem)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 288
+  - title: "Many Men (Wish Death)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 256
+  - title: "In Da Club"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 193
+  - title: "High All The Time"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 269
+  - title: "Heat"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 254
+  - title: "If I Can't"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 196
+  - title: "Blood Hound (feat. Young Buck)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 239
+  - title: "Back Down"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 243
+  - title: "P.I.M.P."
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 249
+  - title: "Like My Style (feat. Tony Yayo)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 193
+  - title: "Poor Lil Rich"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 199
+  - title: "21 Questions (feat. Nate Dogg)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 224
+  - title: "Don't Push Me (feat. Lloyd Banks & Eminem)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 248
+  - title: "Gotta Make It To Heaven"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 240
+  - title: "Wanksta"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 219
+  - title: "U Not Like Me"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 255
+  - title: "Lifes On The Line"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 218
+  - title: "Start"
+    artist: "Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 9
+  - title: "Act A Fool"
+    artist: "Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 270
+  - title: "Represent"
+    artist: "Trick Daddy"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 218
+  - title: "Slum (feat. Shawnna & 2 Chainz)"
+    artist: "I-20"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 186
+  - title: "Pick Up The Phone/Look At That Booty (feat. R. Kelly)"
+    artist: "Tyrese & Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 293
+  - title: "Hands In The Air"
+    artist: "8Ball"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 252
+  - title: "Gettin' It"
+    artist: "Chingy"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 259
+  - title: "Block Reincarnated/Hemi (feat. Kardinal Offishall)"
+    artist: "Shawnna"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 258
+  - title: "Pump It Up"
+    artist: "Joe Budden"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 251
+  - title: "Hell Yeah"
+    artist: "Dead Prez"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 272
+  - title: "Peel Off/Run These Streets"
+    artist: "Jin"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 249
+  - title: "We Ridin'"
+    artist: "Fat Joe"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 181
+  - title: "Rollin' On 20's"
+    artist: "Lil' Flip"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 249
+  - title: "Fuck What a Nigga Say..."
+    artist: "Dirt Bag"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 196
+  - title: "Oye"
+    artist: "Pitbull"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 242
+  - title: "Miami"
+    artist: "K'Jon"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 258
+  - title: "Finish"
+    artist: "Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 10
+  - title: "American Star (feat. Shanell)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 216
+  - title: "Prom Queen (feat. Shanell)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 217
+  - title: "Ground Zero"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 237
+  - title: "Da Da Da"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 220
+  - title: "Paradice"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 236
+  - title: "Get A Life"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 192
+  - title: "On Fire"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 248
+  - title: "Drop The World (feat. Eminem)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 229
+  - title: "Runnin (feat. Shanell)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 271
+  - title: "One Way Trip (feat. Kevin Rudolf)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 278
+  - title: "Knockout (feat. Nicki Minaj)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 249
+  - title: "The Price Is Wrong"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 208
+  - title: "Purple Lamborghini (feat. Rick Ross)"
+    artist: "Skrillex"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 215
+  - title: "Sucker for Pain (feat. Wiz Khalifa, Imagine Dragons, Logic, Ty Dolla $ign & X Ambassadors)"
+    artist: "Lil Wayne"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 243
+  - title: "Heathens"
+    artist: "Twenty One Pilots"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 195
+  - title: "Standing in the Rain (feat. Mark Ronson & Dan Auerbach)"
+    artist: "Action Bronson"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 202
+  - title: "Gangsta"
+    artist: "Kehlani"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 177
+  - title: "Know Better"
+    artist: "Kevin Gates"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 207
+  - title: "You Don't Own Me (feat. G-Eazy)"
+    artist: "SAYGRACE"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 198
+  - title: "Without Me"
+    artist: "Eminem"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 295
+  - title: "Wreak Havoc"
+    artist: "Skylar Grey"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 228
+  - title: "Medieval Warfare"
+    artist: "Grimes"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 180
+  - title: "Bohemian Rhapsody"
+    artist: "Panic! At The Disco"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 363
+  - title: "Slippin' Into Darkness"
+    artist: "War"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 227
+  - title: "Fortunate Son"
+    artist: "Creedence Clearwater Revival"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 138
+  - title: "I Started a Joke (feat. Becky Hanson)"
+    artist: "ConfidentialMX"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 190
   - title: "hell is where i dreamt of u and woke up alone"
     artist: "blackbear"
     album: "digital druglord"
