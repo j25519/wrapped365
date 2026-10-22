@@ -4,13 +4,15 @@ Deep dive into your Spotify analytics locally within your browser. Discover the 
 
 ## Now with themes!
 
-<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/4b011141-bcd0-4a4d-84cb-5e5962978b74" />
+<img width="2864" height="1877" alt="image" src="https://github.com/user-attachments/assets/f30a80bb-fc35-48b2-a8ec-8a6bb33b1228" />
 
-<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/55c98477-00be-44a8-b594-1eddeca8ab48" />
+<img width="2864" height="1885" alt="image" src="https://github.com/user-attachments/assets/c2240200-ac1c-47b3-a3fb-87d276028c05" />
 
-<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/420bbd61-d2fe-4636-a974-6ef3cd5b7cfe" />
+<img width="2864" height="1850" alt="image" src="https://github.com/user-attachments/assets/0d3e137a-7233-4c5d-929d-fea2699d2d84" />
 
-<img width="2890" height="1873" alt="image" src="https://github.com/user-attachments/assets/654e36c8-7595-40d5-b690-52078e2e4b34" />
+<img width="2864" height="1850" alt="image" src="https://github.com/user-attachments/assets/984ac1cf-96c6-46a0-8f87-61adc3fcfe15" />
+
+<img width="2864" height="1850" alt="image" src="https://github.com/user-attachments/assets/77eb21b7-13fb-450c-8e8e-8f727e86a7bd" />
 
 ## Deploy with Docker Compose
 
