@@ -6,7 +6,8 @@
   const MAX_ENTRY_UNCOMPRESSED = 180 * 1024 * 1024;
   const MAX_TOTAL_UNCOMPRESSED = 2 * 1024 * 1024 * 1024;
   const DB_NAME = 'wrapped365-listening-reports';
-  const DB_VERSION = 1;
+  const DB_VERSION = 2;
+  const SOUNDCHECK_KEY = 'wrapped365_soundcheck_unlocked';
   const COOKIE_NAME = 'wrapped365_browser_id';
   const THEME_KEY = 'wrapped365_accent_theme';
   const THEMES = new Set(['green', 'blue', 'red', 'purple', 'pink', 'gold']);
@@ -16,11 +17,11 @@
   const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const ERA_SPARK_ICON = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M12 2v5m0 10v5M2 12h5m10 0h5M4.93 4.93l3.54 3.54m7.06 7.06 3.54 3.54m0-14.14-3.54 3.54m-7.06 7.06-3.54 3.54"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>';
-  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history'];
+  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history', 'soundcheck'];
   const $ = id => document.getElementById(id);
-  const state = { owner: null, db: null, report: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
+  const state = { owner: null, db: null, report: null, soundcheckUnlocked: false, soundcheckSelected: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
   const navigationStack = [];
-  const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports' };
+  const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports', soundcheck: 'Soundcheck' };
 
   function saveNavigation() {
     navigationStack.push({
@@ -118,6 +119,10 @@
           const store = db.createObjectStore('reports', { keyPath: 'id' });
           store.createIndex('owner', 'owner', { unique: false });
         }
+        if (!db.objectStoreNames.contains('soundchecks')) {
+          const checks = db.createObjectStore('soundchecks', { keyPath: 'id' });
+          checks.createIndex('owner', 'owner', { unique: false });
+        }
       };
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
@@ -135,6 +140,37 @@
     if (!state.db) throw new Error('Browser storage is unavailable.');
     const tx = state.db.transaction('reports', 'readwrite');
     await dbRequest(tx, tx.objectStore('reports').put({ id: report.id, owner: state.owner, report }));
+  }
+  async function saveSoundcheck(diagnostic) {
+    if (!state.db) throw new Error('Browser storage is unavailable.');
+    const tx = state.db.transaction('soundchecks', 'readwrite');
+    await dbRequest(tx, tx.objectStore('soundchecks').put({ id: diagnostic.id, owner: state.owner, diagnostic }));
+  }
+  async function deleteSoundchecks(reportId = null) {
+    if (!state.db) return;
+    const tx = state.db.transaction('soundchecks', 'readonly');
+    const records = await dbRequest(tx, tx.objectStore('soundchecks').index('owner').getAll(state.owner));
+    for (const record of records) {
+      if (reportId !== null && record.diagnostic?.reportId !== reportId) continue;
+      const deletion = state.db.transaction('soundchecks', 'readwrite');
+      await dbRequest(deletion, deletion.objectStore('soundchecks').delete(record.id));
+    }
+  }
+  async function deleteSoundchecks(reportId = null) {
+    if (!state.db) return;
+    const tx = state.db.transaction('soundchecks', 'readonly');
+    const records = await dbRequest(tx, tx.objectStore('soundchecks').index('owner').getAll(state.owner));
+    for (const record of records) {
+      if (reportId !== null && record.diagnostic?.reportId !== reportId) continue;
+      const deletion = state.db.transaction('soundchecks', 'readwrite');
+      await dbRequest(deletion, deletion.objectStore('soundchecks').delete(record.id));
+    }
+  }
+  async function listSoundchecks() {
+    if (!state.db) return [];
+    const tx = state.db.transaction('soundchecks', 'readonly');
+    const saved = await dbRequest(tx, tx.objectStore('soundchecks').index('owner').getAll(state.owner));
+    return saved.map(row => row.diagnostic).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 30);
   }
   async function loadReport(id) {
     if (!state.db) return null;
@@ -168,7 +204,7 @@
     };
   }
   function makeBuilder() {
-    return { periods: new Map([['all', emptyPeriod()]]), monthPeriods: new Map(), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0 };
+    return { periods: new Map([['all', emptyPeriod()]]), monthPeriods: new Map(), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0, checks: { episodes: 0, missingMetadata: 0, invalidDate: 0, invalidDuration: 0, malformed: 0, inferredArtists: new Set(), inferredTrackKeys: new Set(), rawTrackVariants: new Set(), scannedTrackKeys: new Set() } };
   }
   // Extended Streaming History normally provides one album-artist string.
   // Preserve additional credits when a source actually provides an artist list;
@@ -314,11 +350,32 @@
     for (let i = 0; i < rows.length; i++) {
       if (i && i % 1500 === 0) await sleep();
       const play = readPlay(rows[i]);
-      if (!play) { builder.ignored++; continue; }
+      if (!play) {
+        builder.ignored++;
+        const row = rows[i];
+        if (!row || typeof row !== 'object' || Array.isArray(row)) builder.checks.malformed++;
+        else if (row.spotify_episode_uri || row.episode_name || row.episode_show_name || row.episodeName) builder.checks.episodes++;
+        else if (!parseSpotifyDate(row.ts ?? row.endTime)) builder.checks.invalidDate++;
+        else if (!Number.isFinite(Number(row.ms_played ?? row.msPlayed)) || Number(row.ms_played ?? row.msPlayed) < 0) builder.checks.invalidDuration++;
+        else builder.checks.missingMetadata++;
+        continue;
+      }
       const duplicateKey = [play.ts, play.ms, play.uri || keyOf(play.artist, play.title), play.platform, play.reasonStart, play.reasonEnd].join('|');
       if (builder.seen.has(duplicateKey)) { builder.duplicates++; continue; }
       builder.seen.add(duplicateKey);
       builder.imported++;
+      if (play.ms >= MIN_PLAY_MS) {
+        builder.checks.rawTrackVariants.add(keyOf(play.artist, play.title, play.album));
+        const trackKey = keyOf(play.artist, play.title);
+        if (!builder.checks.scannedTrackKeys.has(trackKey)) {
+          builder.checks.scannedTrackKeys.add(trackKey);
+          const listed = creditedNames(rows[i].credited_artists ?? rows[i].creditedArtists ?? rows[i].artists ?? rows[i].artist_names ?? rows[i].artistNames ?? rows[i].master_metadata_artists);
+          const known = new Set([play.artist, ...listed, ...splitPrimaryArtist(rows[i].master_metadata_album_artist_name ?? rows[i].artistName).featured].map(name => keyOf(name)));
+          const inferred = featureCreditsFromTitle(play.title).filter(name => !known.has(keyOf(name)));
+          if (inferred.length) builder.checks.inferredTrackKeys.add(trackKey);
+          for (const name of inferred) builder.checks.inferredArtists.add(keyOf(name));
+        }
+      }
       if (play.ms < MIN_PLAY_MS) builder.short++;
       updatePeriod(builder.periods.get('all'), play);
       const year = play.ts.slice(0, 4);
@@ -370,6 +427,70 @@
   const baseName = name => name.split(/[\\/]/).pop() || '';
   const extendedName = name => /^(Streaming_History_Audio.*|endsong[_-].*)\.json$/i.test(baseName(name));
   const basicName = name => /^StreamingHistory(?:_music)?[_\d-]*\.json$/i.test(baseName(name));
+  let appVersion = 'Unknown';
+  const msElapsed = value => Math.round(Math.max(0, value) * 10) / 10;
+  const startTrace = (type, fileBytes = null) => ({ type, started: performance.now(), stages: {}, fileBytes, files: 0, jsonBytes: 0 });
+  const timeStage = (trace, name, began) => { trace.stages[name] = msElapsed((trace.stages[name] || 0) + performance.now() - began); };
+  const browserEnvironment = () => {
+    const ua = navigator.userAgent || '';
+    const browser = /Firefox\//.test(ua) ? 'Firefox' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Other';
+    const os = /Android/.test(ua) ? 'Android' : /iPad|iPhone|iPod/.test(ua) ? 'iOS / iPadOS' : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : 'Other';
+    return { browser, os, deviceClass: /Mobile|iPhone|Android.*Mobile/.test(ua) ? 'Mobile' : /iPad|Tablet|Android/.test(ua) ? 'Tablet' : 'Desktop' };
+  };
+  function buildSoundcheck(report, builder, trace) {
+    const all = report.periods.all;
+    const top = Math.max(1, Math.ceil(all.tracks.length * .1));
+    const topPlays = all.tracks.slice(0, top).reduce((sum, row) => sum + row.plays, 0);
+    const result = {
+      schema: 1, id: uuid(), reportId: report.id, createdAt: new Date().toISOString(), status: 'completed',
+      source: report.isDemo ? 'demo' : 'import', sourceType: report.type,
+      environment: { ...browserEnvironment(), version: appVersion },
+      performance: { totalMs: msElapsed(performance.now() - trace.started), stages: { ...trace.stages }, inputBytes: trace.fileBytes, parsedJsonBytes: trace.jsonBytes, sourceFiles: report.files },
+      events: { scanned: builder.imported + builder.duplicates + builder.ignored, accepted: builder.imported,
+        qualifying: all.qualified, under30s: builder.short, duplicatesRemoved: builder.duplicates, excluded: builder.ignored,
+        exclusions: { episodes: builder.checks.episodes, missingMetadata: builder.checks.missingMetadata,
+          invalidTimestamp: builder.checks.invalidDate, invalidDuration: builder.checks.invalidDuration, malformedRow: builder.checks.malformed } },
+      grouping: { sourceTrackVariants: builder.checks.rawTrackVariants.size,
+        groupedTracks: all.tracks.length,
+        consolidatedVariants: Math.max(0, builder.checks.rawTrackVariants.size - all.tracks.length),
+        uniqueArtists: all.artists.length, uniqueAlbums: all.albums.length },
+      enrichment: { tracksWithInferredFeatures: builder.checks.inferredTrackKeys.size,
+        distinctInferredArtists: builder.checks.inferredArtists.size },
+      listening: { firstTs: all.firstTs, lastTs: all.lastTs, years: Object.keys(report.periods).filter(year => year !== 'all').length,
+        activeDays: all.activeDays, hours: msElapsed(all.ms / 3600000),
+        topTenPercentPlayShare: all.qualified ? msElapsed(100 * topPlays / all.qualified) : 0,
+        annual: report.years.slice().reverse().map(year => ({ year, plays: report.periods[year].qualified, hours: msElapsed(report.periods[year].ms / 3600000) })) }
+    };
+    if (report.isDemo && report.demoData) {
+      const data = report.demoData;
+      const catalogueKeys = new Set(data.catalogue.map(track => keyOf(track.artist, track.title)));
+      const usedKeys = new Set(all.tracks.map(track => keyOf(track.artist, track.name)));
+      const outcomes = {};
+      for (const message of data.messages) outcomes[message.outcome || 'unknown'] = (outcomes[message.outcome || 'unknown'] || 0) + 1;
+      const longSessions = data.sessions.filter(session => session.trackIds.length >= 3);
+      result.demo = { catalogueTracks: data.catalogue.length, distinctCatalogueTracks: catalogueKeys.size,
+        catalogueArtists: new Set(data.catalogue.flatMap(track => (track.creditedArtists || [track.artist]).map(name => keyOf(name)))).size,
+        catalogueAlbums: new Set(data.catalogue.map(track => keyOf(track.artist, track.album))).size,
+        eligibleTracks: data.catalogue.filter(track => Date.parse(track.released + 'T00:00:00Z') <= Date.now()).length,
+        playedTracks: [...usedKeys].filter(key => catalogueKeys.has(key)).length,
+        sessions: data.sessions.length, multiTrackSessions: longSessions.length,
+        chapters: report.monthDetails ? Object.keys(report.monthDetails).length : 0,
+        friends: data.friends.length, playlists: data.playlists.length, recommendations: data.messages.length,
+        recommendationOutcomes: outcomes };
+    }
+    return result;
+  }
+  async function persistSoundcheck(diagnostic) {
+    try { await saveSoundcheck(diagnostic); } catch (error) { console.warn('Soundcheck history could not be saved:', error); diagnostic.unsaved = true; }
+  }
+  async function failedSoundcheck(trace, category) {
+    const diagnostic = { schema: 1, id: uuid(), reportId: null, createdAt: new Date().toISOString(),
+      source: trace.type, status: 'failed', sourceType: trace.type === 'demo' ? 'Demo data' : 'Spotify import',
+      environment: { ...browserEnvironment(), version: appVersion },
+      performance: { totalMs: msElapsed(performance.now() - trace.started), stages: { ...trace.stages }, inputBytes: trace.fileBytes, parsedJsonBytes: trace.jsonBytes, sourceFiles: trace.files },
+      failureStage: category };
+    await persistSoundcheck(diagnostic);
+  }
   function setProgress(label, detail, fraction) {
     $('import-status').classList.remove('hidden');
     $('import-status-title').textContent = label;
@@ -403,6 +524,8 @@
     if (state.loading) return;
     const isZip = /\.zip$/i.test(file.name), isJson = /\.json$/i.test(file.name);
     if (!isZip && !isJson) { showError('Choose a Spotify .zip archive or a .json history file.'); return; }
+    const trace = startTrace('import', file.size);
+    let phase = 'Opening archive';
     state.loading = true;
     $('error-box').classList.add('hidden');
     $('browse-button').disabled = true;
@@ -416,7 +539,9 @@
         if (typeof JSZip === 'undefined') throw new Error('Local ZIP reader is unavailable. Reload the page and try again.');
         setProgress('Opening Spotify export…', 'Reading the ZIP directory locally.', .02);
         await sleep();
+        const openedAt = performance.now();
         const zip = await JSZip.loadAsync(file);
+        timeStage(trace, 'Open ZIP', openedAt);
         const files = Object.values(zip.files).filter(entry => !entry.dir && /\.json$/i.test(entry.name) && !baseName(entry.name).startsWith('._'));
         let candidates = files.filter(x => extendedName(x.name));
         type = 'Extended Streaming History';
@@ -431,43 +556,78 @@
         if (totalSize > MAX_TOTAL_UNCOMPRESSED) throw new Error('This archive is too large to analyse safely in one browser session.');
         candidates.sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }));
         builder.sourceFiles = candidates.length;
+        trace.files = candidates.length;
+        trace.jsonBytes = totalSize;
+        phase = 'Read and parse JSON';
         for (let i = 0; i < candidates.length; i++) {
           const entry = candidates[i];
           setProgress('Analysing listening history…', `File ${i + 1} of ${candidates.length}: ${baseName(entry.name)}`, i / candidates.length);
           await sleep();
+          const readingAt = performance.now();
           const content = await entry.async('string', metadata => {
             $('progress-fill').style.width = `${Math.min(98, (i + metadata.percent / 100) / candidates.length * 100)}%`;
           });
+          timeStage(trace, 'Read JSON', readingAt);
+          const parsingAt = performance.now();
           let rows;
           try { rows = JSON.parse(content.replace(/^\uFEFF/, '')); }
           catch { throw new Error(`Could not parse ${baseName(entry.name)}. Make sure this is an unmodified Spotify export.`); }
+          timeStage(trace, 'Parse JSON', parsingAt);
+          phase = 'Aggregate listening data';
+          const aggregatingAt = performance.now();
           await ingest(builder, rows);
+          timeStage(trace, 'Aggregate events', aggregatingAt);
           rows = null;
         }
       } else {
         type = extendedName(file.name) ? 'Extended Streaming History' : 'Spotify listening history';
         setProgress('Reading JSON history…', file.name, .1);
         await sleep();
+        const readingAt = performance.now();
         const content = await file.text();
+        timeStage(trace, 'Read JSON', readingAt);
+        trace.jsonBytes = file.size;
+        trace.files = 1;
+        phase = 'Parse JSON';
+        const parsingAt = performance.now();
         const rows = JSON.parse(content.replace(/^\uFEFF/, ''));
+        timeStage(trace, 'Parse JSON', parsingAt);
+        phase = 'Aggregate listening data';
+        const aggregatingAt = performance.now();
         await ingest(builder, rows);
+        timeStage(trace, 'Aggregate events', aggregatingAt);
         builder.sourceFiles = 1;
       }
       if (!builder.imported) throw new Error('The files contained no valid music listening events. Check you selected the audio history, rather than podcast or video files.');
       setProgress('Building your report…', `${number(builder.imported)} listening events processed.`, .97);
       await sleep();
+      phase = 'Build report';
+      const reportAt = performance.now();
       const report = finishBuilder(builder, file.name, type);
+      timeStage(trace, 'Build report', reportAt);
+      report.soundcheck = buildSoundcheck(report, builder, trace);
       state.report = report;
       state.year = 'all';
       let saved = true;
+      phase = 'Save report';
+      const savingAt = performance.now();
       try { await saveReport(report); }
       catch (error) { saved = false; console.warn('Local report could not be saved:', error); }
+      timeStage(trace, 'Save report', savingAt);
+      report.soundcheck.performance.stages = { ...trace.stages };
+      report.soundcheck.performance.totalMs = msElapsed(performance.now() - trace.started);
+      report.unsaved = !saved;
+      if (saved) {
+        try { await saveReport(report); } catch (error) { console.warn('Final diagnostic metrics could not be written:', error); }
+      }
+      await persistSoundcheck(report.soundcheck);
       setProgress('Your report is ready.', saved ? 'Saved in your browser. Nothing was uploaded.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
       report.unsaved = !saved;
       await refreshHistoryCount();
       activateReport(report);
     } catch (error) {
       console.error('Local import error:', error);
+      await failedSoundcheck(trace, phase);
       showError(error instanceof Error ? error.message : 'Could not read this archive.');
     } finally {
       $('import-status').classList.add('hidden');
@@ -480,7 +640,7 @@
   }
 
   function openView(view, record = true) {
-    if (!views.includes(view)) return;
+    if (!views.includes(view) || (view === 'soundcheck' && !state.soundcheckUnlocked)) return;
     if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search'].includes(view)) view = 'home';
     if (record && state.view !== view) saveNavigation();
     closeMobileActions();
@@ -489,7 +649,7 @@
     for (const section of document.querySelectorAll('.view')) section.classList.toggle('active', section.id === `view-${view}`);
     for (const nav of document.querySelectorAll('[data-nav]')) nav.classList.toggle('active', nav.dataset.nav === view);
     $('page-name').textContent = pageNames[view];
-    $('report-controls').classList.toggle('hidden', !state.report || view === 'history');
+    $('report-controls').classList.toggle('hidden', !state.report || view === 'history' || view === 'soundcheck');
     const canRandomise = !!state.report?.isDemo && view !== 'home' && view !== 'history';
     $('randomise-demo').classList.toggle('hidden', !canRandomise);
     $('mobile-randomise').classList.toggle('hidden', !canRandomise);
@@ -500,6 +660,7 @@
   }
   function activateReport(report) {
     navigationStack.length = 0;
+    state.soundcheckSelected = null;
     state.report = report;
     state.year = 'all';
     state.eras = { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } };
@@ -521,6 +682,7 @@
     return [...list].sort((a, b) => b.ms - a.ms || b.plays - a.plays);
   }
   function renderCurrent() {
+    if (state.view === 'soundcheck') { void renderSoundcheck(); return; }
     if (!state.report) return;
     if (state.view === 'overview') renderOverview();
     if (['artists', 'tracks', 'albums'].includes(state.view)) renderListing(state.view);
@@ -1089,6 +1251,8 @@
 
   async function makeDemo() {
     if (state.loading) return;
+    const trace = startTrace('demo');
+    let phase = 'Load demo catalogue';
     state.loading = true;
     $('randomise-demo').disabled = true;
     $('demo-button').disabled = true;
@@ -1096,7 +1260,12 @@
     showLoading(randomising ? 'Randomising your demo…' : 'Preparing your demo…', 'Generating a listening history in your browser.');
     try {
       await letLoadingPaint();
+      const loadedAt = performance.now();
       const tracks = await loadDemoTracks();
+      timeStage(trace, 'Load catalogue', loadedAt);
+      trace.files = 1;
+      phase = 'Generate listening history';
+      const generatingAt = performance.now();
       updateLoading(randomising ? 'Randomising your demo…' : 'Building your demo…', 'Creating years of listening activity.');
       let seed = crypto.getRandomValues(new Uint32Array(1))[0];
       const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
@@ -1169,7 +1338,7 @@
           ? finalDemoMonth.getUTCMonth() + 1 : 12;
         if (year > finalDemoMonth.getUTCFullYear() || lastMonth < 1) continue;
 
-        // A short first-month obsession; make the newest available month useful
+        // A short first month obsession; make the newest available month useful
         // when the user first opens Eras in the randomised demo.
         const obsessionMonth = year === finalDemoMonth.getUTCFullYear()
           ? lastMonth : randomInt(1, lastMonth);
@@ -1185,7 +1354,7 @@
         }
 
         // A different track becomes a favourite and then vanishes completely.
-        // Only schedule this far enough back for the actual 12-month rule.
+        // Only schedule this far enough back for the actual 12 month rule.
         const forgottenMonth = randomInt(1, lastMonth);
         const forgottenDate = storyMonthStart(year, forgottenMonth);
         if (finalDemoMonthNumber - storyMonthNumber(new Date(forgottenDate)) >= 12) {
@@ -1235,7 +1404,7 @@
           const track = pickPool(pool);
           if (track?.releasedAt <= timestamp) return track;
         }
-        // Only needed for release-month sessions where some tracks aren't out yet.
+        // Only needed for release month sessions where some tracks aren't out yet.
         return fallback.find(track => track.releasedAt <= timestamp) || null;
       };
       const weightedArtist = (names, favourites) => {
@@ -1431,6 +1600,9 @@
         updateLoading('Building your demo…', `Simulated listening through ${year}.`);
         await sleep();
       }
+      timeStage(trace, 'Generate listening history', generatingAt);
+      phase = 'Generate social activity';
+      const socialAt = performance.now();
       const day = 86400_000;
       const listenTimes = new Map();
       const indexPlays = () => {
@@ -1595,10 +1767,14 @@
         else if (sent - prior.at(-1) >= 180 * day) message.outcome = 'rediscovered';
         else message.outcome = prior.length >= 5 ? 'already-loved' : 'followed-up';
       }
+      timeStage(trace, 'Generate social activity', socialAt);
+      phase = 'Aggregate listening data';
       updateLoading('Finishing your demo…', 'Building your listening statistics.');
+      const aggregationAt = performance.now();
       const builder = makeBuilder();
       await ingest(builder, rows);
       builder.sourceFiles = 1;
+      timeStage(trace, 'Aggregate events', aggregationAt);
       const report = finishBuilder(builder, 'Randomised demo · not your data', 'Demo data', true);
       report.demoData = {
         catalogue: catalogue.map(({ id, title, artist, album, released, length, credits }) => ({ id, title, artist, album, released, durationMs: length, creditedArtists: [artist, ...credits] })),
@@ -1612,8 +1788,11 @@
           message.trackId === track.id && message.outcome === 'new-favourite') ? .85 : .48)).map(track => track.id),
         yearTotals: [...byYear.entries()]
       };
+      report.soundcheck = buildSoundcheck(report, builder, trace);
+      await persistSoundcheck(report.soundcheck);
       activateReport(report);
     } catch (error) {
+      await failedSoundcheck(trace, phase);
       console.error('Could not generate demo:', error);
       if (state.view !== 'home') openView('home');
       showError(error instanceof Error ? error.message : 'Could not generate a new demo.');
@@ -1847,14 +2026,17 @@
       if (button.dataset.deleteReport) {
         if (!confirm('Delete this saved report from this browser? Your original ZIP will not be affected.')) return;
         await removeReport(button.dataset.deleteReport);
+        try { await deleteSoundchecks(button.dataset.deleteReport); } catch (error) { console.warn('Could not delete attached diagnostics:', error); }
         await refreshHistoryCount();
         await renderHistory();
       }
     });
     $('clear-history').addEventListener('click', async () => {
-      if (!confirm('Permanently delete ALL saved Wrapped 365 reports from this browser?')) return;
+      if (!confirm('Permanently delete ALL saved Wrapped 365 reports and Soundcheck diagnostic history from this browser?')) return;
       const reports = await listReports();
       for (const report of reports) await removeReport(report.id);
+      try { await deleteSoundchecks(); } catch (error) { console.warn('Could not delete Soundcheck history:', error); }
+      state.soundcheckSelected = null;
       await refreshHistoryCount();
       await renderHistory();
     });
@@ -1862,6 +2044,164 @@
     $('close-dialog').addEventListener('click', () => $('method-dialog').close());
     $('method-ok').addEventListener('click', () => $('method-dialog').close());
     $('method-dialog').addEventListener('click', event => { if (event.target === $('method-dialog')) $('method-dialog').close(); });
+  }
+
+  const soundcheckMetric = (label, value, detail = '') => `<article class="sc-metric"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>${detail ? `<small>${escapeHtml(detail)}</small>` : ''}</article>`;
+  const soundcheckRow = (label, value, note = '') => `<div class="sc-row"><span>${escapeHtml(label)}${note ? `<small>${escapeHtml(note)}</small>` : ''}</span><strong>${escapeHtml(value)}</strong></div>`;
+  function soundcheckBar(label, value, maximum, suffix = '') {
+    const width = maximum > 0 ? Math.max(1, Math.min(100, value / maximum * 100)) : 0;
+    return `<div class="sc-bar-row"><div><span>${escapeHtml(label)}</span><strong>${escapeHtml(number(value))}${suffix}</strong></div><div class="sc-bar-track"><div style="width:${width.toFixed(2)}%"></div></div></div>`;
+  }
+  function soundcheckView(data) {
+    if (!data) return '<div class="panel sc-empty">No diagnostic reports yet. Import Spotify history or generate demo data to start collecting measurements.</div>';
+    if (data.status === 'failed') return `<div class="panel sc-empty"><h2>Processing did not complete</h2><p>The ${escapeHtml(data.sourceType)} operation stopped during <strong>${escapeHtml(data.failureStage || 'processing')}</strong>. The diagnostic only records the phase and timing, not filenames or source data.</p><p>Total time: ${number(data.performance?.totalMs)} ms</p></div>${soundcheckPerformance(data)}`;
+    const p = data.performance;
+    const ev = data.events;
+    const grouping = data.grouping;
+    const listen = data.listening;
+    const isDemo = data.source === 'demo';
+    const demo = data.demo;
+    const countValue = value => typeof value === 'number' ? number(value) : '—';
+    const coverage = isDemo && demo?.distinctCatalogueTracks ? (100 * demo.playedTracks / demo.distinctCatalogueTracks).toFixed(1) + '%' : '—';
+    const cards = isDemo ? [
+      ['Catalogue coverage', coverage, `${countValue(demo.playedTracks)} distinct songs heard`],
+      ['Qualified plays', countValue(ev.qualifying), '30 seconds or longer'],
+      ['Artists heard', countValue(grouping.uniqueArtists), `of ${countValue(demo.catalogueArtists)} catalogue artists`],
+      ['Recommendations', countValue(demo.recommendations), 'Fictional friend activity']
+    ] : [
+      ['Source events', countValue(ev.scanned), 'Playback rows inspected'],
+      ['Qualified plays', countValue(ev.qualifying), '30 seconds or longer'],
+      ['Distinct tracks', countValue(grouping.groupedTracks), 'After grouping by song identity'],
+      ['Artists inferred', countValue(data.enrichment.distinctInferredArtists), 'Distinct artists from title credits']
+    ];
+    const years = listen.annual || [];
+    const maxYear = Math.max(1, ...years.map(row => row.plays));
+    const quality = [
+      soundcheckRow('Events accepted', countValue(ev.accepted)),
+      soundcheckRow('Streams under 30 seconds', countValue(ev.under30s), 'Kept for behavioural metrics, excluded from play rankings'),
+      soundcheckRow('Exact duplicate events removed', countValue(ev.duplicatesRemoved), 'Identical playback signatures, not repeat listening'),
+      soundcheckRow('Excluded records', countValue(ev.excluded)),
+      ...Object.entries({ 'Podcast / episode records': ev.exclusions.episodes, 'Missing music metadata': ev.exclusions.missingMetadata,
+        'Invalid timestamps': ev.exclusions.invalidTimestamp, 'Invalid durations': ev.exclusions.invalidDuration,
+        'Malformed rows': ev.exclusions.malformedRow }).map(([label, value]) => soundcheckRow(label, countValue(value)))
+    ];
+    const groupingRows = [
+      soundcheckRow('Distinct source track variants', countValue(grouping.sourceTrackVariants), 'Artist + track + album combinations'),
+      soundcheckRow('Final grouped tracks', countValue(grouping.groupedTracks), 'Grouped by primary artist + track title'),
+      soundcheckRow('Variants consolidated', countValue(grouping.consolidatedVariants), 'Release variants combined, not playback events removed'),
+      soundcheckRow('Distinct credited artists', countValue(grouping.uniqueArtists)),
+      soundcheckRow('Distinct albums', countValue(grouping.uniqueAlbums)),
+      soundcheckRow('Tracks with new title-inferred credits', countValue(data.enrichment.tracksWithInferredFeatures)),
+      soundcheckRow('Distinct inferred artist names', countValue(data.enrichment.distinctInferredArtists), 'Found from feat./featuring text not already explicitly credited')
+    ];
+    const demoSection = !isDemo ? '' : `<div class="sc-panels">
+      <article class="panel"><div class="kicker">CATALOGUE</div><h2>Simulation coverage</h2>
+        ${soundcheckRow('Catalogue entries', countValue(demo.catalogueTracks))}
+        ${soundcheckRow('Distinct songs', countValue(demo.distinctCatalogueTracks))}
+        ${soundcheckRow('Eligible releases', countValue(demo.eligibleTracks))}
+        ${soundcheckRow('Albums / releases', countValue(demo.catalogueAlbums))}
+        ${soundcheckRow('Multi-track sessions', countValue(demo.multiTrackSessions))}
+        ${soundcheckRow('Total sessions', countValue(demo.sessions))}
+        ${soundcheckRow('Months represented', countValue(demo.chapters))}
+      </article>
+      <article class="panel"><div class="kicker">SOCIAL SIMULATION</div><h2>Recommendation outcomes</h2>
+        ${soundcheckRow('Friends', countValue(demo.friends))}
+        ${soundcheckRow('Playlists', countValue(demo.playlists))}
+        ${Object.entries(demo.recommendationOutcomes).sort((a,b)=>b[1]-a[1]).map(([name,value])=>soundcheckRow(name.replace(/-/g,' '), countValue(value))).join('')}
+      </article></div>`;
+    return `<div class="sc-cards">${cards.map(args => soundcheckMetric(...args)).join('')}</div>
+      ${soundcheckPerformance(data)}
+      <div class="sc-panels">
+        <article class="panel"><div class="kicker">PROCESSING QUALITY</div><h2>Playback records</h2>${quality.join('')}</article>
+        <article class="panel"><div class="kicker">IDENTITIES & ENRICHMENT</div><h2>Music catalogue</h2>${groupingRows.join('')}</article>
+      </div>${demoSection}
+      <div class="sc-panels">
+        <article class="panel"><div class="kicker">LISTENING DISTRIBUTION</div><h2>Year by year</h2>
+          <div class="sc-bars">${years.map(row => soundcheckBar(row.year, row.plays, maxYear)).join('')}</div>
+        </article>
+        <article class="panel"><div class="kicker">LISTENING PROFILE</div><h2>Coverage and popularity</h2>
+          ${soundcheckRow('First qualifying play', listen.firstTs ? dateLabel(listen.firstTs) : '—')}
+          ${soundcheckRow('Latest qualifying play', listen.lastTs ? dateLabel(listen.lastTs) : '—')}
+          ${soundcheckRow('Years with activity', countValue(listen.years))}
+          ${soundcheckRow('Active days', countValue(listen.activeDays))}
+          ${soundcheckRow('Listening hours', countValue(listen.hours))}
+          ${soundcheckRow('Top 10% song play share', listen.topTenPercentPlayShare + '%', 'Concentration of qualified plays among the most-played songs')}
+        </article>
+      </div>`;
+  }
+  function soundcheckPerformance(data) {
+    const p = data.performance || { stages: {} };
+    const stages = Object.entries(p.stages || {}).sort((a,b)=>b[1]-a[1]);
+    const max = Math.max(1, ...stages.map(([,ms])=>ms));
+    return `<div class="panel sc-performance"><div class="sc-panel-head"><div><div class="kicker">PROCESSING PERFORMANCE</div><h2>What took the time?</h2></div><div class="sc-total">${number(p.totalMs)}<small>ms total</small></div></div>
+       <div class="sc-bars">${stages.length ? stages.map(([label,ms])=>soundcheckBar(label,ms,max,' ms')).join('') : '<p class="search-muted">No completed processing stages were recorded.</p>'}</div>
+       <div class="sc-footnote">The total includes pauses for UI rendering and browser storage, so individual stages may not add up to the complete time.</div>
+       <div class="sc-details">${soundcheckRow('Input size', p.inputBytes != null ? (p.inputBytes / 1048576).toFixed(2) + ' MiB' : 'Not applicable')}
+       ${soundcheckRow('Uncompressed / parsed JSON', p.parsedJsonBytes ? (p.parsedJsonBytes / 1048576).toFixed(2) + ' MiB' : 'Not measured')}
+       ${soundcheckRow('Files processed', p.sourceFiles != null ? number(p.sourceFiles) : '—')}
+       ${soundcheckRow('Wrapped 365 version', data.environment?.version || 'Unknown')}
+       ${soundcheckRow('Browser', data.environment?.browser || 'Unknown')}
+       ${soundcheckRow('OS / device class', `${data.environment?.os || 'Unknown'} / ${data.environment?.deviceClass || 'Unknown'}`)}
+       ${soundcheckRow('Recorded', dateLabel(data.createdAt))}</div></div>`;
+  }
+  async function renderSoundcheck() {
+    if (state.view !== 'soundcheck' || !state.soundcheckUnlocked) return;
+    let history = [];
+    try { history = await listSoundchecks(); } catch (error) { console.warn('Could not read Soundcheck history:', error); }
+    if (state.view !== 'soundcheck') return;
+    const selected = state.soundcheckSelected || state.report?.soundcheck || (!state.report ? history[0] : null) || null;
+    $('soundcheck-type').textContent = selected ? `${selected.source === 'demo' ? 'DEMO SIMULATION' : 'SPOTIFY IMPORT'} · ${selected.status.toUpperCase()}` : 'NO DIAGNOSTICS YET';
+    $('soundcheck-dashboard').innerHTML = !selected && state.report && !state.report.soundcheck ? '<div class="panel sc-empty"><h2>Older saved report</h2><p>This report was created before Soundcheck could collect diagnostics. No processing measurements were recorded at that time. You can inspect other runs below or reimport the original archive to generate a diagnostic report.</p></div>' : soundcheckView(selected);
+    $('soundcheck-recent').innerHTML = history.length ? history.map(item => `<button type="button" class="sc-history-item ${selected?.id === item.id ? 'selected' : ''}" data-soundcheck-id="${escapeHtml(item.id)}"><span><strong>${item.source === 'demo' ? 'Demo simulation' : 'Spotify import'}</strong><small>${dateLabel(item.createdAt)} · ${item.status === 'failed' ? `Stopped: ${escapeHtml(item.failureStage || 'processing')}` : `${number(item.events?.qualifying)} qualifying plays`}</small></span><span>${item.status === 'failed' ? '!' : '↗'}</span></button>`).join('') : '<p class="search-muted">No locally saved diagnostic runs yet. Diagnostics are collected whether Soundcheck is unlocked or not.</p>';
+  }
+  function setSoundcheckUnlocked(unlocked) {
+    state.soundcheckUnlocked = unlocked;
+    try { if (unlocked) localStorage.setItem(SOUNDCHECK_KEY, 'true'); else localStorage.removeItem(SOUNDCHECK_KEY); } catch { /* optional preference */ }
+    $('soundcheck-nav').classList.toggle('hidden', !unlocked);
+    $('soundcheck-nav').classList.toggle('ready', unlocked);
+    if (unlocked) {
+      $('soundcheck-toast').classList.remove('hidden');
+      clearTimeout(setSoundcheckUnlocked.toastTimer);
+      setSoundcheckUnlocked.toastTimer = setTimeout(() => $('soundcheck-toast').classList.add('hidden'), 3100);
+      state.soundcheckSelected = null;
+      openView('soundcheck');
+    } else {
+      state.soundcheckSelected = null;
+      navigationStack.length = 0;
+      if (state.view === 'soundcheck') openView(state.report ? 'overview' : 'home', false);
+      updateBackButton();
+    }
+  }
+  function attachSoundcheckUnlock() {
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let position = 0;
+    document.addEventListener('keydown', event => {
+      if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.target.closest('input,textarea,select,[contenteditable="true"]')) return;
+      const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+      if (key === code[position]) { position++; if (key.startsWith('Arrow')) event.preventDefault(); }
+      else position = key === code[0] ? 1 : 0;
+      if (position === code.length) { position = 0; if (!state.soundcheckUnlocked) setSoundcheckUnlocked(true); else openView('soundcheck'); }
+    });
+    let taps = 0, lastTap = 0;
+    document.querySelector('.brand-dot').addEventListener('click', event => {
+      if (!matchMedia('(max-width: 700px)').matches) return;
+      event.preventDefault();
+      const now = Date.now();
+      taps = now - lastTap > 2200 ? 1 : taps + 1;
+      lastTap = now;
+      if (taps >= 7) { taps = 0; if (!state.soundcheckUnlocked) setSoundcheckUnlocked(true); else openView('soundcheck'); }
+    });
+    $('soundcheck-disable').addEventListener('click', () => setSoundcheckUnlocked(false));
+    $('soundcheck-recent').addEventListener('click', async event => {
+      const row = event.target.closest('[data-soundcheck-id]');
+      if (!row) return;
+      const history = await listSoundchecks();
+      state.soundcheckSelected = history.find(item => item.id === row.dataset.soundcheckId) || null;
+      void renderSoundcheck();
+    });
+    try { state.soundcheckUnlocked = localStorage.getItem(SOUNDCHECK_KEY) === 'true'; } catch { /* optional preference */ }
+    $('soundcheck-nav').classList.toggle('hidden', !state.soundcheckUnlocked);
+    $('soundcheck-nav').classList.toggle('ready', state.soundcheckUnlocked);
   }
 
   async function loadAppVersion() {
@@ -1875,6 +2215,7 @@
       const version = (await response.text()).trim();
       if (!version) throw new Error('Empty VERSION file');
 
+      appVersion = version;
       target.textContent = ` · v${version}`;
     } catch (error) {
       console.warn('Unable to load Wrapped 365 version:', error);
@@ -1884,6 +2225,7 @@
   async function initialise() {
     initialiseTheme();
     attachEvents();
+    attachSoundcheckUnlock();
     void loadAppVersion();
     try { state.owner = getOwner(); }
     catch { state.owner = 'local-session-only'; }
