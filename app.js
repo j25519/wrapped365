@@ -741,7 +741,7 @@
     const peakHourIndex = p.hourly.indexOf(Math.max(...p.hourly));
     const fav = p.artists[0]?.name || 'No data';
     $('overview-insights').innerHTML = [
-      insightCard('YOUR MOST-PLAYED ARTIST', fav, p.artists[0] ? `${number(p.artists[0].plays)} qualifying plays` : 'No artist plays'),
+      insightCard('YOUR MOST PLAYED ARTIST', fav, p.artists[0] ? `${number(p.artists[0].plays)} qualifying plays` : 'No artist plays'),
       insightCard('YOUR BIGGEST LISTENING DAY', weekdayLabels[peakDayIndex], `${duration(p.byWeekday[peakDayIndex])} of recorded music`),
       insightCard('YOUR PEAK LISTENING HOUR', `${String(peakHourIndex).padStart(2, '0')}:00 UTC`, 'Based on the time playback ended')
     ].join('');
@@ -1196,7 +1196,7 @@
       <article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">THROUGH THE YEARS</div><h2>Listening timeline</h2></div><span class="heading-note">RECORDED PLAYS</span></div>${searchTimeline(history)}</article>
       <article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">CONNECTED TO YOUR HISTORY</div><h2>Listening eras</h2></div></div>
       ${eras.length ? `<div class="search-era-links">${eras.map(era => `<button type="button" data-search-era-month="${escapeHtml(era.to)}"><strong>${escapeHtml(era.title)} era</strong><span>${escapeHtml(monthSpan(era.from, era.to))} ↗</span></button>`).join('')}</div>` : `<p class="search-muted">Not among the leading ${category} in any automatically detected era for this time range.</p>`}</article>
-      ${related.length ? `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">GO DEEPER</div><h2>${category === 'albums' ? 'Most-played album tracks' : 'Most-played tracks featuring this artist'}</h2></div></div><div class="rank-list">${related.map((row, i) => rankRow(row, i, 'tracks', 'plays')).join('')}</div></article>` : ''}
+      ${related.length ? `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">GO DEEPER</div><h2>${category === 'albums' ? 'Most played album tracks' : 'Most played tracks featuring this artist'}</h2></div></div><div class="rank-list">${related.map((row, i) => rankRow(row, i, 'tracks', 'plays')).join('')}</div></article>` : ''}
       ${searchDemoConnections(category, item)}
       ${category === 'tracks' && !state.report?.isDemo ? `<p class="search-muted">Playlist membership and friend recommendations will appear here once Account Data import support is added. The standard Spotify streaming-history export does not contain those records.</p>` : ''}
       <p class="search-muted">Counts reflect streams of at least 30 seconds, grouped by UTC month. An era connection means this was among that chapter's leading entries. Historical reports without month-level data cannot show a precise timeline.</p>`;
@@ -1381,8 +1381,10 @@
       }
       const dayMs = 86400_000;
       const listened = new Map();
-      let previousFocus = [];
-      let focusMonthsRemaining = 0;
+      const artistPhases = new Map();
+      const artistCooldowns = new Map();
+      const albumPhases = new Map();
+      const albumCooldowns = new Map();
       let previousObsession = null;
       let previousYearArtists = [];
       const habit = randomInt(13, 20); // Average tracks per calendar day, before lighter early years.
@@ -1434,10 +1436,16 @@
       };
       const weightedArtist = (names, favourites, counts) => {
         const pool = names.map(artist => ({
-          artist, weight: (favourites.includes(artist) ? 2 : 1) *
+          artist, weight: (favourites.includes(artist) ? 1.3 : 1) *
             artistWeights.get(artist) * Math.sqrt(counts.get(artist) || 1)
         }));
         return pickPool(makePool(pool, item => item.weight))?.artist;
+      };
+      const phaseBoost = (phase, monthIndex, peak) => {
+        const elapsed = monthIndex - phase.start;
+        if (elapsed < phase.peakMonths) return peak;
+        const remaining = phase.peakMonths + phase.fadeMonths - elapsed;
+        return 1 + (peak - 1) * remaining / (phase.fadeMonths + 1);
       };
       for (let year = startYear; year <= endYear; year++) {
         const begin = Math.max(minDate, Date.UTC(year, 0, 1));
@@ -1447,7 +1455,7 @@
         if (!available.length) continue;
         const eligibleArtists = [...new Set(available.map(track => track.artist))];
         const yearArtistCounts = artistTrackCounts(available);
-        const yearArtists = shuffled(previousYearArtists.filter(name => eligibleArtists.includes(name))).slice(0, randomInt(1, 3));
+        const yearArtists = shuffled(previousYearArtists.filter(name => eligibleArtists.includes(name))).slice(0, randomInt(1, 2));
         while (yearArtists.length < Math.min(9, eligibleArtists.length)) {
           const artist = weightedArtist(eligibleArtists.filter(name => !yearArtists.includes(name)), previousYearArtists, yearArtistCounts);
           if (!artist) break;
@@ -1465,21 +1473,26 @@
           if (!monthTracks.length) continue;
           const monthArtists = [...new Set(monthTracks.map(track => track.artist))];
           const monthArtistCounts = artistTrackCounts(monthTracks);
-          let focus = previousFocus.filter(artist => monthArtists.includes(artist));
-          if (focusMonthsRemaining <= 0 || !focus.length) {
-            focus = shuffled(focus).slice(0, rand() < .62 ? 1 : 2);
-            const wanted = Math.min(monthArtists.length, randomInt(3, 5));
-            while (focus.length < wanted) {
-              const candidate = weightedArtist(monthArtists.filter(artist => !focus.includes(artist)), yearArtists, monthArtistCounts);
-              if (!candidate) break;
-              focus.push(candidate);
-            }
-            focusMonthsRemaining = randomInt(2, 4);
-          }
-          focusMonthsRemaining--;
-          previousFocus = focus;
-          const focusSet = new Set(focus);
+          const monthIndex = year * 12 + month;
           const yearSet = new Set(yearArtists);
+          for (const [artist, phase] of artistPhases) {
+            if (!monthArtistCounts.has(artist) || monthIndex >= phase.start + phase.peakMonths + phase.fadeMonths) artistPhases.delete(artist);
+          }
+          const eligibleFocusArtists = monthArtists.filter(artist => monthArtistCounts.has(artist));
+          const wanted = Math.min(eligibleFocusArtists.length, randomInt(3, 5));
+          let focus = [...artistPhases].filter(([, phase]) => monthIndex < phase.start + phase.peakMonths).map(([artist]) => artist);
+          while (focus.length < wanted) {
+            const candidates = eligibleFocusArtists.filter(artist => !artistPhases.has(artist) && (artistCooldowns.get(artist) || 0) <= monthIndex);
+            const artist = weightedArtist(candidates, yearArtists, monthArtistCounts);
+            if (!artist) break;
+            const peakMonths = randomInt(2, 3);
+            const fadeMonths = randomInt(1, 2);
+            artistPhases.set(artist, { start: monthIndex, peakMonths, fadeMonths });
+            artistCooldowns.set(artist, monthIndex + peakMonths + fadeMonths + randomInt(6, 10));
+            focus.push(artist);
+          }
+          const focusSet = new Set(focus);
+          const artistBoosts = new Map([...artistPhases].map(([artist, phase]) => [artist, phaseBoost(phase, monthIndex, 4.5)]));
           const regular = monthTracks.filter(track => track.length >= 90_000 && track.releasedAt <= monthStart);
           const obsessionCandidates = regular;
           const obsessionTracks = shuffled(
@@ -1496,12 +1509,6 @@
             const release = ageDays < 120 ? 2.15 : ageDays < 365 ? 1.5 : 1;
             return trackWeights.get(track.id) * trackWeight(track) * release;
           };
-          const general = makePool(monthTracks, track => baseWeight(track) *
-            (focusSet.has(track.artist) ? 4.5 : yearSet.has(track.artist) ? 1.35 : 1) *
-            (obsessionIds.has(track.id) ? 5 : 1));
-          const discovery = makePool(monthTracks, track => baseWeight(track) *
-            (focusSet.has(track.artist) ? 0.65 : 1.25) *
-            (1.5 / (1 + (listened.get(track.id) || 0) / 6)));
           const byArtist = new Map();
           const byAlbum = new Map();
           for (const track of monthTracks) {
@@ -1511,12 +1518,42 @@
             if (!byAlbum.has(albumKey)) byAlbum.set(albumKey, { artist: track.artist, tracks: [] });
             byAlbum.get(albumKey).tracks.push(track);
           }
+          const albums = [...byAlbum.values()].filter(album => album.tracks.filter(track => track.length >= 80_000).length >= 3);
+          for (const [albumKey, phase] of albumPhases) {
+            if (!byAlbum.has(albumKey) || monthIndex >= phase.start + phase.peakMonths + phase.fadeMonths) albumPhases.delete(albumKey);
+          }
+          const wantedAlbums = Math.min(albums.length, randomInt(1, 2));
+          let focusedAlbums = [...albumPhases].filter(([, phase]) => monthIndex < phase.start + phase.peakMonths).length;
+          while (focusedAlbums < wantedAlbums) {
+            const candidates = albums.filter(album => {
+              const albumKey = keyOf(album.artist, album.tracks[0].album);
+              return !albumPhases.has(albumKey) && (albumCooldowns.get(albumKey) || 0) <= monthIndex &&
+                album.tracks.some(track => track.releasedAt <= monthStart);
+            });
+            const chosen = pickPool(makePool(candidates, album => Math.sqrt(album.tracks.length) *
+              albumWeights.get(keyOf(album.artist, album.tracks[0].album)) *
+              (album.tracks[0].releasedAt > monthStart - 365 * dayMs ? 1.4 : 1)));
+            if (!chosen) break;
+            const albumKey = keyOf(chosen.artist, chosen.tracks[0].album);
+            const peakMonths = randomInt(1, 2);
+            const fadeMonths = 1;
+            albumPhases.set(albumKey, { start: monthIndex, peakMonths, fadeMonths });
+            albumCooldowns.set(albumKey, monthIndex + peakMonths + fadeMonths + randomInt(6, 10));
+            focusedAlbums++;
+          }
+          const albumBoosts = new Map([...albumPhases].map(([albumKey, phase]) => [albumKey, phaseBoost(phase, monthIndex, 4.5)]));
+          const general = makePool(monthTracks, track => baseWeight(track) *
+            Math.max(artistBoosts.get(track.artist) || 1, albumBoosts.get(keyOf(track.artist, track.album)) || 1) *
+            (yearSet.has(track.artist) ? 1.15 : 1) * (obsessionIds.has(track.id) ? 5 : 1));
+          const discovery = makePool(monthTracks, track => baseWeight(track) *
+            (focusSet.has(track.artist) ? 0.65 : 1.25) *
+            (1.5 / (1 + (listened.get(track.id) || 0) / 6)));
           const artistPools = new Map([...byArtist].map(([artist, list]) =>
             [artist, makePool(list, track => baseWeight(track) * (obsessionIds.has(track.id) ? 4 : 1))]));
-          const albums = [...byAlbum.values()].filter(album => album.tracks.filter(track => track.length >= 80_000).length >= 3);
           const albumPool = makePool(albums, album =>
             Math.sqrt(album.tracks.length) * albumWeights.get(keyOf(album.artist, album.tracks[0].album)) *
-            (focusSet.has(album.artist) ? 4.2 : yearSet.has(album.artist) ? 1.35 : 1) *
+            (albumBoosts.get(keyOf(album.artist, album.tracks[0].album)) || 1) *
+            (yearSet.has(album.artist) ? 1.1 : 1) *
             (album.tracks[0].releasedAt > monthStart - 240 * dayMs ? 1.65 : 1));
           const activity = yearActivity * (0.78 + rand() * .46);
           const availabilityFactor = Math.min(1, 0.50 + monthTracks.length / 320);
@@ -2156,7 +2193,7 @@
           ${soundcheckRow('Years with activity', countValue(listen.years))}
           ${soundcheckRow('Active days', countValue(listen.activeDays))}
           ${soundcheckRow('Listening hours', countValue(listen.hours))}
-          ${soundcheckRow('Top 10% song play share', listen.topTenPercentPlayShare + '%', 'Concentration of qualified plays among the most-played songs')}
+          ${soundcheckRow('Top 10% song play share', listen.topTenPercentPlayShare + '%', 'Concentration of qualified plays among the most played songs')}
         </article>
       </div>`;
   }
