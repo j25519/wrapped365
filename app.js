@@ -1424,8 +1424,19 @@
         // Only needed for release month sessions where some tracks aren't out yet.
         return fallback.find(track => track.releasedAt <= timestamp) || null;
       };
-      const weightedArtist = (names, favourites) => {
-        const pool = names.map(artist => ({ artist, weight: (favourites.includes(artist) ? 2 : 1) * artistWeights.get(artist) }));
+      const artistTrackCounts = tracks => {
+        const counts = new Map();
+        for (const track of tracks) {
+          if (track.length < 90_000) continue;
+          counts.set(track.artist, (counts.get(track.artist) || 0) + 1);
+        }
+        return counts;
+      };
+      const weightedArtist = (names, favourites, counts) => {
+        const pool = names.map(artist => ({
+          artist, weight: (favourites.includes(artist) ? 2 : 1) *
+            artistWeights.get(artist) * Math.sqrt(counts.get(artist) || 1)
+        }));
         return pickPool(makePool(pool, item => item.weight))?.artist;
       };
       for (let year = startYear; year <= endYear; year++) {
@@ -1435,9 +1446,10 @@
         const available = catalogue.filter(track => track.releasedAt <= end && !storyKeys.has(storyKey(track)));
         if (!available.length) continue;
         const eligibleArtists = [...new Set(available.map(track => track.artist))];
+        const yearArtistCounts = artistTrackCounts(available);
         const yearArtists = shuffled(previousYearArtists.filter(name => eligibleArtists.includes(name))).slice(0, randomInt(1, 3));
         while (yearArtists.length < Math.min(9, eligibleArtists.length)) {
-          const artist = weightedArtist(eligibleArtists.filter(name => !yearArtists.includes(name)), previousYearArtists);
+          const artist = weightedArtist(eligibleArtists.filter(name => !yearArtists.includes(name)), previousYearArtists, yearArtistCounts);
           if (!artist) break;
           yearArtists.push(artist);
         }
@@ -1452,12 +1464,13 @@
           const monthTracks = available.filter(track => track.releasedAt < monthEnd);
           if (!monthTracks.length) continue;
           const monthArtists = [...new Set(monthTracks.map(track => track.artist))];
+          const monthArtistCounts = artistTrackCounts(monthTracks);
           let focus = previousFocus.filter(artist => monthArtists.includes(artist));
           if (focusMonthsRemaining <= 0 || !focus.length) {
             focus = shuffled(focus).slice(0, rand() < .62 ? 1 : 2);
             const wanted = Math.min(monthArtists.length, randomInt(3, 5));
             while (focus.length < wanted) {
-              const candidate = weightedArtist(monthArtists.filter(artist => !focus.includes(artist)), yearArtists);
+              const candidate = weightedArtist(monthArtists.filter(artist => !focus.includes(artist)), yearArtists, monthArtistCounts);
               if (!candidate) break;
               focus.push(candidate);
             }
@@ -1468,8 +1481,7 @@
           const focusSet = new Set(focus);
           const yearSet = new Set(yearArtists);
           const regular = monthTracks.filter(track => track.length >= 90_000 && track.releasedAt <= monthStart);
-          const focusTracks = regular.filter(track => focusSet.has(track.artist));
-          const obsessionCandidates = focusTracks.length ? focusTracks : regular;
+          const obsessionCandidates = regular;
           const obsessionTracks = shuffled(
             previousObsession && obsessionCandidates.some(track => track.id === previousObsession.id) && rand() < .42
               ? [previousObsession, ...shuffled(obsessionCandidates.filter(track => track.id !== previousObsession.id))]
@@ -1536,7 +1548,9 @@
               const shuffle = !albumSession && rand() < (exploring ? .82 : .55);
               let album = albumSession ? pickPool(albumPool) : null;
               let albumIndex = album ? (rand() < .75 ? 0 : randomInt(0, album.tracks.length - 1)) : 0;
-              let artist = artistSession ? (focus.length && rand() < .75 ? choose(focus) : weightedArtist(monthArtists, yearArtists)) : null;
+              let artist = artistSession ? (focus.length && rand() < .75
+                ? weightedArtist(focus, [], monthArtistCounts)
+                : weightedArtist(monthArtists, yearArtists, monthArtistCounts)) : null;
               const events = [];
               let cursor = sessionStart;
               for (let i = 0; i < size; i++) {
