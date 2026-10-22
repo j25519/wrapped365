@@ -14,6 +14,8 @@ Deep dive into your Spotify analytics locally within your browser. Discover the 
 
 <img width="2864" height="1850" alt="image" src="https://github.com/user-attachments/assets/77eb21b7-13fb-450c-8e8e-8f727e86a7bd" />
 
+<img width="2618" height="1875" alt="image" src="https://github.com/user-attachments/assets/9e5106e6-9561-4756-adeb-5e4c87a5baf5" />
+
 ## Deploy with Docker Compose
 
 Grab the [`compose.yaml`](compose.yaml) file and put it in a directory on your Docker host. No source checkout or local image build is needed.
