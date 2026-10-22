@@ -1132,11 +1132,12 @@
           length: seconds ? seconds * 1000 : randomInt(115, 270) * 1000
         };
       });
-      for (const artist of artists) artistWeights.set(artist, 0.3 + 4 * rand() ** 2);
+      for (const artist of artists) artistWeights.set(artist, 0.75 + 0.85 * rand());
       for (const track of catalogue) {
         const albumKey = keyOf(track.artist, track.album);
-        if (!albumWeights.has(albumKey)) albumWeights.set(albumKey, 0.45 + 2 * rand());
-        trackWeights.set(track.id, (0.1 + 5 * rand() ** 5) * artistWeights.get(track.artist) * albumWeights.get(albumKey));
+        if (!albumWeights.has(albumKey)) albumWeights.set(albumKey, 0.8 + 0.55 * rand());
+        // Keep individual favourites without letting a few lucky weights dominate the catalogue.
+        trackWeights.set(track.id, (0.65 + 1.5 * rand() ** 2) * artistWeights.get(track.artist) * albumWeights.get(albumKey));
       }
       // Give demo-only tracks believable listening stories instead of relying on
       // incidental random repeats. These records pass through the normal importer;
@@ -1192,85 +1193,219 @@
           if (forgotten) addStoryBurst(forgotten, forgottenDate, randomInt(6, 12));
         }
       }
+      const dayMs = 86400_000;
+      const listened = new Map();
+      let previousFocus = [];
+      let focusMonthsRemaining = 0;
+      let previousObsession = null;
+      let previousYearArtists = [];
+      const habit = randomInt(13, 20); // Average tracks per calendar day, before lighter early years.
+      const activeChance = 0.79 + 0.08 * rand();
+      const trackWeight = track => {
+        if (track.length < 30_000) return 0.015;
+        if (track.length < 55_000) return 0.07;
+        if (track.length < 85_000) return 0.25;
+        if (track.length < 120_000) return 0.62;
+        return 1;
+      };
+      // Monthly weighted pools are built once. Individual plays are sampled in O(log n),
+      // rather than rescoring the entire catalogue for every play.
+      const makePool = (items, weight) => {
+        const cumulative = new Float64Array(items.length);
+        let total = 0;
+        for (let i = 0; i < items.length; i++) {
+          total += Math.max(0.00001, weight(items[i]));
+          cumulative[i] = total;
+        }
+        return { items, cumulative, total };
+      };
+      const pickPool = pool => {
+        if (!pool?.items.length) return null;
+        const roll = rand() * pool.total;
+        let left = 0, right = pool.items.length - 1;
+        while (left < right) {
+          const mid = (left + right) >>> 1;
+          if (roll < pool.cumulative[mid]) right = mid;
+          else left = mid + 1;
+        }
+        return pool.items[left];
+      };
+      const pickAvailable = (pool, timestamp, fallback) => {
+        for (let retry = 0; retry < 14; retry++) {
+          const track = pickPool(pool);
+          if (track?.releasedAt <= timestamp) return track;
+        }
+        // Only needed for release-month sessions where some tracks aren't out yet.
+        return fallback.find(track => track.releasedAt <= timestamp) || null;
+      };
+      const weightedArtist = (names, favourites) => {
+        const pool = names.map(artist => ({ artist, weight: (favourites.includes(artist) ? 2 : 1) * artistWeights.get(artist) }));
+        return pickPool(makePool(pool, item => item.weight))?.artist;
+      };
       for (let year = startYear; year <= endYear; year++) {
         const begin = Math.max(minDate, Date.UTC(year, 0, 1));
         const end = Math.min(cutoff, Date.UTC(year + 1, 0, 1) - 1);
         if (end <= begin) continue;
-        const available = catalogue.filter(track => track.releasedAt <= end);
+        const available = catalogue.filter(track => track.releasedAt <= end && !storyKeys.has(storyKey(track)));
         if (!available.length) continue;
         const eligibleArtists = [...new Set(available.map(track => track.artist))];
-        const eraArtists = shuffled(eligibleArtists).slice(0, Math.min(4, eligibleArtists.length));
-        const goal = randomInt(450, 1250);
-        const sessions = [];
+        const yearArtists = shuffled(previousYearArtists.filter(name => eligibleArtists.includes(name))).slice(0, randomInt(1, 3));
+        while (yearArtists.length < Math.min(9, eligibleArtists.length)) {
+          const artist = weightedArtist(eligibleArtists.filter(name => !yearArtists.includes(name)), previousYearArtists);
+          if (!artist) break;
+          yearArtists.push(artist);
+        }
+        previousYearArtists = yearArtists;
         const yearRows = [];
-        let planned = 0;
-        let attempts = 0;
-        while (planned < goal && attempts++ < goal) {
-          if (attempts % 24 === 0) await sleep();
-          const sessionSize = Math.min(goal - planned, randomInt(3, 18));
-          const latestStart = Math.max(begin, end - 4 * 3600_000);
-          const sessionStart = begin + Math.floor(rand() * (latestStart - begin + 1));
-          const mode = choose(platforms);
-          const shuffle = rand() < 0.55;
-          // Rotate the musical focus each quarter so demo data develops real,
-          // recognisable month-scale phases instead of uniform yearly tastes.
-          const focusIndex = Math.floor(new Date(sessionStart).getUTCMonth() / 3) % eraArtists.length;
-          const chosenEra = rand() < 0.86 ? eraArtists[focusIndex] : choose(eraArtists);
-          // Story tracks are played only in their planned bursts, so ordinary
-          // random sessions cannot erase a rediscovery gap or a forgotten song.
-          const sessionTracks = catalogue.filter(track => track.releasedAt <= sessionStart &&
-            !storyKeys.has(storyKey(track)));
-          if (!sessionTracks.length) continue;
-          let cursor = sessionStart;
-          const sessionEvents = [];
-          for (let i = 0; i < sessionSize; i++) {
-            const weights = sessionTracks.map(track => trackWeights.get(track.id) *
-              (track.artist === chosenEra ? 8 : 1) *
-              (i && track.artist === sessionEvents[sessionEvents.length - 1]?.artist && !shuffle ? 4 : 1) *
-              (track.releasedAt > sessionStart - 300 * 86400_000 ? 1.35 : 1));
-            let roll = rand() * weights.reduce((a, b) => a + b, 0);
-            let chosen = sessionTracks[sessionTracks.length - 1];
-            for (let j = 0; j < sessionTracks.length; j++) {
-              roll -= weights[j];
-              if (roll <= 0) { chosen = sessionTracks[j]; break; }
+        let sessionCount = 0;
+        const yearActivity = 0.76 + rand() * 0.52;
+        for (let month = 0; month < 12; month++) {
+          const monthStart = Date.UTC(year, month, 1);
+          if (monthStart >= cutoff) break;
+          const monthEnd = Math.min(cutoff, Date.UTC(year, month + 1, 1));
+          const monthTracks = available.filter(track => track.releasedAt < monthEnd);
+          if (!monthTracks.length) continue;
+          const monthArtists = [...new Set(monthTracks.map(track => track.artist))];
+          let focus = previousFocus.filter(artist => monthArtists.includes(artist));
+          if (focusMonthsRemaining <= 0 || !focus.length) {
+            focus = shuffled(focus).slice(0, rand() < .62 ? 1 : 2);
+            const wanted = Math.min(monthArtists.length, randomInt(3, 5));
+            while (focus.length < wanted) {
+              const candidate = weightedArtist(monthArtists.filter(artist => !focus.includes(artist)), yearArtists);
+              if (!candidate) break;
+              focus.push(candidate);
             }
-            const skipped = rand() < 0.05 + (shuffle ? 0.13 : 0.04);
-            const played = skipped ? randomInt(3, Math.max(3, Math.min(90, Math.ceil(chosen.length / 1000) - 1))) * 1000 :
-              Math.max(1000, chosen.length - randomInt(0, Math.min(5000, chosen.length - 1000)));
-            cursor += played + randomInt(0, 5000);
-            if (cursor > end || cursor > cutoff) break;
-            const entry = {
-              ts: new Date(cursor).toISOString(),
-              master_metadata_album_artist_name: chosen.artist,
-              credited_artists: [chosen.artist, ...chosen.credits],
-              master_metadata_track_name: chosen.title,
-              master_metadata_album_album_name: chosen.album,
-              ms_played: played,
-              platform: mode,
-              skipped,
-              shuffle,
-              offline: rand() < 0.08,
-              reason_start: i ? 'trackdone' : 'clickrow',
-              reason_end: skipped ? 'fwdbtn' : 'trackdone',
-              demo_track_id: chosen.id
-            };
-            sessionEvents.push({ id: chosen.id, artist: chosen.artist, ts: entry.ts });
-            yearRows.push(entry);
+            focusMonthsRemaining = randomInt(2, 4);
           }
-          if (sessionEvents.length) {
-            const session = { started: new Date(sessionStart).toISOString(), ended: sessionEvents[sessionEvents.length - 1].ts, platform: mode, trackIds: sessionEvents.map(e => e.id) };
-            sessions.push(session);
-            allSessions.push(session);
-            planned += sessionEvents.length;
+          focusMonthsRemaining--;
+          previousFocus = focus;
+          const focusSet = new Set(focus);
+          const yearSet = new Set(yearArtists);
+          const regular = monthTracks.filter(track => track.length >= 90_000 && track.releasedAt <= monthStart);
+          const focusTracks = regular.filter(track => focusSet.has(track.artist));
+          const obsessionCandidates = focusTracks.length ? focusTracks : regular;
+          const obsessionTracks = shuffled(
+            previousObsession && obsessionCandidates.some(track => track.id === previousObsession.id) && rand() < .42
+              ? [previousObsession, ...shuffled(obsessionCandidates.filter(track => track.id !== previousObsession.id))]
+              : obsessionCandidates
+          ).slice(0, Math.min(3, obsessionCandidates.length));
+          // Let a notable monthly favourite occasionally persist across months.
+          if (previousObsession && rand() < .36 && obsessionCandidates.includes(previousObsession)) obsessionTracks[0] = previousObsession;
+          previousObsession = obsessionTracks[0] || null;
+          const obsessionIds = new Set(obsessionTracks.map(track => track.id));
+          const baseWeight = track => {
+            const ageDays = Math.max(0, (monthStart - track.releasedAt) / dayMs);
+            const release = ageDays < 120 ? 2.15 : ageDays < 365 ? 1.5 : 1;
+            return trackWeights.get(track.id) * trackWeight(track) * release;
+          };
+          const general = makePool(monthTracks, track => baseWeight(track) *
+            (focusSet.has(track.artist) ? 4.5 : yearSet.has(track.artist) ? 1.35 : 1) *
+            (obsessionIds.has(track.id) ? 5 : 1));
+          const discovery = makePool(monthTracks, track => baseWeight(track) *
+            (focusSet.has(track.artist) ? 0.65 : 1.25) *
+            (1.5 / (1 + (listened.get(track.id) || 0) / 6)));
+          const byArtist = new Map();
+          const byAlbum = new Map();
+          for (const track of monthTracks) {
+            if (!byArtist.has(track.artist)) byArtist.set(track.artist, []);
+            byArtist.get(track.artist).push(track);
+            const albumKey = keyOf(track.artist, track.album);
+            if (!byAlbum.has(albumKey)) byAlbum.set(albumKey, { artist: track.artist, tracks: [] });
+            byAlbum.get(albumKey).tracks.push(track);
           }
+          const artistPools = new Map([...byArtist].map(([artist, list]) =>
+            [artist, makePool(list, track => baseWeight(track) * (obsessionIds.has(track.id) ? 4 : 1))]));
+          const albums = [...byAlbum.values()].filter(album => album.tracks.filter(track => track.length >= 80_000).length >= 3);
+          const albumPool = makePool(albums, album =>
+            Math.sqrt(album.tracks.length) * albumWeights.get(keyOf(album.artist, album.tracks[0].album)) *
+            (focusSet.has(album.artist) ? 4.2 : yearSet.has(album.artist) ? 1.35 : 1) *
+            (album.tracks[0].releasedAt > monthStart - 240 * dayMs ? 1.65 : 1));
+          const activity = yearActivity * (0.78 + rand() * .46);
+          const availabilityFactor = Math.min(1, 0.50 + monthTracks.length / 320);
+          const days = Math.ceil((monthEnd - monthStart) / dayMs);
+          for (let dayIndex = 0; dayIndex < days; dayIndex++) {
+            const start = monthStart + dayIndex * dayMs;
+            if (start >= cutoff || rand() >= activeChance) continue;
+            const weekday = new Date(start).getUTCDay();
+            const weekend = weekday === 0 || weekday === 6 ? 1.14 : 1;
+            const target = habit * activity * availabilityFactor * weekend / activeChance;
+            let remaining = Math.max(3, Math.min(44, Math.round(target * (0.50 + rand()))));
+            const slots = Math.min(4, Math.max(1, Math.ceil(remaining / randomInt(12, 19))));
+            const hours = slots === 1 ? [choose([8, 12, 17, 19, 21])] :
+              slots === 2 ? [randomInt(7, 11), randomInt(17, 21)] :
+              slots === 3 ? [randomInt(7, 9), randomInt(12, 15), randomInt(18, 21)] :
+              [randomInt(7, 9), randomInt(11, 13), randomInt(15, 17), randomInt(20, 21)];
+            for (let sessionIndex = 0; sessionIndex < slots && remaining > 0; sessionIndex++) {
+              const left = slots - sessionIndex;
+              const size = left === 1 ? remaining : Math.min(22, Math.max(3,
+                Math.round(remaining / left * (0.84 + rand() * .32))));
+              remaining -= size;
+              const sessionStart = start + hours[sessionIndex] * 3600_000 + randomInt(0, 42) * 60_000;
+              if (sessionStart >= monthEnd || sessionStart >= cutoff) continue;
+              const mode = choose(platforms);
+              const flavour = rand();
+              const albumSession = flavour < .32 && albums.length > 0;
+              const artistSession = flavour >= .32 && flavour < .55;
+              const exploring = flavour >= .83;
+              const shuffle = !albumSession && rand() < (exploring ? .82 : .55);
+              let album = albumSession ? pickPool(albumPool) : null;
+              let albumIndex = album ? (rand() < .75 ? 0 : randomInt(0, album.tracks.length - 1)) : 0;
+              let artist = artistSession ? (focus.length && rand() < .75 ? choose(focus) : weightedArtist(monthArtists, yearArtists)) : null;
+              const events = [];
+              let cursor = sessionStart;
+              for (let i = 0; i < size; i++) {
+                let chosen = null;
+                if (album) {
+                  if (albumIndex >= album.tracks.length) {
+                    album = pickPool(albumPool);
+                    albumIndex = album && rand() < .75 ? 0 : album ? randomInt(0, album.tracks.length - 1) : 0;
+                  }
+                  chosen = album?.tracks[albumIndex++] || null;
+                  if (chosen?.releasedAt > cursor) chosen = null;
+                }
+                if (!chosen && artist && rand() < .80) chosen = pickAvailable(artistPools.get(artist), cursor, byArtist.get(artist));
+                if (!chosen) chosen = pickAvailable(exploring ? discovery : general, cursor, monthTracks);
+                if (!chosen) break;
+                if (!album && i && chosen.id === events[events.length - 1]?.id) {
+                  chosen = pickAvailable(exploring ? discovery : general, cursor, monthTracks) || chosen;
+                }
+                const skipped = rand() < (albumSession ? .055 : shuffle ? .15 : .085);
+                const played = skipped ? randomInt(3, Math.max(3, Math.min(90, Math.ceil(chosen.length / 1000) - 1))) * 1000 :
+                  Math.max(1000, chosen.length - randomInt(0, Math.min(5000, chosen.length - 1000)));
+                cursor += played + randomInt(0, 4500);
+                if (cursor >= monthEnd || cursor >= cutoff || cursor >= start + dayMs) break;
+                const entry = {
+                  ts: new Date(cursor).toISOString(),
+                  master_metadata_album_artist_name: chosen.artist,
+                  credited_artists: [chosen.artist, ...chosen.credits],
+                  master_metadata_track_name: chosen.title,
+                  master_metadata_album_album_name: chosen.album,
+                  ms_played: played, platform: mode, skipped, shuffle,
+                  offline: rand() < .08,
+                  reason_start: i ? 'trackdone' : 'clickrow',
+                  reason_end: skipped ? 'fwdbtn' : 'trackdone',
+                  demo_track_id: chosen.id
+                };
+                yearRows.push(entry);
+                events.push({ id: chosen.id, ts: entry.ts });
+                if (played >= MIN_PLAY_MS) listened.set(chosen.id, (listened.get(chosen.id) || 0) + 1);
+              }
+              if (events.length) {
+                allSessions.push({ started: new Date(sessionStart).toISOString(),
+                  ended: events[events.length - 1].ts, platform: mode, trackIds: events.map(event => event.id) });
+                sessionCount++;
+              }
+            }
+          }
+          await sleep();
         }
         for (const burst of storyBursts.get(String(year)) || []) {
           const monthEnd = Date.UTC(new Date(burst.timestamp).getUTCFullYear(),
             new Date(burst.timestamp).getUTCMonth() + 1, 1);
           const latest = Math.min(monthEnd - 60_000, cutoff - 60_000);
-          const earliest = Math.max(burst.timestamp + 6 * 86400_000, burst.track.releasedAt + 60_000);
+          const earliest = Math.max(burst.timestamp + 6 * dayMs, burst.track.releasedAt + 60_000);
           if (latest < earliest + burst.track.length) continue;
-          const spread = Math.min(latest - earliest - burst.track.length, 9 * 86400_000);
+          const spread = Math.min(latest - earliest - burst.track.length, 9 * dayMs);
           for (let i = 0; i < burst.count; i++) {
             const finishedAt = earliest + burst.track.length + Math.floor(spread * i / Math.max(1, burst.count - 1));
             const platform = choose(platforms);
@@ -1281,23 +1416,19 @@
               master_metadata_track_name: burst.track.title,
               master_metadata_album_album_name: burst.track.album,
               ms_played: burst.track.length,
-              platform,
-              skipped: false,
-              shuffle: rand() < 0.3,
-              offline: rand() < 0.08,
-              reason_start: 'clickrow', reason_end: 'trackdone',
-              demo_track_id: burst.track.id
+              platform, skipped: false, shuffle: rand() < .3, offline: rand() < .08,
+              reason_start: 'clickrow', reason_end: 'trackdone', demo_track_id: burst.track.id
             };
             yearRows.push(entry);
-            const session = { started: new Date(finishedAt - burst.track.length).toISOString(),
-              ended: entry.ts, platform, trackIds: [burst.track.id] };
-            sessions.push(session);
-            allSessions.push(session);
+            allSessions.push({ started: new Date(finishedAt - burst.track.length).toISOString(),
+              ended: entry.ts, platform, trackIds: [burst.track.id] });
+            sessionCount++;
           }
         }
-        years.push({ year, artists: eraArtists, sessions: sessions.length });
+        years.push({ year, artists: yearArtists, sessions: sessionCount });
         byYear.set(String(year), yearRows.length);
         rows.push(...yearRows);
+        updateLoading('Building your demo…', `Simulated listening through ${year}.`);
         await sleep();
       }
       const day = 86400_000;
