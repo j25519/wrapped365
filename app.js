@@ -454,6 +454,75 @@
     const os = /Android/.test(ua) ? 'Android' : /iPad|iPhone|iPod/.test(ua) ? 'iOS / iPadOS' : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : 'Other';
     return { browser, os, deviceClass: /Mobile|iPhone|Android.*Mobile/.test(ua) ? 'Mobile' : /iPad|Tablet|Android/.test(ua) ? 'Tablet' : 'Desktop' };
   };
+  function demoListeningDiversity(report) {
+    const topTracks = report.periods.all.tracks.slice(0, 20);
+    const albums = new Map();
+    for (const track of topTracks) {
+      if (!track.album) continue;
+      const key = keyOf(track.album); // Group multi-artist soundtracks by release title.
+      albums.set(key, (albums.get(key) || 0) + 1);
+    }
+
+    const months = Object.entries(report.monthDetails || {})
+      .filter(([month]) => /^\d{4}-(0[1-9]|1[0-2])$/.test(month))
+      .sort(([a], [b]) => a.localeCompare(b));
+    const keys = new Set(topTracks.map(track => keyOf(track.artist, track.name)));
+    const playsByTrack = new Map([...keys].map(key => [key, new Map()]));
+    let longestTopFiveArtistStreak = 0;
+    let previousTopFive = new Map(), previousMonth = null;
+    for (const [month, data] of months) {
+      const index = monthNumber(month);
+      for (const track of data.tracks || []) {
+        const history = playsByTrack.get(keyOf(track.artist, track.name));
+        if (history) history.set(index, track.plays);
+      }
+      const currentTopFive = new Map();
+      for (const artist of (data.artists || []).slice(0, 5)) {
+        const key = keyOf(artist.name);
+        const streak = (previousMonth === index - 1 ? previousTopFive.get(key) : 0) || 0;
+        currentTopFive.set(key, streak + 1);
+        longestTopFiveArtistStreak = Math.max(longestTopFiveArtistStreak, streak + 1);
+      }
+      previousTopFive = currentTopFive;
+      previousMonth = index;
+    }
+
+    const concentrations = topTracks.filter(track => track.plays > 0).map(track => {
+      const history = playsByTrack.get(keyOf(track.artist, track.name)) || new Map();
+      let peak = 0;
+      for (const month of history.keys()) {
+        peak = Math.max(peak, (history.get(month) || 0) +
+          (history.get(month - 1) || 0) + (history.get(month - 2) || 0));
+      }
+      return 100 * peak / track.plays;
+    }).sort((a, b) => a - b);
+    const middle = Math.floor(concentrations.length / 2);
+    const medianPeakThreeMonthPlayShare = concentrations.length
+      ? msElapsed(concentrations.length % 2 ? concentrations[middle] :
+        (concentrations[middle - 1] + concentrations[middle]) / 2) : null;
+
+    const years = report.years.slice().sort();
+    const overlaps = [];
+    for (let i = 1; i < years.length; i++) {
+      const before = (report.periods[years[i - 1]]?.artists || []).slice(0, 10);
+      const after = new Set((report.periods[years[i]]?.artists || []).slice(0, 10).map(artist => keyOf(artist.name)));
+      if (!before.length || !after.size || Number(years[i]) !== Number(years[i - 1]) + 1) continue;
+      overlaps.push(100 * before.filter(artist => after.has(keyOf(artist.name))).length / before.length);
+    }
+
+    return {
+      topTracksCount: topTracks.length,
+      distinctPrimaryArtists: new Set(topTracks.map(track => keyOf(track.artist))).size,
+      distinctAlbumTitles: albums.size,
+      albumTaggedTopTracks: [...albums.values()].reduce((sum, count) => sum + count, 0),
+      largestAlbumCluster: Math.max(0, ...albums.values()),
+      medianPeakThreeMonthPlayShare,
+      longestTopFiveArtistStreak,
+      annualTopTenArtistOverlap: overlaps.length ? msElapsed(overlaps.reduce((sum, value) => sum + value, 0) / overlaps.length) : null,
+      consecutiveYearPairs: overlaps.length
+    };
+  }
+
   function buildSoundcheck(report, builder, trace) {
     const all = report.periods.all;
     const top = Math.max(1, Math.ceil(all.tracks.length * .1));
@@ -493,7 +562,8 @@
         sessions: data.sessions.length, multiTrackSessions: longSessions.length,
         chapters: report.monthDetails ? Object.keys(report.monthDetails).length : 0,
         friends: data.friends.length, playlists: data.playlists.length, recommendations: data.messages.length,
-        recommendationOutcomes: outcomes };
+        recommendationOutcomes: outcomes,
+        diversity: demoListeningDiversity(report) };
     }
     return result;
   }
@@ -2120,7 +2190,24 @@
     const width = maximum > 0 ? Math.max(1, Math.min(100, value / maximum * 100)) : 0;
     return `<div class="sc-bar-row"><div><span>${escapeHtml(label)}</span><strong>${escapeHtml(number(value))}${suffix}</strong></div><div class="sc-bar-track"><div style="width:${width.toFixed(2)}%"></div></div></div>`;
   }
-  function soundcheckView(data) {
+  function soundcheckDiversityTrend(selected, history) {
+    const runs = history.filter(item => item.source === 'demo' && item.status === 'completed' &&
+      typeof item.demo?.diversity?.distinctPrimaryArtists === 'number').slice(0, 10).reverse();
+    if (selected?.demo?.diversity && !runs.some(item => item.id === selected.id)) {
+      runs.push(selected);
+      if (runs.length > 10) runs.shift();
+    }
+    if (!runs.length) return '';
+    return `<article class="panel sc-diversity-trend"><div class="kicker">ACROSS REGENERATIONS</div><h2>All-time top 20 artist diversity</h2>
+      <p class="search-muted">Distinct primary artists across the latest ${runs.length} demo ${runs.length === 1 ? 'generation' : 'generations'} with these diagnostics. Older runs without this measurement are excluded.</p>
+      <div class="sc-trend-bars" role="img" aria-label="Distinct artists in the all-time top 20 by regeneration: ${runs.map(item => item.demo.diversity.distinctPrimaryArtists).join(', ')}">
+        ${runs.map((item, index) => `<div class="sc-trend-column ${item.id === selected.id ? 'selected' : ''}" title="Run ${index + 1}: ${item.demo.diversity.distinctPrimaryArtists} artists · ${dateLabel(item.createdAt)}">
+          <span>${number(item.demo.diversity.distinctPrimaryArtists)}</span><div class="sc-trend-rail"><i style="height:${Math.min(100, 100 * item.demo.diversity.distinctPrimaryArtists / 20)}%"></i></div><small>${index + 1}</small>
+        </div>`).join('')}
+      </div><p class="sc-footnote">Oldest to newest · bar scale: 0–20 artists · highlighted bar: selected report</p></article>`;
+  }
+
+  function soundcheckView(data, history = []) {
     if (!data) return '<div class="panel sc-empty">No diagnostic reports yet. Import Spotify history or generate demo data to start collecting measurements.</div>';
     if (data.status === 'failed') return `<div class="panel sc-empty"><h2>Processing did not complete</h2><p>The ${escapeHtml(data.sourceType)} operation stopped during <strong>${escapeHtml(data.failureStage || 'processing')}</strong>. The diagnostic only records the phase and timing, not filenames or source data.</p><p>Total time: ${number(data.performance?.totalMs)} ms</p></div>${soundcheckPerformance(data)}`;
     const p = data.performance;
@@ -2162,6 +2249,25 @@
       soundcheckRow('Tracks with new title-inferred credits', countValue(data.enrichment.tracksWithInferredFeatures)),
       soundcheckRow('Distinct inferred artist names', countValue(data.enrichment.distinctInferredArtists), 'Found from feat./featuring text not already explicitly credited')
     ];
+    const diversity = demo?.diversity;
+    const diversitySection = !isDemo ? '' : !diversity
+      ? '<article class="panel sc-diversity-panel"><div class="kicker">DEMO ANALYTICS</div><h2>Listening diversity &amp; temporal focus</h2><p class="search-muted">These measurements were added after this report was generated. Randomise the demo to collect them.</p></article>'
+      : `<section class="sc-diversity-section" aria-label="Demo listening diversity diagnostics">
+        <div class="sc-panel-head"><div><div class="kicker">DEMO ANALYTICS</div><h2>Listening diversity &amp; temporal focus</h2></div></div>
+        <div class="sc-cards">
+          ${soundcheckMetric('Top 20 primary artists', countValue(diversity.distinctPrimaryArtists), `Distinct artists among ${countValue(diversity.topTracksCount)} leading tracks`)}
+          ${soundcheckMetric('Top 20 album titles', countValue(diversity.distinctAlbumTitles), `Across ${countValue(diversity.albumTaggedTopTracks)} album-tagged tracks · includes soundtracks`)}
+          ${soundcheckMetric('Largest album cluster', `${countValue(diversity.largestAlbumCluster)}/${countValue(diversity.topTracksCount)}`, 'Most tracks sharing one album title')}
+          ${soundcheckMetric('Peak three-month share', diversity.medianPeakThreeMonthPlayShare == null ? '—' : `${diversity.medianPeakThreeMonthPlayShare}%`, 'Median share of lifetime plays within each top track’s busiest three consecutive months')}
+        </div>
+        <div class="sc-panels"><article class="panel"><div class="kicker">TEMPORAL FOCUS</div><h2>How tastes change</h2>
+          ${soundcheckRow('Longest top-five artist streak', `${countValue(diversity.longestTopFiveArtistStreak)} months`, 'Consecutive calendar months in any month’s five leading credited artists')}
+          ${soundcheckRow('Year-to-year artist overlap', diversity.annualTopTenArtistOverlap == null ? '—' : `${diversity.annualTopTenArtistOverlap}%`, 'Average share of the prior year’s top ten credited artists returning the next year')}
+          ${soundcheckRow('Consecutive year comparisons', countValue(diversity.consecutiveYearPairs))}
+        </article><article class="panel"><div class="kicker">INTERPRETING THE NUMBERS</div><h2>Long-term vs short-term</h2>
+          <p class="search-muted">Low artist and album diversity suggests concentrated all-time rankings. High peak three-month share suggests bursts of listening rather than persistent popularity.</p>
+          <p class="search-muted">Album titles are grouped across primary artists to reveal soundtrack clusters. These metrics describe the generated history; they do not change any play counts.</p>
+        </article></div>${soundcheckDiversityTrend(data, history)}</section>`;
     const demoSection = !isDemo ? '' : `<div class="sc-panels">
       <article class="panel"><div class="kicker">CATALOGUE</div><h2>Simulation coverage</h2>
         ${soundcheckRow('Catalogue entries', countValue(demo.catalogueTracks))}
@@ -2182,7 +2288,7 @@
       <div class="sc-panels">
         <article class="panel"><div class="kicker">PROCESSING QUALITY</div><h2>Playback records</h2>${quality.join('')}</article>
         <article class="panel"><div class="kicker">IDENTITIES & ENRICHMENT</div><h2>Music catalogue</h2>${groupingRows.join('')}</article>
-      </div>${demoSection}
+      </div>${demoSection}${diversitySection}
       <div class="sc-panels">
         <article class="panel"><div class="kicker">LISTENING DISTRIBUTION</div><h2>Year by year</h2>
           <div class="sc-bars">${years.map(row => soundcheckBar(row.year, row.plays, maxYear)).join('')}</div>
@@ -2261,13 +2367,17 @@
         ...pickNumbers(diagnostic.demo, ['catalogueTracks', 'distinctCatalogueTracks', 'catalogueArtists', 'catalogueAlbums', 'eligibleTracks', 'playedTracks', 'sessions', 'multiTrackSessions', 'chapters', 'friends', 'playlists', 'recommendations']),
         recommendationOutcomes: Object.fromEntries(['new-discovery', 'new-favourite', 'rediscovered', 'already-loved', 'followed-up', 'not-followed-up', 'unknown'].filter(key => numeric(diagnostic.demo.recommendationOutcomes?.[key]) !== null).map(key => [key, numeric(diagnostic.demo.recommendationOutcomes[key])]))
       };
+      if (diagnostic.demo.diversity) payload.demo.diversity = pickNumbers(diagnostic.demo.diversity,
+        ['topTracksCount', 'distinctPrimaryArtists', 'distinctAlbumTitles', 'albumTaggedTopTracks',
+          'largestAlbumCluster', 'medianPeakThreeMonthPlayShare', 'longestTopFiveArtistStreak',
+          'annualTopTenArtistOverlap', 'consecutiveYearPairs']);
     }
     return {
       format: 'wrapped365-soundcheck-debug',
       exportSchema: 1,
       exportedAt: new Date().toISOString(),
       privacy: {
-        contains: ['Aggregated processing and listening statistics', 'Listening date range and annual totals', 'Diagnostic timestamps and processing durations', 'Browser, operating system, and device type', 'Wrapped 365 version'],
+        contains: ['Aggregated processing and listening statistics', 'Demo generation metrics (when available)', 'Listening date range and annual totals', 'Diagnostic timestamps and processing durations', 'Browser, operating system, and device type', 'Wrapped 365 version'],
         excludes: ['IP address', 'Spotify account details or email address', 'Spotify subscription or billing data', 'Contents of Spotify messages', 'Source filenames', 'Track, artist, or album names', 'Raw playback records', 'Browser user agent string', 'Cookie, browser, or report identifiers']
       },
       diagnostic: payload
@@ -2314,7 +2424,7 @@
     state.soundcheckDisplayed = selected;
     $('soundcheck-download').disabled = !selected;
     $('soundcheck-type').textContent = selected ? `${selected.source === 'demo' ? 'DEMO SIMULATION' : 'SPOTIFY IMPORT'} · ${selected.status.toUpperCase()}` : 'NO DIAGNOSTICS YET';
-    $('soundcheck-dashboard').innerHTML = !selected && state.report && !state.report.soundcheck ? '<div class="panel sc-empty"><h2>No diagnostics for this report</h2><p>This report either predates Soundcheck or its diagnostic data was deleted. You can inspect other runs below or reimport the original archive to generate fresh diagnostics.</p></div>' : soundcheckView(selected);
+    $('soundcheck-dashboard').innerHTML = !selected && state.report && !state.report.soundcheck ? '<div class="panel sc-empty"><h2>No diagnostics for this report</h2><p>This report either predates Soundcheck or its diagnostic data was deleted. You can inspect other runs below or reimport the original archive to generate fresh diagnostics.</p></div>' : soundcheckView(selected, history);
     $('soundcheck-recent').innerHTML = history.length ? history.map(item => `<button type="button" class="sc-history-item ${selected?.id === item.id ? 'selected' : ''}" data-soundcheck-id="${escapeHtml(item.id)}"><span><strong>${item.source === 'demo' ? 'Demo simulation' : 'Spotify import'}</strong><small>${dateLabel(item.createdAt)} · ${item.status === 'failed' ? `Stopped: ${escapeHtml(item.failureStage || 'processing')}` : `${number(item.events?.qualifying)} qualifying plays`}</small></span><span>${item.status === 'failed' ? '!' : '↗'}</span></button>`).join('') : '<p class="search-muted">No locally saved diagnostic runs yet. Diagnostics are collected whether Soundcheck is unlocked or not.</p>';
   }
   function setSoundcheckUnlocked(unlocked) {
