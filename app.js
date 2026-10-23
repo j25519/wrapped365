@@ -1,4 +1,4 @@
-/* Wrapped 365 — local-only Spotify listening history analytics. */
+/* Wrapped 365 — STAY WRAPPED ALL YEAR. */
 (() => {
   'use strict';
 
@@ -224,9 +224,9 @@
   function makeBuilder() {
     return { periods: new Map([['all', emptyPeriod()]]), monthPeriods: new Map(), seen: new Set(), imported: 0, duplicates: 0, ignored: 0, short: 0, sourceFiles: 0, checks: { episodes: 0, missingMetadata: 0, invalidDate: 0, invalidDuration: 0, malformed: 0, inferredArtists: new Set(), inferredTrackKeys: new Set(), rawTrackVariants: new Set(), scannedTrackKeys: new Set() } };
   }
-  // Extended Streaming History normally provides one album-artist string.
+  // Extended Streaming History normally provides one album artist string.
   // Preserve additional credits when a source actually provides an artist list;
-  // never split arbitrary comma-separated names (e.g. Tyler, the Creator).
+  // never split arbitrary comma separated names (e.g. Tyler, the Creator).
   function creditedNames(value) {
     if (!Array.isArray(value)) return [];
     const seen = new Set();
@@ -327,7 +327,7 @@
   function parseSpotifyDate(input) {
     if (typeof input !== 'string') return null;
     let value = input.trim();
-    // Account-data endTime can be "2024-12-10 21:31", implicitly UTC.
+    // Account data endTime can be "2024-12-10 21:31", implicitly UTC.
     if (/^\d{4}-\d\d-\d\d \d\d:\d\d$/.test(value)) value = value.replace(' ', 'T') + ':00Z';
     if (/^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(value)) value += ':00Z';
     if (!/^\d{4}-\d\d-\d\dT/.test(value)) return null;
@@ -442,6 +442,62 @@
     };
   }
 
+  // Spotify Account Data contains playlist *membership*, not evidence of playback.
+  // Keep music entries in their exported order and leave duration unknown if absent.
+  const validTrackUri = value => typeof value === 'string' && /^spotify:track:[A-Za-z0-9]+$/.test(value) ? value : '';
+  const playlistFilename = name => /^Playlists?(?:[_-]?\d+)?\.json$/i.test(baseName(name));
+  const isPlaylistDocument = data => !!data && !Array.isArray(data) &&
+    Array.isArray(data.playlists);
+  const playlistField = (value, max = 500) => typeof value === 'string' ? value.trim().slice(0, max) : '';
+
+  function importSpotifyPlaylists(document, collected) {
+    if (!isPlaylistDocument(document)) throw new Error('Spotify playlist JSON must contain a playlists array.');
+    const result = collected || { playlists: [], musicTracks: 0, skippedEpisodes: 0, skippedUnknown: 0, localTracks: 0 };
+    if (document.playlists.length > 5000 || result.playlists.length + document.playlists.length > 5000)
+      throw new Error('This export contains more than 5,000 playlists and cannot be imported in one go.');
+    for (const source of document.playlists) {
+      if (!source || typeof source !== 'object' || Array.isArray(source) || !Array.isArray(source.items))
+        throw new Error('A Spotify playlist record is missing its items array.');
+      const name = playlistField(source.name, 300);
+      if (!name) throw new Error('A Spotify playlist has no name.');
+      const tracks = [];
+      for (let index = 0; index < source.items.length; index++) {
+        const entry = source.items[index];
+        if (!entry || typeof entry !== 'object') { result.skippedUnknown++; continue; }
+        if (entry.episode || entry.audiobook) { result.skippedEpisodes++; continue; }
+        const local = !entry.track && entry.localTrack;
+        const original = local ? entry.localTrack : entry.track;
+        if (!original) { result.skippedUnknown++; continue; }
+        const raw = typeof original === 'string' ? { trackName: original } : original;
+        const title = playlistField(raw.trackName ?? raw.name, 500);
+        const artist = playlistField(raw.artistName ?? raw.artist, 400) || (local ? 'Unknown local artist' : '');
+        if (!title || !artist) { result.skippedUnknown++; continue; }
+        const album = playlistField(raw.albumName ?? raw.album, 400);
+        const uri = local ? '' : validTrackUri(raw.trackUri ?? raw.uri);
+        const durationMs = Number(raw.duration_ms ?? raw.durationMs);
+        const seconds = Number.isFinite(durationMs) && durationMs > 0 ? Math.round(durationMs / 1000) : null;
+        const addedDate = /^\d{4}-\d{2}-\d{2}$/.test(entry.addedDate || '') ? entry.addedDate : '';
+        tracks.push({ id: uri || `imported-track:${keyOf(artist, title, album)}`, title, name: title, artist,
+          album, uri, seconds, position: index + 1, addedDate, local: !!local,
+          creditedArtists: creditedNames([artist, ...featureCreditsFromTitle(title)]) });
+        result.musicTracks++;
+        if (local) result.localTracks++;
+        if (result.musicTracks > 200000) throw new Error('Playlist export exceeds the 200,000-track safety limit.');
+      }
+      const exportedUri = playlistField(source.playlistUri ?? source.uri, 160);
+      // The Account Data export normally omits playlist URIs. A per-report ID
+      // preserves playlists with identical names without merging their contents.
+      const id = /^spotify:playlist:[A-Za-z0-9]+$/.test(exportedUri) ? exportedUri :
+        `spotify-export:playlist:${result.playlists.length + 1}`;
+      const lastModifiedDate = /^\d{4}-\d{2}-\d{2}$/.test(source.lastModifiedDate || '') ? source.lastModifiedDate : '';
+      const followers = Number(source.numberOfFollowers);
+      result.playlists.push({ id, source: 'spotify', name, tracks,
+        description: playlistField(source.description, 3000), lastModifiedDate,
+        followers: Number.isSafeInteger(followers) && followers >= 0 ? followers : null });
+    }
+    return result;
+  }
+
   const baseName = name => name.split(/[\\/]/).pop() || '';
   const extendedName = name => /^(Streaming_History_Audio.*|endsong[_-].*)\.json$/i.test(baseName(name));
   const basicName = name => /^StreamingHistory(?:_music)?[_\d-]*\.json$/i.test(baseName(name));
@@ -537,6 +593,7 @@
         qualifying: all.qualified, under30s: builder.short, duplicatesRemoved: builder.duplicates, excluded: builder.ignored,
         exclusions: { episodes: builder.checks.episodes, missingMetadata: builder.checks.missingMetadata,
           invalidTimestamp: builder.checks.invalidDate, invalidDuration: builder.checks.invalidDuration, malformedRow: builder.checks.malformed } },
+      playlistImport: report.playlistImport || { playlists: 0, musicTracks: 0, localTracks: 0, skippedEpisodes: 0, skippedUnknown: 0 },
       grouping: { sourceTrackVariants: builder.checks.rawTrackVariants.size,
         groupedTracks: all.tracks.length,
         consolidatedVariants: Math.max(0, builder.checks.rawTrackVariants.size - all.tracks.length),
@@ -615,17 +672,18 @@
   async function importHistory(file) {
     if (state.loading) return;
     const isZip = /\.zip$/i.test(file.name), isJson = /\.json$/i.test(file.name);
-    if (!isZip && !isJson) { showError('Choose a Spotify .zip archive or a .json history file.'); return; }
+    if (!isZip && !isJson) { showError('Choose a Spotify .zip archive or a .json history/playlist file.'); return; }
     const trace = startTrace('import', file.size);
     let phase = 'Opening archive';
     state.loading = true;
     $('error-box').classList.add('hidden');
     $('browse-button').disabled = true;
     $('demo-button').disabled = true;
-    showLoading('Opening your Spotify history…', 'Processing everything locally.');
+    showLoading('Opening your Spotify export…', 'Reading listening history and playlist metadata locally.');
     try {
       await letLoadingPaint();
       const builder = makeBuilder();
+      const playlistImport = { playlists: [], musicTracks: 0, skippedEpisodes: 0, skippedUnknown: 0, localTracks: 0 };
       let type;
       if (isZip) {
         if (typeof JSZip === 'undefined') throw new Error('Local ZIP reader is unavailable. Reload the page and try again.');
@@ -635,25 +693,29 @@
         const zip = await JSZip.loadAsync(file);
         timeStage(trace, 'Open ZIP', openedAt);
         const files = Object.values(zip.files).filter(entry => !entry.dir && /\.json$/i.test(entry.name) && !baseName(entry.name).startsWith('._'));
-        let candidates = files.filter(x => extendedName(x.name));
+        let historyFiles = files.filter(x => extendedName(x.name));
         type = 'Extended Streaming History';
-        if (!candidates.length) { candidates = files.filter(x => basicName(x.name)); type = 'Account streaming history'; }
-        if (!candidates.length) throw new Error('No Spotify listening-history JSON files were found in this ZIP. Look for Streaming_History_Audio_*.json or endsong_*.json in your Extended Streaming History export.');
+        if (!historyFiles.length) { historyFiles = files.filter(x => basicName(x.name)); type = 'Account streaming history'; }
+        const playlistFiles = files.filter(x => playlistFilename(x.name));
+        if (!historyFiles.length && !playlistFiles.length) throw new Error('No Spotify listening-history or playlist JSON files were found. Expected Streaming_History_Audio_*.json, StreamingHistory_music_*.json or Playlist1.json.');
+        const candidates = [...historyFiles.map(entry => ({entry, kind: 'history'})),
+          ...playlistFiles.map(entry => ({entry, kind: 'playlist'}))];
         let totalSize = 0;
-        for (const entry of candidates) {
+        for (const { entry } of candidates) {
           const bytes = entry._data?.uncompressedSize || 0;
           if (bytes > MAX_ENTRY_UNCOMPRESSED) throw new Error(`The file ${baseName(entry.name)} is unusually large. Import JSON files smaller than 180 MB individually.`);
           totalSize += bytes;
         }
         if (totalSize > MAX_TOTAL_UNCOMPRESSED) throw new Error('This archive is too large to analyse safely in one browser session.');
-        candidates.sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }));
+        candidates.sort((a, b) => a.kind.localeCompare(b.kind) || a.entry.name.localeCompare(b.entry.name, 'en', { numeric: true }));
         builder.sourceFiles = candidates.length;
         trace.files = candidates.length;
         trace.jsonBytes = totalSize;
         phase = 'Read and parse JSON';
         for (let i = 0; i < candidates.length; i++) {
-          const entry = candidates[i];
-          setProgress('Analysing listening history…', `File ${i + 1} of ${candidates.length}: ${baseName(entry.name)}`, i / candidates.length);
+          const { entry, kind } = candidates[i];
+          setProgress(kind === 'playlist' ? 'Importing saved playlists…' : 'Analysing listening history…',
+            `File ${i + 1} of ${candidates.length}: ${baseName(entry.name)}`, i / candidates.length);
           await sleep();
           const readingAt = performance.now();
           const content = await entry.async('string', metadata => {
@@ -661,41 +723,65 @@
           });
           timeStage(trace, 'Read JSON', readingAt);
           const parsingAt = performance.now();
-          let rows;
-          try { rows = JSON.parse(content.replace(/^\uFEFF/, '')); }
+          let parsed;
+          try { parsed = JSON.parse(content.replace(/^\uFEFF/, '')); }
           catch { throw new Error(`Could not parse ${baseName(entry.name)}. Make sure this is an unmodified Spotify export.`); }
           timeStage(trace, 'Parse JSON', parsingAt);
-          phase = 'Aggregate listening data';
-          const aggregatingAt = performance.now();
-          await ingest(builder, rows);
-          timeStage(trace, 'Aggregate events', aggregatingAt);
-          rows = null;
+          if (kind === 'playlist') {
+            phase = 'Parse playlist metadata';
+            const began = performance.now();
+            importSpotifyPlaylists(parsed, playlistImport);
+            timeStage(trace, 'Parse playlists', began);
+          } else {
+            phase = 'Aggregate listening data';
+            const began = performance.now();
+            await ingest(builder, parsed);
+            timeStage(trace, 'Aggregate events', began);
+          }
+          parsed = null;
         }
       } else {
-        type = extendedName(file.name) ? 'Extended Streaming History' : 'Spotify listening history';
-        setProgress('Reading JSON history…', file.name, .1);
+        setProgress('Reading Spotify JSON…', file.name, .1);
         await sleep();
         const readingAt = performance.now();
         const content = await file.text();
         timeStage(trace, 'Read JSON', readingAt);
         trace.jsonBytes = file.size;
         trace.files = 1;
+        builder.sourceFiles = 1;
         phase = 'Parse JSON';
         const parsingAt = performance.now();
-        const rows = JSON.parse(content.replace(/^\uFEFF/, ''));
+        let parsed;
+        try { parsed = JSON.parse(content.replace(/^\uFEFF/, '')); }
+        catch { throw new Error('The selected file is not valid JSON.'); }
         timeStage(trace, 'Parse JSON', parsingAt);
-        phase = 'Aggregate listening data';
-        const aggregatingAt = performance.now();
-        await ingest(builder, rows);
-        timeStage(trace, 'Aggregate events', aggregatingAt);
-        builder.sourceFiles = 1;
+        if (isPlaylistDocument(parsed)) {
+          type = 'Spotify playlists';
+          phase = 'Parse playlist metadata';
+          const began = performance.now();
+          importSpotifyPlaylists(parsed, playlistImport);
+          timeStage(trace, 'Parse playlists', began);
+        } else {
+          if (playlistFilename(file.name)) throw new Error('This playlist file is missing the expected playlists array.');
+          type = extendedName(file.name) ? 'Extended Streaming History' : 'Spotify listening history';
+          phase = 'Aggregate listening data';
+          const began = performance.now();
+          await ingest(builder, parsed);
+          timeStage(trace, 'Aggregate events', began);
+        }
       }
-      if (!builder.imported) throw new Error('The files contained no valid music listening events. Check you selected the audio history, rather than podcast or video files.');
-      setProgress('Building your report…', `${number(builder.imported)} listening events processed.`, .97);
+      if (!builder.imported && !playlistImport.playlists.length)
+        throw new Error('The files contained no valid music listening events or Spotify playlists.');
+      if (playlistImport.playlists.length) type = builder.imported ? `${type} + Spotify playlists` : 'Spotify playlists';
+      setProgress('Building your report…', `${number(builder.imported)} listening events and ${number(playlistImport.playlists.length)} playlists processed.`, .97);
       await sleep();
       phase = 'Build report';
       const reportAt = performance.now();
       const report = finishBuilder(builder, file.name, type);
+      report.playlists = playlistImport.playlists;
+      report.playlistImport = { playlists: playlistImport.playlists.length, musicTracks: playlistImport.musicTracks,
+        localTracks: playlistImport.localTracks, skippedEpisodes: playlistImport.skippedEpisodes,
+        skippedUnknown: playlistImport.skippedUnknown };
       timeStage(trace, 'Build report', reportAt);
       report.soundcheck = buildSoundcheck(report, builder, trace);
       state.report = report;
@@ -717,6 +803,8 @@
       report.unsaved = !saved;
       await refreshHistoryCount();
       activateReport(report);
+      // A playlist only Account Data export has no listening statistics to show.
+      if (!builder.imported && playlistImport.playlists.length) openView('playlists', false);
     } catch (error) {
       console.error('Local import error:', error);
       await failedSoundcheck(trace, phase);
@@ -791,27 +879,35 @@
   function playlistTrackLength(list) {
     return list.tracks.reduce((sum, track) => sum + (Number(track.seconds) || 0) * 1000, 0);
   }
+  const playlistDurationLabel = list => list.tracks.some(track => Number(track.seconds) > 0)
+    ? `${duration(playlistTrackLength(list))}${list.tracks.some(track => !track.seconds) ? ' known' : ''}` : 'Duration unavailable';
   function renderPlaylistTrackRows(list) {
     const stats = playlistStatsFor(list.id);
+    const real = !state.report?.isDemo;
+    // Match actual history without claiming any plays originated from a playlist.
+    const played = period()?.tracks || [];
+    const byUri = new Map(played.filter(item => item.uri).map(item => [item.uri, item]));
+    const byTitle = new Map(played.map(item => [keyOf(item.artist, item.name), item]));
     return list.tracks.map((track, index) => {
-      const listen = stats.tracks?.[track.id] || { plays: 0, ms: 0 };
+      const listen = real ? (byUri.get(track.uri) || byTitle.get(keyOf(track.artist, track.title))) : stats.tracks?.[track.id];
       const pos = track.position || index + 1;
       return `<div class="playlist-track-row"><span class="playlist-position">${number(pos)}</span>
-        <div class="playlist-track-meta"><button type="button" data-playlist-track="${escapeHtml(encodeURIComponent(keyOf(track.artist, track.title)))}">${escapeHtml(track.title || track.name)}</button><span>${escapeHtml(track.artist)} · ${escapeHtml(track.album || 'Unknown release')}</span></div>
+        <div class="playlist-track-meta"><button type="button" data-playlist-track="${escapeHtml(encodeURIComponent(keyOf(track.artist, track.title)))}">${escapeHtml(track.title || track.name)}</button><span>${escapeHtml(track.artist)} · ${escapeHtml(track.album || 'Unknown release')}${track.local ? ' · Local file' : ''}</span></div>
         <span class="playlist-track-length">${track.seconds ? duration(track.seconds * 1000) : '—'}</span>
-        <span class="playlist-track-plays">${listen.plays ? `${number(listen.plays)} plays` : '—'}</span></div>`;
+        <span class="playlist-track-plays">${listen?.plays ? `${number(listen.plays)} ${real ? 'overall' : 'plays'}` : '—'}</span></div>`;
     }).join('');
   }
   function playlistDetailMarkup(list, embedded = false) {
     const stats = playlistStatsFor(list.id);
-    const source = list.source === 'social' ? 'Random social collection' : 'Curated playlist';
+    const source = list.source === 'social' ? 'Random social collection' : list.source === 'spotify' ? 'Spotify saved playlist' : 'Curated playlist';
     const total = list.tracks.length;
     const artists = new Set(list.tracks.map(track => keyOf(track.artist))).size;
-    return `<article class="panel playlist-detail"><div class="playlist-detail-heading"><div><div class="kicker">${source.toUpperCase()}</div><h2>${escapeHtml(list.name)}</h2><p>${number(total)} tracks · ${number(artists)} artists · ${duration(playlistTrackLength(list))} of listed music</p></div>
+    return `<article class="panel playlist-detail"><div class="playlist-detail-heading"><div><div class="kicker">${source.toUpperCase()}</div><h2>${escapeHtml(list.name)}</h2><p>${number(total)} music tracks · ${number(artists)} artists · ${playlistDurationLabel(list)}${list.lastModifiedDate ? ` · Modified ${escapeHtml(list.lastModifiedDate)}` : ''}</p></div>
       ${embedded ? `<button type="button" class="btn btn-outline" data-playlist-open="${escapeHtml(list.id)}">View playlist ↗</button>` : `<button type="button" class="btn btn-outline" data-playlist-back>← All playlists</button>`}</div>
+      ${list.description ? `<p class="search-muted">${escapeHtml(list.description)}</p>` : ''}
       <div class="playlist-metrics"><div><strong>${state.report?.isDemo ? number(stats.plays) : '—'}</strong><span>${state.report?.isDemo ? 'Attributed demo plays' : 'Playback source unavailable'}</span></div><div><strong>${state.report?.isDemo ? duration(stats.ms) : '—'}</strong><span>Attributed listening time</span></div><div><strong>${number(total)}</strong><span>Playlist entries</span></div></div>
       ${list.source === 'social' ? `<p class="search-muted">This randomly generated collection remains part of the demo's social library. Its songs also exist in the standard demo music catalogue. Plays are not automatically attributed to this collection.</p>` :
-        `<p class="search-muted">${state.report?.isDemo ? 'Saving this playlist does not save its tracks to the music library. The play counts below reflect only sessions explicitly simulated from this playlist; all music plays also feed the normal analytics and Eras.' : 'Saved playlist entries are independent of saved music. The Spotify export does not tell us whether an individual playback originated in this playlist.'}</p>`}
+        `<p class="search-muted">${state.report?.isDemo ? 'Saving this playlist does not save its tracks to the music library. The play counts below reflect only sessions explicitly simulated from this playlist; all music plays also feed the normal analytics and Eras.' : 'Saved playlist entries are independent of saved music. Matching play counts below are from your overall listening history, not attributed to this playlist. Spotify does not export the playback source playlist.'}</p>`}
       <div class="playlist-track-head"><span>TRACKS · PLAYLIST ORDER</span><span>${state.year === 'all' ? 'ALL TIME' : escapeHtml(state.year)}</span></div>
       <div class="playlist-track-list">${renderPlaylistTrackRows(list)}</div></article>`;
   }
@@ -822,7 +918,7 @@
     $('playlist-detail-container').classList.toggle('hidden', !selected);
     if (selected) { $('playlist-detail-container').innerHTML = playlistDetailMarkup(selected); return; }
     const renderGroup = (items, node, empty) => {
-      $(node).innerHTML = items.length ? items.map(list => `<button class="playlist-card" type="button" data-playlist-open="${escapeHtml(list.id)}"><span class="playlist-card-icon">≡</span><strong>${escapeHtml(list.name)}</strong><span>${number(list.tracks.length)} tracks · ${duration(playlistTrackLength(list))}</span><small>${list.source === 'social' ? 'Social demo collection' : `${state.report?.isDemo ? `${number(playlistStatsFor(list.id).plays)} attributed plays` : 'Saved playlist'}`} ↗</small></button>`).join('') : emptyMessage(empty);
+      $(node).innerHTML = items.length ? items.map(list => `<button class="playlist-card" type="button" data-playlist-open="${escapeHtml(list.id)}"><span class="playlist-card-icon">≡</span><strong>${escapeHtml(list.name)}</strong><span>${number(list.tracks.length)} tracks · ${playlistDurationLabel(list)}</span><small>${list.source === 'social' ? 'Social demo collection' : `${state.report?.isDemo ? `${number(playlistStatsFor(list.id).plays)} attributed plays` : 'Saved playlist'}`} ↗</small></button>`).join('') : emptyMessage(empty);
     };
     renderGroup(lists.filter(list => list.source !== 'social'), 'playlist-curated', 'No saved playlists have been imported yet.');
     $('playlist-social-section').classList.toggle('hidden', !lists.some(list => list.source === 'social'));
@@ -840,7 +936,7 @@
     for (const list of lists.filter(item => item.source !== 'social')) {
       for (const track of list.tracks) {
         const entries = category === 'tracks' ? [{ name: track.name || track.title, artist: track.artist,
-          album: track.album, creditedArtists: track.creditedArtists || [track.artist], plays: 0, ms: 0, playlistOnly: true }] :
+          album: track.album, uri: track.uri || '', creditedArtists: track.creditedArtists || [track.artist], plays: 0, ms: 0, playlistOnly: true }] :
           category === 'artists' ? (track.creditedArtists || [track.artist]).map(name => ({ name, plays: 0, ms: 0, playlistOnly: true })) :
           category === 'albums' ? [{ name: track.album, artist: track.artist, plays: 0, ms: 0, playlistOnly: true }] : [];
         for (const item of entries) {
@@ -883,7 +979,9 @@
     const p = period();
     const year = state.year;
     $('overview-title').innerHTML = year === 'all' ? 'The big picture<span class="accent">.</span>' : `Your ${escapeHtml(year)}<span class="accent">.</span>`;
-    $('overview-subtitle').textContent = `${dateLabel(p.firstTs)} – ${dateLabel(p.lastTs)} · ${number(p.activeDays)} active listening days`;
+    $('overview-subtitle').textContent = !p.qualified && state.report?.playlists?.length
+      ? `No listening history in this import · ${number(state.report.playlists.length)} saved playlists available`
+      : `${dateLabel(p.firstTs)} – ${dateLabel(p.lastTs)} · ${number(p.activeDays)} active listening days`;
     $('range-label').textContent = year === 'all' ? 'ALL TIME' : year;
     $('summary-stats').innerHTML = [
       statCard('Listening time', `${hours(p.ms)} hrs`, 'Qualified music streams', '◷'),
@@ -1316,6 +1414,17 @@
       ${shares.length > 4 ? `<p class="search-muted">And ${number(shares.length - 4)} earlier recommendations.</p>` : ''}
       </div></article>`;
   }
+  function searchRealPlaylistConnections(category, item) {
+    if (category !== 'tracks' || !state.report || state.report.isDemo) return '';
+    const lists = (state.report.playlists || []).filter(list => list.tracks.some(track =>
+      (item.uri && track.uri && item.uri === track.uri) ||
+      keyOf(track.artist, track.title) === keyOf(item.artist, item.name)));
+    if (!lists.length) return '';
+    return `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">SAVED COLLECTIONS</div><h2>Playlist memberships</h2></div></div>
+      <p class="search-muted">This track occurs in ${number(lists.length)} imported ${lists.length === 1 ? 'playlist' : 'playlists'}. However, Spotify does not tell us if playback came from a playlist.</p>
+      <div class="search-entity-links">${lists.map(list => `<button type="button" data-playlist-open="${escapeHtml(list.id)}">${escapeHtml(list.name)} ↗</button>`).join('')}</div></article>`;
+  }
+
   function renderSearchDetail() {
     const target = $('search-detail');
     const selected = state.search.selected;
@@ -1364,7 +1473,8 @@
       ${eras.length ? `<div class="search-era-links">${eras.map(era => `<button type="button" data-search-era-month="${escapeHtml(era.to)}"><strong>${escapeHtml(era.title)} era</strong><span>${escapeHtml(monthSpan(era.from, era.to))} ↗</span></button>`).join('')}</div>` : `<p class="search-muted">Not among the leading ${category} in any automatically detected era for this time range.</p>`}</article>
       ${related.length ? `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">GO DEEPER</div><h2>${category === 'albums' ? 'Most played album tracks' : 'Most played tracks featuring this artist'}</h2></div></div><div class="rank-list">${related.map((row, i) => rankRow(row, i, 'tracks', 'plays')).join('')}</div></article>` : ''}
       ${searchDemoConnections(category, item)}
-      ${category === 'tracks' && !state.report?.isDemo ? `<p class="search-muted">Playlist membership and friend recommendations will appear here once Account Data import support is added. The standard Spotify streaming-history export does not contain those records.</p>` : ''}
+      ${searchRealPlaylistConnections(category, item)}
+      ${category === 'tracks' && !state.report?.isDemo ? `<p class="search-muted">Spotify's standard listening-history export does not identify which playlist a track was played from. Saved playlist memberships come from Account Data only.</p>` : ''}
       <p class="search-muted">Counts reflect streams of at least 30 seconds, grouped by UTC month. An era connection means this was among that chapter's leading entries. Historical reports without month-level data cannot show a precise timeline.</p>`;
   }
 
@@ -1382,7 +1492,7 @@
       root.innerHTML = emptyMessage('No saved reports yet. Import your Spotify ZIP on the Home page to create one.');
       return;
     }
-    root.innerHTML = reports.map(report => `<article class="history-card"><div class="history-card-head"><span class="history-icon">♫</span><span class="history-date">Saved ${dateLabel(report.createdAt)}</span></div><h3>${escapeHtml(report.filename)}</h3><p>${number(report.periods?.all?.qualified || report.imported - report.short)} streams · ${escapeHtml(report.type)}<br>${dateLabel(report.firstTs)} – ${dateLabel(report.lastTs)}</p><div class="history-actions"><button class="btn btn-primary" data-open-report="${report.id}">Open report ↗</button><button class="btn btn-outline" data-export-report="${report.id}">Export JSON ↓</button><button class="btn btn-danger" data-delete-report="${report.id}">Delete</button></div></article>`).join('');
+    root.innerHTML = reports.map(report => `<article class="history-card"><div class="history-card-head"><span class="history-icon">♫</span><span class="history-date">Saved ${dateLabel(report.createdAt)}</span></div><h3>${escapeHtml(report.filename)}</h3><p>${number(report.periods?.all?.qualified ?? Math.max(0, report.imported - report.short))} streams · ${escapeHtml(report.type)}${report.playlistImport?.playlists ? ` · ${number(report.playlistImport.playlists)} playlists` : ''}<br>${report.firstTs ? `${dateLabel(report.firstTs)} – ${dateLabel(report.lastTs)}` : 'No listening history in this report'}</p><div class="history-actions"><button class="btn btn-primary" data-open-report="${report.id}">Open report ↗</button><button class="btn btn-outline" data-export-report="${report.id}">Export JSON ↓</button><button class="btn btn-danger" data-delete-report="${report.id}">Delete</button></div></article>`).join('');
   }
 
   async function loadDemoTracks() {
@@ -2584,13 +2694,13 @@
     const isoTime = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value) && Number.isFinite(Date.parse(value)) ? new Date(value).toISOString() : null;
     const recognised = (value, choices) => choices.includes(value) ? value : 'Unknown';
     const environment = diagnostic.environment || {};
-    const stages = ['Open ZIP', 'Read JSON', 'Parse JSON', 'Aggregate events', 'Build report', 'Save report', 'Load catalogue', 'Generate listening history', 'Generate social activity'];
+    const stages = ['Open ZIP', 'Read JSON', 'Parse JSON', 'Parse playlists', 'Aggregate events', 'Build report', 'Save report', 'Load catalogue', 'Generate listening history', 'Generate social activity'];
     const performanceData = diagnostic.performance || {};
     const payload = {
       schema: 1,
       status: recognised(diagnostic.status, ['completed', 'failed']),
       source: recognised(diagnostic.source, ['demo', 'import']),
-      sourceType: recognised(diagnostic.sourceType, ['Demo data', 'Spotify import', 'Extended Streaming History', 'Account streaming history', 'Spotify listening history']),
+      sourceType: recognised(diagnostic.sourceType, ['Demo data', 'Spotify import', 'Extended Streaming History', 'Account streaming history', 'Spotify listening history', 'Spotify playlists', 'Extended Streaming History + Spotify playlists', 'Account streaming history + Spotify playlists', 'Spotify listening history + Spotify playlists']),
       createdAt: isoTime(diagnostic.createdAt),
       environment: {
         version: typeof environment.version === 'string' && /^[a-zA-Z0-9._+\-]{1,64}$/.test(environment.version) ? environment.version : 'Unknown',
@@ -2604,7 +2714,7 @@
       }
     };
     if (payload.status === 'failed') {
-      payload.failureStage = recognised(diagnostic.failureStage, ['Opening archive', 'Read and parse JSON', 'Parse JSON', 'Aggregate listening data', 'Build report', 'Save report', 'Load demo catalogue', 'Generate listening history', 'Generate social activity']);
+      payload.failureStage = recognised(diagnostic.failureStage, ['Opening archive', 'Read and parse JSON', 'Parse JSON', 'Parse playlist metadata', 'Aggregate listening data', 'Build report', 'Save report', 'Load demo catalogue', 'Generate listening history', 'Generate social activity']);
     }
     if (diagnostic.events) {
       payload.events = {
@@ -2612,6 +2722,7 @@
         exclusions: pickNumbers(diagnostic.events.exclusions, ['episodes', 'missingMetadata', 'invalidTimestamp', 'invalidDuration', 'malformedRow'])
       };
     }
+    if (diagnostic.playlistImport) payload.playlistImport = pickNumbers(diagnostic.playlistImport, ['playlists', 'musicTracks', 'localTracks', 'skippedEpisodes', 'skippedUnknown']);
     if (diagnostic.grouping) payload.grouping = pickNumbers(diagnostic.grouping, ['sourceTrackVariants', 'groupedTracks', 'consolidatedVariants', 'uniqueArtists', 'uniqueAlbums']);
     if (diagnostic.enrichment) payload.enrichment = pickNumbers(diagnostic.enrichment, ['tracksWithInferredFeatures', 'distinctInferredArtists']);
     if (diagnostic.listening) {

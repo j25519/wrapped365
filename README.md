@@ -29,6 +29,8 @@ docker compose up -d wrapped365
 
 Open **http://localhost:6967** on the Docker host. By default, the Compose file binds to `6967` and it will be available to all devices on your LAN. Change this to `127.0.0.1:6967` to bind to localhost only - recommended if running behind a reverse proxy.
 
+Wrapped 365 does not require elevated privileges. It runs inside a small Alpine Docker image. The default Docker Compose configuration runs the application as `user: "10001:10001"` and sets `no-new-privileges:true`. The default port, `6967`, is an unprivileged port. Feel free to change the UID/GID pair to any unprivileged user on your system if needed. I recommend a no-login account without a shell that is only a member of its own group as good security practice. You gain nothing running it from a `root` or `sudo` account, you just harm your OPSEC.
+
 ## What is Wrapped 365?
 
 Wrapped 365 is a self-hosted, Spotify inspired listening statistics dashboard. Upload your **Spotify Extended Streaming History ZIP** to explore your music listening habits across individual years or your entire account history.
@@ -40,6 +42,9 @@ All ZIP processing and analysis happen **in your browser**. There is no Spotify 
 - Top artists, tracks, and albums by plays or listening time.
 - Listening totals, yearly breakdowns, trends, and interactive charts.
 - Listening habits, including activity by time and day, skips, shuffle, and devices.
+- Deep analysis into the music that defined eras of your life.
+- Throwbacks to tracks, albums, and artists you once loved and may have forgotten.
+- Enhanced playlist and social analytics, measuring whose recommendations shaped your tastes.
 - A local history of reports that you can reopen, delete, or export.
 - Support for Spotify's current extended-history JSON format and older export formats.
 
@@ -50,6 +55,9 @@ Discover the musical chapters of your life through automatically identified list
 
 ### Unified Search
 Search your entire listening history for tracks, albums, and artists. Explore detailed statistics, listening timelines, popularity peaks, and connections to your listening eras. Search results include featured artists where available, with local metadata enrichment to identify additional artist credits.
+
+### Much more to come!
+Massive amount of new functionality on the roadmap, give us a star and watch this space! <3
 
 ## Technologies
 
