@@ -656,8 +656,17 @@
         osVersion = ({ '6.1': '7', '6.2': '8', '6.3': '8.1' })[nt] || (nt === '10.0' ? '10 / 11' : null);
       } else if (os === 'macOS') {
         const detected = userAgentVersion(ua, /Mac OS X\s+([\d._]+)/i);
-        // Safari/macOS commonly freeze this UA token at 10.15.7, even on newer macOS versions; displaying it as the real OS would be misleading.
+        // Safari/macOS commonly freeze this UA token at 10.15.7, even on newer macOS versions.
         if (detected && !detected.startsWith('10.15')) osVersion = detected;
+      }
+      let osVersionSource = osVersion ? 'userAgent' : null;
+      // Safari 26+ deliberately freezes the iOS/iPadOS version in the UA at 18.6/18.7.
+      // Its own major version usually tracks the OS major release, but is only an inference.
+      const safariMajor = browser === 'Safari' ? Number(browserVersion?.split('.')[0]) : 0;
+      if (isAppleMobile && safariMajor >= 26 &&
+          (!osVersion || /^18\.(?:6|7)(?:\.|$)/.test(osVersion))) {
+        osVersion = String(safariMajor);
+        osVersionSource = 'inferredFromSafari';
       }
       let deviceClass = /iPad|Tablet|Android(?!.*Mobile)|touch/i.test(ua) && (os === 'Android' || os === 'iPadOS') ? 'Tablet'
         : /Mobile|iPhone|iPod|Android/.test(ua) ? 'Mobile' : 'Desktop';
@@ -684,8 +693,7 @@
       // not simply by the CriOS branding.
       if (isAppleMobile && /\bAppleWebKit\//i.test(ua)) engine = 'WebKit';
 
-      // Chromium can optionally expose accurate browser/OS version and CPU
-      // architecture hints. Unknown information stays null rather than guessed.
+      // Chromium can optionally expose accurate browser/OS version and CPU architecture hints. Unknown information stays null rather than guessed.
       try {
         const uaData = navigator.userAgentData;
         if (uaData?.getHighEntropyValues) {
@@ -695,8 +703,8 @@
             deviceModel = cleanDeviceModel(hints?.model) || deviceModel;
           const platformVersion = cleanVersion(hints?.platformVersion);
           if (platformVersion) {
-            if (os === 'Windows') osVersion = Number(platformVersion.split('.')[0]) >= 13 ? '11' : '10';
-            else if (os === 'Android' || os === 'macOS' || os === 'Chrome OS') osVersion = platformVersion;
+            if (os === 'Windows') { osVersion = Number(platformVersion.split('.')[0]) >= 13 ? '11' : '10'; osVersionSource = 'clientHints'; }
+            else if (os === 'Android' || os === 'macOS' || os === 'Chrome OS') { osVersion = platformVersion; osVersionSource = 'clientHints'; }
           }
           const knownBrands = {
             'Microsoft Edge': 'Edge', 'Google Chrome': 'Chrome', 'Opera': 'Opera',
@@ -732,7 +740,7 @@
           }
         }
       } catch { /* Don't block diagnostics on optional browser APIs. */ }
-      return { browser, browserVersion, engine, os, osVersion, deviceClass, deviceModel, architecture,
+      return { browser, browserVersion, engine, os, osVersion, osVersionSource, deviceClass, deviceModel, architecture,
         linuxDistribution, linuxDistributionVersion, linuxKernelVersion };
     })();
     return environmentPromise;
@@ -2927,7 +2935,7 @@
         ${soundcheckRow('Distinct songs', countValue(demo.distinctCatalogueTracks))}
         ${soundcheckRow('Eligible releases', countValue(demo.eligibleTracks))}
         ${soundcheckRow('Albums / releases', countValue(demo.catalogueAlbums))}
-        ${soundcheckRow('Multi-track sessions', countValue(demo.multiTrackSessions))}
+        ${soundcheckRow('Multi track sessions', countValue(demo.multiTrackSessions))}
         ${soundcheckRow('Total sessions', countValue(demo.sessions))}
         ${soundcheckRow('Curated playlists', countValue(demo.curatedPlaylists))}
         ${soundcheckRow('Playlist sessions', countValue(demo.playlistSessions))}
@@ -2973,7 +2981,7 @@
        ${soundcheckRow('Wrapped 365 version', data.environment?.version || 'Unknown')}
        ${soundcheckRow('Browser', `${data.environment?.browser || 'Unknown'}${data.environment?.browserVersion ? ' ' + data.environment.browserVersion : ''}`)}
        ${soundcheckRow('Browser engine', data.environment?.engine || 'Not reported')}
-       ${soundcheckRow('Operating system', `${data.environment?.os || 'Unknown'}${data.environment?.osVersion ? ' ' + data.environment.osVersion : ''}`)}
+       ${soundcheckRow('Operating system', `${data.environment?.os || 'Unknown'}${data.environment?.osVersion ? ' ' + data.environment.osVersion : ''}${data.environment?.osVersionSource === 'inferredFromSafari' ? ' (inferred from Safari)' : ''}`)}
        ${data.environment?.os === 'Linux' ? soundcheckRow('Linux distribution', data.environment?.linuxDistribution ?
          `${data.environment.linuxDistribution}${data.environment.linuxDistributionVersion ? ' ' + data.environment.linuxDistributionVersion : ''} (reported)` : 'Not reported') : ''}
        ${data.environment?.os === 'Linux' ? soundcheckRow('Linux kernel', data.environment?.linuxKernelVersion || 'Not reported') : ''}
@@ -3006,6 +3014,7 @@
         os: recognised(environment.os, ['Android', 'iOS', 'iPadOS', 'iOS / iPadOS', 'Windows', 'macOS', 'Chrome OS', 'Linux', 'Other']),
         osVersion: environment.os === 'Android' ? cleanVersion(environment.osVersion) :
           environment.os === 'Windows' && environment.osVersion === '10 / 11' ? '10 / 11' : exportVersion(environment.osVersion),
+        osVersionSource: ['userAgent', 'clientHints', 'inferredFromSafari'].includes(environment.osVersionSource) ? environment.osVersionSource : null,
         architecture: ['x86', 'x86_64', 'ARM32', 'ARM64', 'ppc64le', 'ppc64', 'riscv64', 's390x'].includes(environment.architecture) ? environment.architecture : null,
         linuxDistribution: environment.os === 'Linux' && SOUNDCHECK_LINUX_DISTROS.some(([name]) => name === environment.linuxDistribution) ? environment.linuxDistribution : null,
         linuxDistributionVersion: environment.os === 'Linux' ? cleanVersion(environment.linuxDistributionVersion) : null,
@@ -3123,6 +3132,7 @@
     }
   }
   function attachSoundcheckUnlock() {
+    // Enable Soundcheck with the Konami code!
     const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let position = 0;
     document.addEventListener('keydown', event => {
