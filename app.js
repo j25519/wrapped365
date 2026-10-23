@@ -2801,9 +2801,9 @@
     }
     runs.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     if (!runs.length) return '';
-    return `<article class="panel sc-diversity-trend"><div class="kicker">ACROSS REGENERATIONS</div><h2>All-time top 20 artist diversity</h2>
+    return `<article class="panel sc-diversity-trend"><div class="kicker">ACROSS REGENERATIONS</div><h2>All time top 20 artist diversity</h2>
       <p class="search-muted">Distinct primary artists across the latest ${runs.length} demo ${runs.length === 1 ? 'generation' : 'generations'} with these diagnostics. Older runs without this measurement are excluded.</p>
-      <div class="sc-trend-bars" role="img" aria-label="Distinct artists in the all-time top 20 by regeneration: ${runs.map(item => item.demo.diversity.distinctPrimaryArtists).join(', ')}">
+      <div class="sc-trend-bars" role="img" aria-label="Distinct artists in the all time top 20 by regeneration: ${runs.map(item => item.demo.diversity.distinctPrimaryArtists).join(', ')}">
         ${runs.map((item, index) => `<div class="sc-trend-column ${item.id === selected.id ? 'selected' : ''}" title="Run ${index + 1}: ${item.demo.diversity.distinctPrimaryArtists} artists · ${dateLabel(item.createdAt)}">
           <span>${number(item.demo.diversity.distinctPrimaryArtists)}</span><div class="sc-trend-rail"><i style="height:${Math.min(100, 100 * item.demo.diversity.distinctPrimaryArtists / 20)}%"></i></div><small>${index + 1}</small>
         </div>`).join('')}
@@ -2916,8 +2916,8 @@
           ${soundcheckRow('Longest top five artist streak', `${countValue(diversity.longestTopFiveArtistStreak)} months`, 'Consecutive calendar months in any month’s five leading credited artists')}
           ${soundcheckRow('Year-to-year artist overlap', diversity.annualTopTenArtistOverlap == null ? '—' : `${diversity.annualTopTenArtistOverlap}%`, 'Average share of the prior year’s top ten credited artists returning the next year')}
           ${soundcheckRow('Consecutive year comparisons', countValue(diversity.consecutiveYearPairs))}
-        </article><article class="panel"><div class="kicker">INTERPRETING THE NUMBERS</div><h2>Long-term vs short-term</h2>
-          <p class="search-muted">Low artist and album diversity suggests concentrated all-time rankings. High peak three month share suggests bursts of listening rather than persistent popularity.</p>
+        </article><article class="panel"><div class="kicker">INTERPRETING THE NUMBERS</div><h2>Long term vs short term</h2>
+          <p class="search-muted">Low artist and album diversity suggests concentrated all time rankings. High peak three month share suggests bursts of listening rather than persistent popularity.</p>
           <p class="search-muted">Album titles are grouped across primary artists to reveal soundtrack clusters. These metrics describe the generated history; they do not change any play counts.</p>
         </article></div>${soundcheckDiversityTrend(data, history)}</section>`;
     const demoSection = !isDemo ? '' : `<div class="sc-panels">
