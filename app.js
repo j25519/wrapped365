@@ -665,7 +665,7 @@
       const safariMajor = browser === 'Safari' ? Number(browserVersion?.split('.')[0]) : 0;
       if (isAppleMobile && safariMajor >= 26 &&
           (!osVersion || /^18\.(?:6|7)(?:\.|$)/.test(osVersion))) {
-        osVersion = String(safariMajor);
+        osVersion = browserVersion;
         osVersionSource = 'inferredFromSafari';
       }
       let deviceClass = /iPad|Tablet|Android(?!.*Mobile)|touch/i.test(ua) && (os === 'Android' || os === 'iPadOS') ? 'Tablet'
