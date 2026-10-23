@@ -876,6 +876,14 @@
   }
   const playlistStatsFor = id => state.report?.playlistStats?.[state.year]?.[id] ||
     { plays: 0, ms: 0, tracks: {} };
+  // Spotify exports may already supply creditedArtists; demo tracks instead carry
+  // their additional credits in `credits`. Always include explicit feat. credits
+  // from the title, without changing the underlying primary artist identity.
+  const playlistArtistCredits = track => creditedNames([
+    ...artistCredits(track),
+    ...(Array.isArray(track?.credits) ? track.credits : []),
+    ...featureCreditsFromTitle(track?.title || track?.name || '')
+  ]);
   function playlistTrackLength(list) {
     return list.tracks.reduce((sum, track) => sum + (Number(track.seconds) || 0) * 1000, 0);
   }
@@ -892,7 +900,7 @@
       const listen = real ? (byUri.get(track.uri) || byTitle.get(keyOf(track.artist, track.title))) : stats.tracks?.[track.id];
       const pos = track.position || index + 1;
       return `<div class="playlist-track-row"><span class="playlist-position">${number(pos)}</span>
-        <div class="playlist-track-meta"><button type="button" data-playlist-track="${escapeHtml(encodeURIComponent(keyOf(track.artist, track.title)))}">${escapeHtml(track.title || track.name)}</button><span>${escapeHtml(track.artist)} · ${escapeHtml(track.album || 'Unknown release')}${track.local ? ' · Local file' : ''}</span></div>
+        <div class="playlist-track-meta"><button type="button" data-playlist-track="${escapeHtml(encodeURIComponent(keyOf(track.artist, track.title)))}">${escapeHtml(track.title || track.name)}</button><span>${escapeHtml(playlistArtistCredits(track).join(', '))} · ${escapeHtml(track.album || 'Unknown release')}${track.local ? ' · Local file' : ''}</span></div>
         <span class="playlist-track-length">${track.seconds ? duration(track.seconds * 1000) : '—'}</span>
         <span class="playlist-track-plays">${listen?.plays ? `${number(listen.plays)} ${real ? 'overall' : 'plays'}` : '—'}</span></div>`;
     }).join('');
@@ -901,7 +909,7 @@
     const stats = playlistStatsFor(list.id);
     const source = list.source === 'social' ? 'Random social collection' : list.source === 'spotify' ? 'Spotify saved playlist' : 'Curated playlist';
     const total = list.tracks.length;
-    const artists = new Set(list.tracks.map(track => keyOf(track.artist))).size;
+    const artists = new Set(list.tracks.flatMap(track => playlistArtistCredits(track).map(name => keyOf(name)))).size;
     return `<article class="panel playlist-detail"><div class="playlist-detail-heading"><div><div class="kicker">${source.toUpperCase()}</div><h2>${escapeHtml(list.name)}</h2><p>${number(total)} music tracks · ${number(artists)} artists · ${playlistDurationLabel(list)}${list.lastModifiedDate ? ` · Modified ${escapeHtml(list.lastModifiedDate)}` : ''}</p></div>
       ${embedded ? `<button type="button" class="btn btn-outline" data-playlist-open="${escapeHtml(list.id)}">View playlist ↗</button>` : `<button type="button" class="btn btn-outline" data-playlist-back>← All playlists</button>`}</div>
       ${list.description ? `<p class="search-muted">${escapeHtml(list.description)}</p>` : ''}
@@ -936,8 +944,8 @@
     for (const list of lists.filter(item => item.source !== 'social')) {
       for (const track of list.tracks) {
         const entries = category === 'tracks' ? [{ name: track.name || track.title, artist: track.artist,
-          album: track.album, uri: track.uri || '', creditedArtists: track.creditedArtists || [track.artist], plays: 0, ms: 0, playlistOnly: true }] :
-          category === 'artists' ? (track.creditedArtists || [track.artist]).map(name => ({ name, plays: 0, ms: 0, playlistOnly: true })) :
+          album: track.album, uri: track.uri || '', creditedArtists: playlistArtistCredits(track), plays: 0, ms: 0, playlistOnly: true }] :
+          category === 'artists' ? playlistArtistCredits(track).map(name => ({ name, plays: 0, ms: 0, playlistOnly: true })) :
           category === 'albums' ? [{ name: track.album, artist: track.artist, plays: 0, ms: 0, playlistOnly: true }] : [];
         for (const item of entries) {
           const key = recordKey(category, item);
