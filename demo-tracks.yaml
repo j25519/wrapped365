@@ -1584,6 +1584,316 @@ tracks:
     album: "Encore"
     released: "2004-11-12"
     seconds: 348
+  - title: "Intro"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 6
+  - title: "What Up Gangsta"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 179
+  - title: "Patiently Waiting (feat. Eminem)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 288
+  - title: "Many Men (Wish Death)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 256
+  - title: "In Da Club"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 193
+  - title: "High All The Time"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 269
+  - title: "Heat"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 254
+  - title: "If I Can't"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 196
+  - title: "Blood Hound (feat. Young Buck)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 239
+  - title: "Back Down"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 243
+  - title: "P.I.M.P."
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 249
+  - title: "Like My Style (feat. Tony Yayo)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 193
+  - title: "Poor Lil Rich"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 199
+  - title: "21 Questions (feat. Nate Dogg)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 224
+  - title: "Don't Push Me (feat. Lloyd Banks & Eminem)"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 248
+  - title: "Gotta Make It To Heaven"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 240
+  - title: "Wanksta"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 219
+  - title: "U Not Like Me"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 255
+  - title: "Lifes On The Line"
+    artist: "50 Cent"
+    album: "Get Rich or Die Tryin'"
+    released: "2003-02-06"
+    seconds: 218
+  - title: "Start"
+    artist: "Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 9
+  - title: "Act A Fool"
+    artist: "Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 270
+  - title: "Represent"
+    artist: "Trick Daddy"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 218
+  - title: "Slum (feat. Shawnna & 2 Chainz)"
+    artist: "I-20"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 186
+  - title: "Pick Up The Phone/Look At That Booty (feat. R. Kelly)"
+    artist: "Tyrese & Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 293
+  - title: "Hands In The Air"
+    artist: "8Ball"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 252
+  - title: "Gettin' It"
+    artist: "Chingy"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 259
+  - title: "Block Reincarnated/Hemi (feat. Kardinal Offishall)"
+    artist: "Shawnna"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 258
+  - title: "Pump It Up"
+    artist: "Joe Budden"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 251
+  - title: "Hell Yeah"
+    artist: "Dead Prez"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 272
+  - title: "Peel Off/Run These Streets"
+    artist: "Jin"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 249
+  - title: "We Ridin'"
+    artist: "Fat Joe"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 181
+  - title: "Rollin' On 20's"
+    artist: "Lil' Flip"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 249
+  - title: "Fuck What a Nigga Say..."
+    artist: "Dirt Bag"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 196
+  - title: "Oye"
+    artist: "Pitbull"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 242
+  - title: "Miami"
+    artist: "K'Jon"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 258
+  - title: "Finish"
+    artist: "Ludacris"
+    album: "2 Fast 2 Furious"
+    released: "2003-05-27"
+    seconds: 10
+  - title: "American Star (feat. Shanell)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 216
+  - title: "Prom Queen (feat. Shanell)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 217
+  - title: "Ground Zero"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 237
+  - title: "Da Da Da"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 220
+  - title: "Paradice"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 236
+  - title: "Get A Life"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 192
+  - title: "On Fire"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 248
+  - title: "Drop The World (feat. Eminem)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 229
+  - title: "Runnin (feat. Shanell)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 271
+  - title: "One Way Trip (feat. Kevin Rudolf)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 278
+  - title: "Knockout (feat. Nicki Minaj)"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 249
+  - title: "The Price Is Wrong"
+    artist: "Lil Wayne"
+    album: "Rebirth"
+    released: "2010-02-02"
+    seconds: 208
+  - title: "Purple Lamborghini (feat. Rick Ross)"
+    artist: "Skrillex"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 215
+  - title: "Sucker for Pain (feat. Wiz Khalifa, Imagine Dragons, Logic, Ty Dolla $ign & X Ambassadors)"
+    artist: "Lil Wayne"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 243
+  - title: "Heathens"
+    artist: "Twenty One Pilots"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 195
+  - title: "Standing in the Rain (feat. Mark Ronson & Dan Auerbach)"
+    artist: "Action Bronson"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 202
+  - title: "Gangsta"
+    artist: "Kehlani"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 177
+  - title: "Know Better"
+    artist: "Kevin Gates"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 207
+  - title: "You Don't Own Me (feat. G-Eazy)"
+    artist: "SAYGRACE"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 198
+  - title: "Without Me"
+    artist: "Eminem"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 295
+  - title: "Wreak Havoc"
+    artist: "Skylar Grey"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 228
+  - title: "Medieval Warfare"
+    artist: "Grimes"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 180
+  - title: "Bohemian Rhapsody"
+    artist: "Panic! At The Disco"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 363
+  - title: "Slippin' Into Darkness"
+    artist: "War"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 227
+  - title: "Fortunate Son"
+    artist: "Creedence Clearwater Revival"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 138
+  - title: "I Started a Joke (feat. Becky Hanson)"
+    artist: "ConfidentialMX"
+    album: "Suicide Squad: The Album"
+    released: "2016-08-05"
+    seconds: 190
   - title: "hell is where i dreamt of u and woke up alone"
     artist: "blackbear"
     album: "digital druglord"
@@ -2484,6 +2794,101 @@ tracks:
     album: "Goodbye & Good Riddance"
     released: "2018-05-23"
     seconds: 75
+  - title: "The Party Never Ends"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 140
+  - title: "Misfit"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 159
+  - title: "AGATS2 (Insecure) (feat. Nicki Minaj)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 199
+  - title: "Lace It (feat. Eminem & benny blanco)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 217
+  - title: "Cuffed"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 244
+  - title: "Empty Out Your Pockets"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 135
+  - title: "KTM Drip"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 240
+  - title: "Love Letter"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 159
+  - title: "Condone It"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 180
+  - title: "Goodbye"
+    artist: "The Kid LAROI"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 161
+  - title: "Party By Myself"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 198
+  - title: "Adore You"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 167
+  - title: "Celebrate (feat. Offset)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 180
+  - title: "Jeffrey"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 175
+  - title: "Barbarian"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 150
+  - title: "Best Friend (feat. Fall Out Boy)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 156
+  - title: "Floor It"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 192
+  - title: "Oxycodone"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 160
+  - title: "Spend It"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 180
   - title: "The Explanation"
     artist: "XXXTENTACION"
     album: "17"
@@ -11377,3 +11782,338 @@ tracks:
     album: "MM..FOOD"
     released: "2004-11-16"
     seconds: 241
+  - title: "Poland"
+    artist: "Lil Yachty"
+    album: "Poland"
+    released: "2022-10-11"
+    seconds: 83
+  - title: "Smile"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 196
+  - title: "Knock 'Em Out"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 173
+  - title: "LDN"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 192
+  - title: "Everything's Just Wonderful"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 208
+  - title: "Not Big"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 196
+  - title: "Friday Night"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 186
+  - title: "Shame for You"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 246
+  - title: "Littlest Things"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 187
+  - title: "Take What You Take"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 246
+  - title: "Friend of Mine"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 237
+  - title: "Alfie"
+    artist: "Lily Allen"
+    album: "Alright, Still"
+    released: "2006-07-17"
+    seconds: 165
+  - title: "Everyone's at It"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 278
+  - title: "The Fear"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 207
+  - title: "Not Fair"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 202
+  - title: "22"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 186
+  - title: "I Could Say"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 244
+  - title: "Back to the Start"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 254
+  - title: "Never Gonna Happen"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 207
+  - title: "Fuck You"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 219
+  - title: "Who'd Have Known"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 230
+  - title: "Chinese"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 208
+  - title: "Him"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 198
+  - title: "He Wasn't There"
+    artist: "Lily Allen"
+    album: "It's Not Me, It's You"
+    released: "2009-02-04"
+    seconds: 172
+  - title: "Kids That Love To Dance (feat. Emeli Sandé)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 166
+  - title: "Just Be Good To Green (feat. Lily Allen)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 204
+  - title: "I Need You Tonight (feat. Ed Drewett)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 225
+  - title: "City Of Gold"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 242
+  - title: "Oh My God (feat. Labrinth)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 230
+  - title: "Jungle (feat. Maverick Sabre)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 193
+  - title: "Do For You (feat. SunN.Y.)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 261
+  - title: "Falling Down (feat. Lee Bailey)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 233
+  - title: "Monster (feat. Example)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 188
+  - title: "Closing The Door (feat. Fink)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 240
+  - title: "Where Do We Go (feat. Shereen Shabanaa)"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 227
+  - title: "Goodnight"
+    artist: "Professor Green"
+    album: "Alive Till I'm Dead"
+    released: "2010-07-19"
+    seconds: 283
+  - title: "On The Come Up (feat. Big Sean)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 235
+  - title: "W Y O (What You On) (feat. Young Thug)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 262
+  - title: "Hasselhoff (feat. Lil Yachty)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 130
+  - title: "Gucci On My (feat. 21 Savage, YG & Migos)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 274
+  - title: "Oh Hi Hater (Hiatus) (feat. Fortune)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 185
+  - title: "Perfect Pint (feat. Kendrick Lamar, Gucci Mane & Rae Sremmurd)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 240
+  - title: "Razzle Dazzle (feat. Future)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 216
+  - title: "Bars Of Soap (feat. Swae Lee)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 259
+  - title: "Burnin (feat. Andrea)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 133
+  - title: "Y'all Ain't Ready (feat. 2 Chainz)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 222
+  - title: "Aries (YuGo) (feat. Pharrell & Station Wagon P)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 271
+  - title: "Emotions Unlocked (feat. Eearz)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 239
+  - title: "Big God (feat. Trouble & Problem)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 251
+  - title: "Faith (feat. Lil Wayne & HoodyBaby)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 284
+  - title: "Come Down (feat. Chief Keef & Rae Sremmurd)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 218
+  - title: "Outro"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 27
+  - title: "Nothing Is Promised (feat. Rihanna)"
+    artist: "Mike WiLL Made-It"
+    album: "Ransom 2"
+    released: "2017-03-24"
+    seconds: 170
+  - title: "Thriller (feat. Jay-Z)"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 209
+  - title: "\"The Take Over, The Breaks Over\""
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 213
+  - title: "This Ain't A Scene, It's An Arms Race"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 212
+  - title: "I'm Like A Lawyer With The Way I'm Always Trying To Get You Off (Me & You)"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 211
+  - title: "Hum Hallelujah"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 230
+  - title: "Golden"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 152
+  - title: "Thnks fr th Mmrs"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 203
+  - title: "Don't You Know Who I Think I Am?"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 171
+  - title: "The (After) Life Of The Party"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 201
+  - title: "The Carpal Tunnel Of Love"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 203
+  - title: "Bang The Doldrums"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 211
+  - title: "Fame < Infamy"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 186
+  - title: "You're Crashing, But You're No Wave"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 222
+  - title: "I've Got All This Ringing In My Ears And None On My Fingers"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 246

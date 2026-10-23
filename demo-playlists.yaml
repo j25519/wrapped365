@@ -1,0 +1,358 @@
+# Demo playlists for Wrapped 365!
+# Spotify treats these differently to albums so we will too
+# This file simply populates the playlists the user has saved to their library
+# They are only treated as albums for historic listening data generation purposes
+# Organisationally, and within the UX, they are treated differently.
+# Playlisy logic is much more deterministic - we simply choose a handful of playlists to add to any given generated data set, and the tracks within are in the same pool of library tracks as everything else.
+playlists:
+  cyberpunk:
+    - title: "Phantom Liberty"
+      artist: "Dawid Podsiadło & P.T. Adamczyk"
+      album: "Phantom Liberty"
+      released: "2023-09-29"
+      seconds: 347
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 1
+    - title: "Chippin' In"
+      artist: "SAMURAI & Refused"
+      album: "Chippin' In"
+      released: "2019-07-02"
+      seconds: 213
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 2
+    - title: "V"
+      artist: "Marcin Przybyłowicz"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 154
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 3
+    - title: "No Save Point - From \"Cyberpunk 2077\""
+      artist: "Run The Jewels"
+      album: "No Save Point (From Cyberpunk 2077)"
+      released: "2020-11-12"
+      seconds: 195
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 4
+    - title: "I Really Want to Stay at Your House"
+      artist: "Rosa Walton & Hallie Coggins"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 246
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 5
+    - title: "Choke Hold"
+      artist: "Idris Elba"
+      album: "The Phantom Files (From Cyberpunk 2077)"
+      released: "2023-09-21"
+      seconds: 141
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 6
+    - title: "The Rebel Path"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 250
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 7
+    - title: "Ponpon Shit"
+      artist: "Namakopuri & Us Cracks"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 214
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 8
+    - title: "Delicate Weapon"
+      artist: "Grimes & Lizzy Wizzy"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 230
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 9
+    - title: "Never Fade Away"
+      artist: "SAMURAI & Refused"
+      album: "Never Fade Away"
+      released: "2019-08-23"
+      seconds: 190
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 10
+    - title: "Extraction Action"
+      artist: "Paul Leonard-Morgan"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 296
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 11
+    - title: "Who's Ready for Tomorrow"
+      artist: "RAT BOY & IBDY"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 116
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 12
+    - title: "Cloudy Day"
+      artist: "Marcin Przybyłowicz"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 305
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 13
+    - title: "Major Crimes"
+      artist: "HEALTH & Window Weather"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 213
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 14
+    - title: "Force Projection (From \"Cyberpunk 2077: Phantom Liberty\" Score)"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077: Phantom Liberty (Original Score)"
+      released: "2023-09-14"
+      seconds: 166
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 15
+    - title: "Headrush"
+      artist: "Backxwash & BADPANNINI"
+      album: "107.5 Darkstar Radio"
+      released: "2023-09-21"
+      seconds: 238
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 16
+    - title: "Hole in the Sun (feat. COS & Conway)"
+      artist: "Raney Shockne & Point Break Candy"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 207
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 17
+    - title: "Friday Night Fire Fight"
+      artist: "Aligns & Rubicones"
+      album: "Cyberpunk 2077: Radio, Vol. 1 (Original Soundtrack)"
+      released: "2020-12-11"
+      seconds: 214
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 18
+    - title: "Let You Down"
+      artist: "Dawid Podsiadło"
+      album: "Let You Down"
+      released: "2022-09-12"
+      seconds: 227
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 19
+    - title: "The Ballad Of Buck Ravers"
+      artist: "SAMURAI"
+      album: "The Ballad Of Buck Ravers"
+      released: "2020-06-29"
+      seconds: 268
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 20
+    - title: "Been Good To Know Ya"
+      artist: "Marcin Przybyłowicz"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 254
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 21
+    - title: "Never Looking Back (From \"Cyberpunk 2077: Phantom Liberty\" Score)"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077: Phantom Liberty (Original Score)"
+      released: "2023-09-14"
+      seconds: 228
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 22
+    - title: "My Lullaby for You"
+      artist: "Nina Kraviz & Bara Nova"
+      album: "Cyberpunk 2077: Radio, Vol. 4 (Original Soundtrack)"
+      released: "2021-01-01"
+      seconds: 334
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 23
+    - title: "Dinero (feat. Cerbeus)"
+      artist: "Konrad OldMoney & 7 Facas"
+      album: "Cyberpunk 2077: Radio, Vol. 1 (Original Soundtrack)"
+      released: "2020-12-11"
+      seconds: 199
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 24
+    - title: "Rolla Coaster"
+      artist: "Idris Elba"
+      album: "The Phantom Files (From Cyberpunk 2077)"
+      released: "2023-09-21"
+      seconds: 129
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 25
+    - title: "Rite Of Passage"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 334
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 26
+    - title: "Kill Kill"
+      artist: "Le Destroy & The Bait"
+      album: "Cyberpunk 2077: Radio, Vol. 1 (Original Soundtrack)"
+      released: "2020-12-11"
+      seconds: 202
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 27
+    - title: "The Sacred And The Profane"
+      artist: "Paul Leonard-Morgan"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 275
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 28
+    - title: "Test of Loyalty (From \"Cyberpunk 2077: Phantom Liberty\" Score)"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077: Phantom Liberty (Original Score)"
+      released: "2023-09-14"
+      seconds: 179
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 29
+    - title: "A Like Supreme"
+      artist: "SAMURAI"
+      album: "A Like Supreme"
+      released: "2020-08-10"
+      seconds: 228
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 30
+    - title: "Resist and Disorder"
+      artist: "Rezodrone & The Cartesian Duelists"
+      album: "Cyberpunk 2077: Radio, Vol. 3 (Original Soundtrack)"
+      released: "2020-12-25"
+      seconds: 257
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 31
+    - title: "Cyberwildlife Park"
+      artist: "Marcin Przybyłowicz"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 132
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 32
+    - title: "Outsider No More"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 230
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 33
+    - title: "Black Dog"
+      artist: "SAMURAI"
+      album: "Black Dog"
+      released: "2020-11-14"
+      seconds: 263
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 34
+    - title: "Bells Of Laguna Bend"
+      artist: "Paul Leonard-Morgan"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 261
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 35
+    - title: "Likewise"
+      artist: "RAT BOY & IBDY"
+      album: "Cyberpunk 2077: Radio, Vol. 3 (Original Soundtrack)"
+      released: "2020-12-25"
+      seconds: 133
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 36
+    - title: "Chippin' In"
+      artist: "Damian Ukeje & P.T. Adamczyk & Kerry Eurodyne"
+      album: "Cyberpunk 2077: Radio, Vol. 3 (Original Soundtrack)"
+      released: "2020-12-25"
+      seconds: 215
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 37
+    - title: "Мусорщики"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 107
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 38
+    - title: "Night City"
+      artist: "R E L & Artemis Delta"
+      album: "Cyberpunk 2077: Radio, Vol. 3 (Original Soundtrack)"
+      released: "2020-12-25"
+      seconds: 193
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 39
+    - title: "Archangel"
+      artist: "SAMURAI"
+      album: "Archangel"
+      released: "2022-02-16"
+      seconds: 179
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 40
+    - title: "Night City Aliens"
+      artist: "The Armed & Homeschool Dropouts"
+      album: "Cyberpunk 2077: Radio, Vol. 1 (Original Soundtrack)"
+      released: "2020-12-11"
+      seconds: 204
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 41
+    - title: "Wushu Dolls"
+      artist: "Marcin Przybyłowicz"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 141
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 42
+    - title: "Orbital Insertion"
+      artist: "Hagop Tchaparian & No Strings Attached"
+      album: "107.5 Darkstar Radio"
+      released: "2023-09-21"
+      seconds: 232
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 43
+    - title: "You Shall Never Have To Forgive Me Again"
+      artist: "P.T. Adamczyk"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 196
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 44
+    - title: "On My Way to Hell"
+      artist: "Połoz & Tinnitus"
+      album: "Cyberpunk 2077: Radio, Vol. 2 (Original Soundtrack)"
+      released: "2020-12-18"
+      seconds: 320
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 45
+    - title: "The Streets Are Long-Ass Gutters"
+      artist: "Paul Leonard-Morgan"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 168
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 46
+    - title: "Gr4ves (feat. Johnny Gr4ves)"
+      artist: "Konrad OldMoney & Kyubik"
+      album: "Cyberpunk 2077: More Music from Night City Radio (Original Soundtrack)"
+      released: "2021-03-26"
+      seconds: 179
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 47
+    - title: "NCPD Prowl"
+      artist: "Marcin Przybyłowicz"
+      album: "Cyberpunk 2077 - Original Score EP"
+      released: "2020-11-19"
+      seconds: 296
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 48
+    - title: "Kill the Messenger"
+      artist: "Rezodrone & The Cartesian Duelists"
+      album: "Cyberpunk 2077: More Music from Night City Radio (Original Soundtrack)"
+      released: "2021-03-26"
+      seconds: 208
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 49
+    - title: "Never Fade Away (SAMURAI Cover)"
+      artist: "P.T. Adamczyk & Olga Jankowska"
+      album: "Cyberpunk 2077 - Original Score"
+      released: "2020-12-11"
+      seconds: 286
+      playlist: "Cyberpunk 2077 Official Playlist"
+      playlist_position: 50

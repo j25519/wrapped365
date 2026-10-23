@@ -18,7 +18,7 @@ ENV XDG_CONFIG_HOME=/tmp/caddy-config \
 
 WORKDIR /srv/wrapped365
 COPY Caddyfile /etc/caddy/Caddyfile
-COPY index.html styles.css app.js demo-tracks.yaml jszip.min.js favicon.svg LICENSE-JSZIP.txt VERSION ./
+COPY index.html styles.css app.js demo-tracks.yaml demo-playlists.yaml jszip.min.js favicon.svg LICENSE-JSZIP.txt VERSION ./
 
 # Numeric, non-root UID/GID; does not depend on /etc/passwd or a writable /home.
 USER 10001:10001
