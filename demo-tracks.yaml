@@ -2794,6 +2794,101 @@ tracks:
     album: "Goodbye & Good Riddance"
     released: "2018-05-23"
     seconds: 75
+  - title: "The Party Never Ends"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 140
+  - title: "Misfit"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 159
+  - title: "AGATS2 (Insecure) (feat. Nicki Minaj)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 199
+  - title: "Lace It (feat. Eminem & benny blanco)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 217
+  - title: "Cuffed"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 244
+  - title: "Empty Out Your Pockets"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 135
+  - title: "KTM Drip"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 240
+  - title: "Love Letter"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 159
+  - title: "Condone It"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 180
+  - title: "Goodbye"
+    artist: "The Kid LAROI"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 161
+  - title: "Party By Myself"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 198
+  - title: "Adore You"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 167
+  - title: "Celebrate (feat. Offset)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 180
+  - title: "Jeffrey"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 175
+  - title: "Barbarian"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 150
+  - title: "Best Friend (feat. Fall Out Boy)"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 156
+  - title: "Floor It"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 192
+  - title: "Oxycodone"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 160
+  - title: "Spend It"
+    artist: "Juice WRLD"
+    album: "The Party Never Ends 2.0"
+    released: "2024-11-29"
+    seconds: 180
   - title: "The Explanation"
     artist: "XXXTENTACION"
     album: "17"
@@ -11952,3 +12047,73 @@ tracks:
     album: "Ransom 2"
     released: "2017-03-24"
     seconds: 170
+  - title: "Thriller (feat. Jay-Z)"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 209
+  - title: "\"The Take Over, The Breaks Over\""
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 213
+  - title: "This Ain't A Scene, It's An Arms Race"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 212
+  - title: "I'm Like A Lawyer With The Way I'm Always Trying To Get You Off (Me & You)"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 211
+  - title: "Hum Hallelujah"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 230
+  - title: "Golden"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 152
+  - title: "Thnks fr th Mmrs"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 203
+  - title: "Don't You Know Who I Think I Am?"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 171
+  - title: "The (After) Life Of The Party"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 201
+  - title: "The Carpal Tunnel Of Love"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 203
+  - title: "Bang The Doldrums"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 211
+  - title: "Fame < Infamy"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 186
+  - title: "You're Crashing, But You're No Wave"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 222
+  - title: "I've Got All This Ringing In My Ears And None On My Fingers"
+    artist: "Fall Out Boy"
+    album: "Infinity On High"
+    released: "2007-02-06"
+    seconds: 246
