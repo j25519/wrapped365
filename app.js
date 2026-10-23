@@ -910,8 +910,9 @@
     const source = list.source === 'social' ? 'Random social collection' : list.source === 'spotify' ? 'Spotify saved playlist' : 'Curated playlist';
     const total = list.tracks.length;
     const artists = new Set(list.tracks.flatMap(track => playlistArtistCredits(track).map(name => keyOf(name)))).size;
-    return `<article class="panel playlist-detail"><div class="playlist-detail-heading"><div><div class="kicker">${source.toUpperCase()}</div><h2>${escapeHtml(list.name)}</h2><p>${number(total)} music tracks · ${number(artists)} artists · ${playlistDurationLabel(list)}${list.lastModifiedDate ? ` · Modified ${escapeHtml(list.lastModifiedDate)}` : ''}</p></div>
-      ${embedded ? `<button type="button" class="btn btn-outline" data-playlist-open="${escapeHtml(list.id)}">View playlist ↗</button>` : `<button type="button" class="btn btn-outline" data-playlist-back>← All playlists</button>`}</div>
+    return `<article class="panel playlist-detail">${embedded ? '' : `<div style="margin-bottom:18px"><button type="button" class="btn btn-outline" data-playlist-back>← All playlists</button></div>`}
+      <div class="playlist-detail-heading"><div><div class="kicker">${source.toUpperCase()}</div><h2>${escapeHtml(list.name)}</h2><p>${number(total)} music tracks · ${number(artists)} artists · ${playlistDurationLabel(list)}${list.lastModifiedDate ? ` · Modified ${escapeHtml(list.lastModifiedDate)}` : ''}</p></div>
+      ${embedded ? `<button type="button" class="btn btn-outline" data-playlist-open="${escapeHtml(list.id)}">View playlist ↗</button>` : ''}</div>
       ${list.description ? `<p class="search-muted">${escapeHtml(list.description)}</p>` : ''}
       <div class="playlist-metrics"><div><strong>${state.report?.isDemo ? number(stats.plays) : '—'}</strong><span>${state.report?.isDemo ? 'Attributed demo plays' : 'Playback source unavailable'}</span></div><div><strong>${state.report?.isDemo ? duration(stats.ms) : '—'}</strong><span>Attributed listening time</span></div><div><strong>${number(total)}</strong><span>Playlist entries</span></div></div>
       ${list.source === 'social' ? `<p class="search-muted">This randomly generated collection remains part of the demo's social library. Its songs also exist in the standard demo music catalogue. Plays are not automatically attributed to this collection.</p>` :
