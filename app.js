@@ -17,15 +17,15 @@
   const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const ERA_SPARK_ICON = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:inline-block;vertical-align:middle"><path d="M12 2v5m0 10v5M2 12h5m10 0h5M4.93 4.93l3.54 3.54m7.06 7.06 3.54 3.54m0-14.14-3.54 3.54m-7.06 7.06-3.54 3.54"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>';
-  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search', 'history', 'soundcheck'];
+  const views = ['home', 'overview', 'artists', 'tracks', 'albums', 'playlists', 'eras', 'patterns', 'search', 'history', 'soundcheck'];
   const $ = id => document.getElementById(id);
-  const state = { owner: null, db: null, report: null, soundcheckUnlocked: false, soundcheckSelected: null, soundcheckDisplayed: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
+  const state = { owner: null, db: null, report: null, soundcheckUnlocked: false, soundcheckSelected: null, soundcheckDisplayed: null, view: 'home', year: 'all', count: 25, sorts: { artists: 'plays', tracks: 'plays', albums: 'plays' }, playlistSelection: null, loading: false, eras: { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } }, eraHistory: null, eraChaptersCache: null, search: { query: '', filter: 'all', selected: null, matches: [], limit: 30 } };
   const navigationStack = [];
-  const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports', soundcheck: 'Soundcheck' };
+  const pageNames = { home: 'Home', overview: 'Overview', artists: 'Artists', tracks: 'Tracks', albums: 'Albums', playlists: 'Playlists', eras: 'Eras', patterns: 'Listening patterns', search: 'Search', history: 'Saved reports', soundcheck: 'Soundcheck' };
 
   function saveNavigation() {
     navigationStack.push({
-      view: state.view, year: state.year, count: state.count, sorts: { ...state.sorts },
+      view: state.view, year: state.year, count: state.count, sorts: { ...state.sorts }, playlistSelection: state.playlistSelection,
       eras: { month: state.eras.month, sort: state.eras.sort, limits: { ...state.eras.limits } },
       search: { query: state.search.query, filter: state.search.filter, selected: state.search.selected && { ...state.search.selected }, limit: state.search.limit },
       listings: Object.fromEntries(['artists', 'tracks', 'albums'].map(type => [type, $(type.slice(0, -1) + '-search').value])),
@@ -43,6 +43,7 @@
     state.year = previous.year;
     state.count = previous.count;
     state.sorts = previous.sorts;
+    state.playlistSelection = previous.playlistSelection;
     state.eras = previous.eras;
     state.search = { ...previous.search, matches: [] };
     $('year-filter').value = state.year;
@@ -281,7 +282,7 @@
   const artistCredits = item => Array.isArray(item?.creditedArtists) && item.creditedArtists.length
     ? item.creditedArtists : item?.artist ? [item.artist] : [];
   const artistCreditLabel = item => artistCredits(item).join(', ');
-  const recordKey = (category, item) => category === 'artists' ? keyOf(item.name) : keyOf(item.artist, item.name);
+  const recordKey = (category, item) => category === 'playlists' ? item.id : category === 'artists' ? keyOf(item.name) : keyOf(item.artist, item.name);
 
   function rankUpdate(map, key, item, ms) {
     let previous = map.get(key);
@@ -549,15 +550,19 @@
     };
     if (report.isDemo && report.demoData) {
       const data = report.demoData;
-      const catalogueKeys = new Set(data.catalogue.map(track => keyOf(track.artist, track.title)));
+      const allDemoTracks = [...data.catalogue, ...(data.curatedTracks || [])];
+      const catalogueKeys = new Set(allDemoTracks.map(track => keyOf(track.artist, track.title)));
       const usedKeys = new Set(all.tracks.map(track => keyOf(track.artist, track.name)));
       const outcomes = {};
       for (const message of data.messages) outcomes[message.outcome || 'unknown'] = (outcomes[message.outcome || 'unknown'] || 0) + 1;
       const longSessions = data.sessions.filter(session => session.trackIds.length >= 3);
       result.demo = { catalogueTracks: data.catalogue.length, distinctCatalogueTracks: catalogueKeys.size,
-        catalogueArtists: new Set(data.catalogue.flatMap(track => (track.creditedArtists || [track.artist]).map(name => keyOf(name)))).size,
-        catalogueAlbums: new Set(data.catalogue.map(track => keyOf(track.artist, track.album))).size,
-        eligibleTracks: data.catalogue.filter(track => Date.parse(track.released + 'T00:00:00Z') <= Date.now()).length,
+        curatedPlaylistTracks: (data.curatedTracks || []).length, curatedPlaylists: (report.playlists || []).length,
+        playlistSessions: data.sessions.filter(session => session.source === 'playlist').length,
+        playlistPlays: Object.values(report.playlistStats?.all || {}).reduce((sum, item) => sum + item.plays, 0),
+        catalogueArtists: new Set(allDemoTracks.flatMap(track => (track.creditedArtists || [track.artist]).map(name => keyOf(name)))).size,
+        catalogueAlbums: new Set(allDemoTracks.map(track => keyOf(track.artist, track.album))).size,
+        eligibleTracks: allDemoTracks.filter(track => Date.parse(track.released + 'T00:00:00Z') <= Date.now()).length,
         playedTracks: [...usedKeys].filter(key => catalogueKeys.has(key)).length,
         sessions: data.sessions.length, multiTrackSessions: longSessions.length,
         chapters: report.monthDetails ? Object.keys(report.monthDetails).length : 0,
@@ -728,7 +733,7 @@
 
   function openView(view, record = true) {
     if (!views.includes(view) || (view === 'soundcheck' && !state.soundcheckUnlocked)) return;
-    if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'eras', 'patterns', 'search'].includes(view)) view = 'home';
+    if (!state.report && ['overview', 'artists', 'tracks', 'albums', 'playlists', 'eras', 'patterns', 'search'].includes(view)) view = 'home';
     if (record && state.view !== view) saveNavigation();
     closeMobileActions();
     closeThemeMenu();
@@ -749,6 +754,7 @@
     navigationStack.length = 0;
     state.soundcheckSelected = null;
     state.report = report;
+    state.playlistSelection = null;
     state.year = 'all';
     state.eras = { month: null, sort: 'plays', limits: { artists: 8, tracks: 10, albums: 8 } };
     state.eraHistory = null;
@@ -768,11 +774,93 @@
     if (state.sorts[category] === 'plays') return list;
     return [...list].sort((a, b) => b.ms - a.ms || b.plays - a.plays);
   }
+  // Curated/saved playlists and randomly generated friend collections coexist.
+  function playlistCollections() {
+    const curated = state.report?.playlists || [];
+    const demo = state.report?.demoData;
+    const social = (demo?.playlists || []).map(list => ({ ...list, source: 'social',
+      tracks: (list.trackIds || []).map((id, index) => {
+        const track = demo.catalogue?.find(record => record.id === id);
+        return track ? { ...track, name: track.title, position: index + 1,
+          seconds: Math.round(track.durationMs / 1000) } : null;
+      }).filter(Boolean) }));
+    return [...curated, ...social];
+  }
+  const playlistStatsFor = id => state.report?.playlistStats?.[state.year]?.[id] ||
+    { plays: 0, ms: 0, tracks: {} };
+  function playlistTrackLength(list) {
+    return list.tracks.reduce((sum, track) => sum + (Number(track.seconds) || 0) * 1000, 0);
+  }
+  function renderPlaylistTrackRows(list) {
+    const stats = playlistStatsFor(list.id);
+    return list.tracks.map((track, index) => {
+      const listen = stats.tracks?.[track.id] || { plays: 0, ms: 0 };
+      const pos = track.position || index + 1;
+      return `<div class="playlist-track-row"><span class="playlist-position">${number(pos)}</span>
+        <div class="playlist-track-meta"><button type="button" data-playlist-track="${escapeHtml(encodeURIComponent(keyOf(track.artist, track.title)))}">${escapeHtml(track.title || track.name)}</button><span>${escapeHtml(track.artist)} · ${escapeHtml(track.album || 'Unknown release')}</span></div>
+        <span class="playlist-track-length">${track.seconds ? duration(track.seconds * 1000) : '—'}</span>
+        <span class="playlist-track-plays">${listen.plays ? `${number(listen.plays)} plays` : '—'}</span></div>`;
+    }).join('');
+  }
+  function playlistDetailMarkup(list, embedded = false) {
+    const stats = playlistStatsFor(list.id);
+    const source = list.source === 'social' ? 'Random social collection' : 'Curated playlist';
+    const total = list.tracks.length;
+    const artists = new Set(list.tracks.map(track => keyOf(track.artist))).size;
+    return `<article class="panel playlist-detail"><div class="playlist-detail-heading"><div><div class="kicker">${source.toUpperCase()}</div><h2>${escapeHtml(list.name)}</h2><p>${number(total)} tracks · ${number(artists)} artists · ${duration(playlistTrackLength(list))} of listed music</p></div>
+      ${embedded ? `<button type="button" class="btn btn-outline" data-playlist-open="${escapeHtml(list.id)}">View playlist ↗</button>` : `<button type="button" class="btn btn-outline" data-playlist-back>← All playlists</button>`}</div>
+      <div class="playlist-metrics"><div><strong>${state.report?.isDemo ? number(stats.plays) : '—'}</strong><span>${state.report?.isDemo ? 'Attributed demo plays' : 'Playback source unavailable'}</span></div><div><strong>${state.report?.isDemo ? duration(stats.ms) : '—'}</strong><span>Attributed listening time</span></div><div><strong>${number(total)}</strong><span>Playlist entries</span></div></div>
+      ${list.source === 'social' ? `<p class="search-muted">This randomly generated collection remains part of the demo's social library. Its songs also exist in the standard demo music catalogue. Plays are not automatically attributed to this collection.</p>` :
+        `<p class="search-muted">${state.report?.isDemo ? 'Saving this playlist does not save its tracks to the music library. The play counts below reflect only sessions explicitly simulated from this playlist; all music plays also feed the normal analytics and Eras.' : 'Saved playlist entries are independent of saved music. The Spotify export does not tell us whether an individual playback originated in this playlist.'}</p>`}
+      <div class="playlist-track-head"><span>TRACKS · PLAYLIST ORDER</span><span>${state.year === 'all' ? 'ALL TIME' : escapeHtml(state.year)}</span></div>
+      <div class="playlist-track-list">${renderPlaylistTrackRows(list)}</div></article>`;
+  }
+  function renderPlaylists() {
+    const lists = playlistCollections();
+    const selected = lists.find(list => list.id === state.playlistSelection);
+    $('playlist-listing').classList.toggle('hidden', !!selected);
+    $('playlist-detail-container').classList.toggle('hidden', !selected);
+    if (selected) { $('playlist-detail-container').innerHTML = playlistDetailMarkup(selected); return; }
+    const renderGroup = (items, node, empty) => {
+      $(node).innerHTML = items.length ? items.map(list => `<button class="playlist-card" type="button" data-playlist-open="${escapeHtml(list.id)}"><span class="playlist-card-icon">≡</span><strong>${escapeHtml(list.name)}</strong><span>${number(list.tracks.length)} tracks · ${duration(playlistTrackLength(list))}</span><small>${list.source === 'social' ? 'Social demo collection' : `${state.report?.isDemo ? `${number(playlistStatsFor(list.id).plays)} attributed plays` : 'Saved playlist'}`} ↗</small></button>`).join('') : emptyMessage(empty);
+    };
+    renderGroup(lists.filter(list => list.source !== 'social'), 'playlist-curated', 'No saved playlists have been imported yet.');
+    $('playlist-social-section').classList.toggle('hidden', !lists.some(list => list.source === 'social'));
+    renderGroup(lists.filter(list => list.source === 'social'), 'playlist-social', '');
+  }
+
+  function playlistSearchEntities(category) {
+    const lists = playlistCollections();
+    if (category === 'playlists') return lists.map(list => ({ id: list.id, name: list.name,
+      plays: playlistStatsFor(list.id).plays, ms: playlistStatsFor(list.id).ms,
+      source: list.source, trackCount: list.tracks.length }));
+    const originals = period()?.[category] || [];
+    const existing = new Set(originals.map(item => recordKey(category, item)));
+    const extra = new Map();
+    for (const list of lists.filter(item => item.source !== 'social')) {
+      for (const track of list.tracks) {
+        const entries = category === 'tracks' ? [{ name: track.name || track.title, artist: track.artist,
+          album: track.album, creditedArtists: track.creditedArtists || [track.artist], plays: 0, ms: 0, playlistOnly: true }] :
+          category === 'artists' ? (track.creditedArtists || [track.artist]).map(name => ({ name, plays: 0, ms: 0, playlistOnly: true })) :
+          category === 'albums' ? [{ name: track.album, artist: track.artist, plays: 0, ms: 0, playlistOnly: true }] : [];
+        for (const item of entries) {
+          const key = recordKey(category, item);
+          if (item.name && !existing.has(key) && !extra.has(key)) extra.set(key, item);
+        }
+      }
+    }
+    return [...originals, ...extra.values()];
+  }
+  function searchEntity(category, key) {
+    return playlistSearchEntities(category).find(item => recordKey(category, item) === key);
+  }
+
   function renderCurrent() {
     if (state.view === 'soundcheck') { void renderSoundcheck(); return; }
     if (!state.report) return;
     if (state.view === 'overview') renderOverview();
     if (['artists', 'tracks', 'albums'].includes(state.view)) renderListing(state.view);
+    if (state.view === 'playlists') renderPlaylists();
     if (state.view === 'patterns') renderPatterns();
     if (state.view === 'eras') renderEras();
     if (state.view === 'search') renderSearch();
@@ -1089,7 +1177,7 @@
 
   // Unified Search works against the same aggregated year and month data as
   // the rest of the app. It never sends a query to Spotify or an external API.
-  const searchCategories = { artists: 'Artist', tracks: 'Track', albums: 'Album' };
+  const searchCategories = { artists: 'Artist', tracks: 'Track', albums: 'Album', playlists: 'Playlist' };
   function exploreItem(category, item) {
     saveNavigation();
     state.search.query = item.name;
@@ -1122,14 +1210,14 @@
     });
     const query = state.search.query.trim().toLocaleLowerCase('en-GB');
     const matches = [];
-    for (const category of ['tracks', 'artists', 'albums']) {
+    for (const category of ['tracks', 'artists', 'albums', 'playlists']) {
       if (state.search.filter !== 'all' && state.search.filter !== category) continue;
-      for (const item of period()?.[category] || []) {
+      for (const item of playlistSearchEntities(category)) {
         const score = searchScore(item, category, query);
         if (score >= 0) matches.push({ category, item, score });
       }
     }
-    matches.sort((a, b) => b.score - a.score || b.item.plays - a.item.plays || b.item.ms - a.item.ms);
+    matches.sort((a, b) => b.score - a.score || (b.item.plays || 0) - (a.item.plays || 0) || (b.item.ms || 0) - (a.item.ms || 0));
     state.search.matches = matches;
     renderSearchResults();
     renderSearchDetail();
@@ -1139,16 +1227,16 @@
     const results = $('search-results');
     $('search-result-count').textContent = `${number(matches.length)} ${matches.length === 1 ? 'result' : 'results'}`;
     if (!matches.length) {
-      results.innerHTML = emptyMessage('No matches in this listening history. Try a different track, artist, or album.');
+      results.innerHTML = emptyMessage('No matches in your listening history or playlists. Try another search.');
     } else {
       results.innerHTML = matches.slice(0, state.search.limit).map(({ category, item }, index) => {
         const selected = state.search.selected?.category === category && state.search.selected.key === recordKey(category, item);
         const sub = category === 'tracks' ? `${artistCreditLabel(item)}${item.album ? ' · ' + item.album : ''}` :
-          category === 'albums' ? item.artist : `${number(item.plays)} credited plays`;
+          category === 'albums' ? item.artist : category === 'playlists' ? `${number(item.trackCount)} tracks · ${item.source === 'social' ? 'Social collection' : 'Saved playlist'}` : `${number(item.plays)} credited plays`;
         return `<button type="button" class="search-result ${selected ? 'selected' : ''}" data-search-result="${index}" aria-pressed="${selected}">
-          <span class="search-result-art" aria-hidden="true">${category === 'tracks' ? '♫' : category === 'albums' ? '▤' : '◉'}</span>
+          <span class="search-result-art" aria-hidden="true">${category === 'tracks' ? '♫' : category === 'albums' ? '▤' : category === 'playlists' ? '≡' : '◉'}</span>
           <span class="search-result-main"><strong title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</strong><small title="${escapeHtml(sub)}">${escapeHtml(sub)}</small></span>
-          <span class="search-result-meta"><span>${escapeHtml(searchCategories[category])}</span><b>${number(item.plays)} plays</b></span>
+          <span class="search-result-meta"><span>${escapeHtml(searchCategories[category])}</span><b>${item.playlistOnly ? 'Playlist only' : `${number(item.plays)} plays`}</b></span>
           <span class="search-result-arrow" aria-hidden="true">↗</span></button>`;
       }).join('');
     }
@@ -1196,9 +1284,12 @@
   function searchDemoConnections(category, item) {
     if (category !== 'tracks' || !state.report?.isDemo || !state.report.demoData) return '';
     const data = state.report.demoData;
-    const track = (data.catalogue || []).find(row => keyOf(row.artist, row.title) === keyOf(item.artist, item.name));
+    const track = [...(data.catalogue || []), ...(data.curatedTracks || [])].find(row => keyOf(row.artist, row.title) === keyOf(item.artist, item.name));
     if (!track) return '';
-    const playlists = (data.playlists || []).filter(list => list.trackIds.includes(track.id));
+    const playlists = [
+      ...(data.playlists || []).filter(list => list.trackIds.includes(track.id)),
+      ...(state.report.playlists || []).filter(list => list.tracks.some(entry => entry.id === track.id))
+    ];
     const shares = (data.messages || []).filter(message => message.trackId === track.id && message.direction === 'received');
     const senders = [...new Set(shares.map(message => (data.friends || []).find(friend => friend.id === message.friendId)?.name).filter(Boolean))];
     const saved = (data.savedTrackIds || []).includes(track.id);
@@ -1229,16 +1320,21 @@
     const target = $('search-detail');
     const selected = state.search.selected;
     if (!selected) {
-      target.innerHTML = `<div class="panel search-detail-placeholder"><span aria-hidden="true">♫</span><h2>Every song has a story.</h2><p>Choose a track, artist, or album to discover its listening timeline, milestones, and connections to your musical eras.</p></div>`;
+      target.innerHTML = `<div class="panel search-detail-placeholder"><span aria-hidden="true">♫</span><h2>Every song has a story.</h2><p>Choose a track, artist, album, or playlist to discover its listening timeline, milestones, and connections to your musical eras.</p></div>`;
       return;
     }
-    const item = (period()?.[selected.category] || []).find(row => recordKey(selected.category, row) === selected.key);
+    const item = searchEntity(selected.category, selected.key);
     if (!item) {
       state.search.selected = null;
       target.innerHTML = emptyMessage('This entry is not present in the selected year. Try All time.');
       return;
     }
     const category = selected.category;
+    if (category === 'playlists') {
+      const list = playlistCollections().find(list => list.id === item.id);
+      target.innerHTML = list ? playlistDetailMarkup(list, true) : emptyMessage('This playlist is unavailable.');
+      return;
+    }
     const history = searchMonthlyHistory(category, item);
     const first = history[0]?.month || null;
     const last = history.at(-1)?.month || null;
@@ -1246,7 +1342,7 @@
     const eras = searchEraLinks(category, item);
     const subtitle = category === 'tracks' ? `${artistCreditLabel(item)}${item.album ? ' · ' + item.album : ''}` :
       category === 'albums' ? item.artist : 'Artist';
-    const categories = { artists: '◉', tracks: '♫', albums: '▤' };
+    const categories = { artists: '◉', tracks: '♫', albums: '▤', playlists: '≡' };
     const stats = [
       ['Qualifying plays', number(item.plays)], ['Listening time', `${hours(item.ms)} hrs`],
       ['First recorded month', first ? monthShort(first) : 'Unavailable'],
@@ -1336,6 +1432,59 @@
     return tracks;
   }
 
+  // A separate source of truth for curated demo playlists. Do not pass these
+  // tracks into the saved-library pool or the randomly generated friend playlists.
+  async function loadDemoPlaylists() {
+    const response = await fetch('./demo-playlists.yaml', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Could not load demo-playlists.yaml (HTTP ${response.status}). Keep it alongside demo-tracks.yaml.`);
+    const lists = [];
+    let current = null, track = null, root = false;
+    const lines = (await response.text()).split(/\r?\n/);
+    for (const [index, line] of lines.entries()) {
+      if (!line.trim() || line.trim().startsWith('#') || line.trim() === '---') continue;
+      if (line === 'playlists:') { if (root) throw new Error('Duplicate playlists root.'); root = true; continue; }
+      const header = line.match(/^  ([a-zA-Z0-9_-]+):\s*$/);
+      const title = line.match(/^    - title: (.+)$/);
+      const property = line.match(/^      (artist|album|released|seconds|credits|playlist|playlist_position): (.+)$/);
+      if (header && root) {
+        if (lists.some(list => list.id === `curated:${header[1]}`)) throw new Error(`Duplicate playlist key ${header[1]}.`);
+        current = { id: `curated:${header[1]}`, slug: header[1], name: '', source: 'curated', tracks: [] };
+        lists.push(current); track = null;
+      } else if (title && current) {
+        try { track = { title: JSON.parse(title[1]) }; }
+        catch { throw new Error(`Invalid playlist track title on line ${index + 1}. Use double-quoted strings.`); }
+        current.tracks.push(track);
+      } else if (property && track) {
+        try { track[property[1]] = JSON.parse(property[2]); }
+        catch { throw new Error(`Invalid playlist property on line ${index + 1}. Quote text with double quotes.`); }
+      } else throw new Error(`Invalid demo-playlists.yaml format at line ${index + 1}.`);
+    }
+    if (!root || !lists.length) throw new Error('demo-playlists.yaml must contain playlists with named collections.');
+    for (const list of lists) {
+      if (!list.tracks.length) throw new Error(`Playlist ${list.slug} has no tracks.`);
+      const positions = new Set();
+      for (const [index, item] of list.tracks.entries()) {
+        if (!['title', 'artist', 'album', 'released'].every(field => typeof item[field] === 'string' && item[field].trim()) ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(item.released) ||
+            !Number.isInteger(item.seconds) || item.seconds <= 0 ||
+            !Number.isInteger(item.playlist_position) || item.playlist_position < 1 ||
+            (item.credits !== undefined && (!Array.isArray(item.credits) || !item.credits.every(name => typeof name === 'string' && name.trim())))) {
+          throw new Error(`Invalid track ${index + 1} in playlist ${list.slug}.`);
+        }
+        const date = new Date(`${item.released}T00:00:00Z`);
+        if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== item.released)
+          throw new Error(`Invalid release date for ${item.title} in playlist ${list.slug}.`);
+        if (positions.has(item.playlist_position)) throw new Error(`Duplicate position ${item.playlist_position} in ${list.slug}.`);
+        positions.add(item.playlist_position);
+        if (typeof item.playlist !== 'string' || !item.playlist.trim()) throw new Error(`Missing playlist name for ${item.title}.`);
+        if (!list.name) list.name = item.playlist;
+        else if (list.name !== item.playlist) throw new Error(`Conflicting playlist names in ${list.slug}.`);
+      }
+      list.tracks.sort((a, b) => a.playlist_position - b.playlist_position);
+    }
+    return lists;
+  }
+
   async function makeDemo() {
     if (state.loading) return;
     const trace = startTrace('demo');
@@ -1348,9 +1497,9 @@
     try {
       await letLoadingPaint();
       const loadedAt = performance.now();
-      const tracks = await loadDemoTracks();
+      const [tracks, definedPlaylists] = await Promise.all([loadDemoTracks(), loadDemoPlaylists()]);
       timeStage(trace, 'Load catalogue', loadedAt);
-      trace.files = 1;
+      trace.files = 2;
       phase = 'Generate listening history';
       const generatingAt = performance.now();
       updateLoading(randomising ? 'Randomising your demo…' : 'Building your demo…', 'Creating years of listening activity.');
@@ -1387,6 +1536,29 @@
           id, title, artist, album, released, credits, releasedAt: Date.parse(released + 'T00:00:00Z'),
           length: seconds ? seconds * 1000 : randomInt(115, 270) * 1000
         };
+      });
+      // Exact artist/title/album matches share a recording ID, but ownership stays
+      // separate. Different recordings or releases never collapse on title alone.
+      const identity = new Map(catalogue.map(track => [keyOf(track.artist, track.title, track.album), track]));
+      const playlistCatalogue = [];
+      const curatedPlaylists = definedPlaylists.map(list => {
+        const members = list.tracks.map(entry => {
+          const key = keyOf(entry.artist, entry.title, entry.album);
+          let track = identity.get(key);
+          if (!track) {
+            const credits = creditedNames([...(entry.credits || []), ...featureCreditsFromTitle(entry.title)])
+              .filter(name => keyOf(name) !== keyOf(entry.artist));
+            track = { id: catalogue.length + playlistCatalogue.length, title: entry.title,
+              artist: entry.artist, album: entry.album, released: entry.released,
+              credits, releasedAt: Date.parse(entry.released + 'T00:00:00Z'), length: entry.seconds * 1000 };
+            identity.set(key, track);
+            playlistCatalogue.push(track);
+          }
+          return track;
+        });
+        return { id: list.id, slug: list.slug, name: list.name, source: 'curated',
+          tracks: members.map((track, index) => ({ ...track, position: list.tracks[index].playlist_position })),
+          availableAt: Math.max(...members.map(track => track.releasedAt)) };
       });
       for (const artist of artists) artistWeights.set(artist, 0.75 + 0.85 * rand());
       for (const track of catalogue) {
@@ -1455,6 +1627,8 @@
       const artistCooldowns = new Map();
       const albumPhases = new Map();
       const albumCooldowns = new Map();
+      const playlistPhases = new Map();
+      const playlistCooldowns = new Map();
       let previousObsession = null;
       let previousYearArtists = [];
       const habit = randomInt(13, 20); // Average tracks per calendar day, before lighter early years.
@@ -1625,6 +1799,21 @@
             (albumBoosts.get(keyOf(album.artist, album.tracks[0].album)) || 1) *
             (yearSet.has(album.artist) ? 1.1 : 1) *
             (album.tracks[0].releasedAt > monthStart - 240 * dayMs ? 1.65 : 1));
+          const availablePlaylists = curatedPlaylists.filter(list => list.availableAt < monthEnd);
+          for (const [id, phase] of playlistPhases) {
+            if (!availablePlaylists.some(list => list.id === id) ||
+                monthIndex >= phase.start + phase.peakMonths + phase.fadeMonths) playlistPhases.delete(id);
+          }
+          if (availablePlaylists.length && rand() < .48) {
+            const candidates = availablePlaylists.filter(list => !playlistPhases.has(list.id) &&
+              (playlistCooldowns.get(list.id) || 0) <= monthIndex);
+            if (candidates.length) {
+              const list = choose(candidates);
+              const peakMonths = randomInt(1, 3), fadeMonths = randomInt(1, 2);
+              playlistPhases.set(list.id, { start: monthIndex, peakMonths, fadeMonths });
+              playlistCooldowns.set(list.id, monthIndex + peakMonths + fadeMonths + randomInt(5, 9));
+            }
+          }
           const activity = yearActivity * (0.78 + rand() * .46);
           const availabilityFactor = Math.min(1, 0.50 + monthTracks.length / 320);
           const days = Math.ceil((monthEnd - monthStart) / dayMs);
@@ -1651,8 +1840,14 @@
               const flavour = rand();
               const albumSession = flavour < .32 && albums.length > 0;
               const artistSession = flavour >= .32 && flavour < .55;
+              const playlistSession = flavour >= .55 && flavour < .73 && availablePlaylists.some(list => list.availableAt <= sessionStart && list.tracks.some(track => !storyKeys.has(storyKey(track))));
               const exploring = flavour >= .83;
-              const shuffle = !albumSession && rand() < (exploring ? .82 : .55);
+              const shuffle = playlistSession ? rand() < .70 : !albumSession && rand() < (exploring ? .82 : .55);
+              const selectedPlaylist = playlistSession ? pickPool(makePool(availablePlaylists.filter(list => list.availableAt <= sessionStart && list.tracks.some(track =>
+                !storyKeys.has(storyKey(track)))), list =>
+                Math.sqrt(list.tracks.length) * (playlistPhases.has(list.id) ? phaseBoost(playlistPhases.get(list.id), monthIndex, 5) : 1))) : null;
+              const playlistMembers = selectedPlaylist ? selectedPlaylist.tracks.filter(track => track.releasedAt <= sessionStart && !storyKeys.has(storyKey(track))) : [];
+              let playlistIndex = playlistMembers.length && !shuffle && rand() < .76 ? 0 : randomInt(0, Math.max(0, playlistMembers.length - 1));
               let album = albumSession ? pickPool(albumPool) : null;
               let albumIndex = album ? (rand() < .75 ? 0 : randomInt(0, album.tracks.length - 1)) : 0;
               let artist = artistSession ? (focus.length && rand() < .75
@@ -1662,7 +1857,10 @@
               let cursor = sessionStart;
               for (let i = 0; i < size; i++) {
                 let chosen = null;
-                if (album) {
+                if (selectedPlaylist && playlistMembers.length) {
+                  chosen = shuffle ? choose(playlistMembers) : playlistMembers[playlistIndex++ % playlistMembers.length];
+                }
+                if (!chosen && album) {
                   if (albumIndex >= album.tracks.length) {
                     album = pickPool(albumPool);
                     albumIndex = album && rand() < .75 ? 0 : album ? randomInt(0, album.tracks.length - 1) : 0;
@@ -1673,7 +1871,7 @@
                 if (!chosen && artist && rand() < .80) chosen = pickAvailable(artistPools.get(artist), cursor, byArtist.get(artist));
                 if (!chosen) chosen = pickAvailable(exploring ? discovery : general, cursor, monthTracks);
                 if (!chosen) break;
-                if (!album && i && chosen.id === events[events.length - 1]?.id) {
+                if (!album && !selectedPlaylist && i && chosen.id === events[events.length - 1]?.id) {
                   chosen = pickAvailable(exploring ? discovery : general, cursor, monthTracks) || chosen;
                 }
                 const skipped = rand() < (albumSession ? .055 : shuffle ? .15 : .085);
@@ -1691,7 +1889,7 @@
                   offline: rand() < .08,
                   reason_start: i ? 'trackdone' : 'clickrow',
                   reason_end: skipped ? 'fwdbtn' : 'trackdone',
-                  demo_track_id: chosen.id
+                  demo_track_id: chosen.id, ...(selectedPlaylist ? { demo_playlist_id: selectedPlaylist.id } : {})
                 };
                 yearRows.push(entry);
                 events.push({ id: chosen.id, ts: entry.ts });
@@ -1699,7 +1897,8 @@
               }
               if (events.length) {
                 allSessions.push({ started: new Date(sessionStart).toISOString(),
-                  ended: events[events.length - 1].ts, platform: mode, trackIds: events.map(event => event.id) });
+                  ended: events[events.length - 1].ts, platform: mode, trackIds: events.map(event => event.id),
+                  ...(selectedPlaylist ? { playlistId: selectedPlaylist.id, source: 'playlist' } : { source: albumSession ? 'album' : artistSession ? 'artist' : 'mixed' }) });
                 sessionCount++;
               }
             }
@@ -1911,15 +2110,33 @@
       const aggregationAt = performance.now();
       const builder = makeBuilder();
       await ingest(builder, rows);
-      builder.sourceFiles = 1;
+      builder.sourceFiles = 2;
       timeStage(trace, 'Aggregate events', aggregationAt);
       const report = finishBuilder(builder, 'Randomised demo · not your data', 'Demo data', true);
+      report.playlists = curatedPlaylists.map(list => ({ id: list.id, slug: list.slug, name: list.name,
+        source: 'curated', tracks: list.tracks.map(track => ({ id: track.id, name: track.title, title: track.title,
+          artist: track.artist, album: track.album, released: track.released, seconds: Math.round(track.length / 1000),
+          position: track.position, creditedArtists: [track.artist, ...track.credits] })) }));
+      report.playlistStats = { all: {} };
+      for (const row of rows) {
+        if (!row.demo_playlist_id || row.ms_played < MIN_PLAY_MS) continue;
+        const year = row.ts.slice(0, 4);
+        for (const periodKey of ['all', year]) {
+          const grouped = report.playlistStats[periodKey] ||= {};
+          const summary = grouped[row.demo_playlist_id] ||= { plays: 0, ms: 0, tracks: {} };
+          summary.plays++; summary.ms += row.ms_played;
+          const track = summary.tracks[row.demo_track_id] ||= { plays: 0, ms: 0 };
+          track.plays++; track.ms += row.ms_played;
+        }
+      }
       report.demoData = {
         catalogue: catalogue.map(({ id, title, artist, album, released, length, credits }) => ({ id, title, artist, album, released, durationMs: length, creditedArtists: [artist, ...credits] })),
         events: rows,
         sessions: allSessions,
         eras: years,
-        playlists,
+        playlists, // Existing randomly generated social/friend playlists
+        curatedTracks: playlistCatalogue.map(({ id, title, artist, album, released, length, credits }) =>
+          ({ id, title, artist, album, released, durationMs: length, creditedArtists: [artist, ...credits] })),
         friends,
         messages,
         savedTrackIds: catalogue.filter(track => rand() < (messages.some(message =>
@@ -2045,13 +2262,30 @@
       if (!element || !state.report) return;
       const category = element.dataset.exploreCategory;
       const key = decodeURIComponent(element.dataset.exploreKey);
-      const item = (period()?.[category] || []).find(row => recordKey(category, row) === key);
+      const item = searchEntity(category, key);
       if (item) exploreItem(category, item);
     });
+    const playlistClick = event => {
+      const back = event.target.closest('[data-playlist-back]');
+      if (back) { saveNavigation(); state.playlistSelection = null; renderPlaylists(); return; }
+      const open = event.target.closest('[data-playlist-open]');
+      if (open) {
+        const list = playlistCollections().find(list => list.id === open.dataset.playlistOpen);
+        if (!list) return;
+        saveNavigation(); state.playlistSelection = list.id; openView('playlists', false); return;
+      }
+      const track = event.target.closest('[data-playlist-track]');
+      if (track) {
+        const item = playlistSearchEntities('tracks').find(item => keyOf(item.artist, item.name) === decodeURIComponent(track.dataset.playlistTrack));
+        if (item) exploreItem('tracks', item);
+      }
+    };
+    $('view-playlists').addEventListener('click', playlistClick);
+    $('search-detail').addEventListener('click', playlistClick);
     $('unified-search').addEventListener('input', event => {
       state.search.query = event.target.value;
       state.search.selected = null;
-      state.search.limit = 30;
+      state.search.limit = 32;
       renderSearch();
     });
     $('view-search').addEventListener('click', event => {
@@ -2270,17 +2504,21 @@
         </article></div>${soundcheckDiversityTrend(data, history)}</section>`;
     const demoSection = !isDemo ? '' : `<div class="sc-panels">
       <article class="panel"><div class="kicker">CATALOGUE</div><h2>Simulation coverage</h2>
-        ${soundcheckRow('Catalogue entries', countValue(demo.catalogueTracks))}
+        ${soundcheckRow('Library catalogue entries', countValue(demo.catalogueTracks))}
+        ${soundcheckRow('Additional playlist-only tracks', countValue(demo.curatedPlaylistTracks))}
         ${soundcheckRow('Distinct songs', countValue(demo.distinctCatalogueTracks))}
         ${soundcheckRow('Eligible releases', countValue(demo.eligibleTracks))}
         ${soundcheckRow('Albums / releases', countValue(demo.catalogueAlbums))}
         ${soundcheckRow('Multi-track sessions', countValue(demo.multiTrackSessions))}
         ${soundcheckRow('Total sessions', countValue(demo.sessions))}
+        ${soundcheckRow('Curated playlists', countValue(demo.curatedPlaylists))}
+        ${soundcheckRow('Playlist sessions', countValue(demo.playlistSessions))}
+        ${soundcheckRow('Attributed playlist plays', countValue(demo.playlistPlays))}
         ${soundcheckRow('Months represented', countValue(demo.chapters))}
       </article>
       <article class="panel"><div class="kicker">SOCIAL SIMULATION</div><h2>Recommendation outcomes</h2>
         ${soundcheckRow('Friends', countValue(demo.friends))}
-        ${soundcheckRow('Playlists', countValue(demo.playlists))}
+        ${soundcheckRow('Random friend playlists', countValue(demo.playlists))}
         ${Object.entries(demo.recommendationOutcomes).sort((a,b)=>b[1]-a[1]).map(([name,value])=>soundcheckRow(name.replace(/-/g,' '), countValue(value))).join('')}
       </article></div>`;
     return `<div class="sc-cards">${cards.map(args => soundcheckMetric(...args)).join('')}</div>
@@ -2364,7 +2602,7 @@
     }
     if (diagnostic.source === 'demo' && diagnostic.demo) {
       payload.demo = {
-        ...pickNumbers(diagnostic.demo, ['catalogueTracks', 'distinctCatalogueTracks', 'catalogueArtists', 'catalogueAlbums', 'eligibleTracks', 'playedTracks', 'sessions', 'multiTrackSessions', 'chapters', 'friends', 'playlists', 'recommendations']),
+        ...pickNumbers(diagnostic.demo, ['catalogueTracks', 'distinctCatalogueTracks', 'catalogueArtists', 'catalogueAlbums', 'eligibleTracks', 'playedTracks', 'sessions', 'multiTrackSessions', 'chapters', 'friends', 'playlists', 'curatedPlaylists', 'curatedPlaylistTracks', 'playlistSessions', 'playlistPlays', 'recommendations']),
         recommendationOutcomes: Object.fromEntries(['new-discovery', 'new-favourite', 'rediscovered', 'already-loved', 'followed-up', 'not-followed-up', 'unknown'].filter(key => numeric(diagnostic.demo.recommendationOutcomes?.[key]) !== null).map(key => [key, numeric(diagnostic.demo.recommendationOutcomes[key])]))
       };
       if (diagnostic.demo.diversity) payload.demo.diversity = pickNumbers(diagnostic.demo.diversity,
