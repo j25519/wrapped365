@@ -932,7 +932,7 @@
         type = 'Extended Streaming History';
         if (!historyFiles.length) { historyFiles = files.filter(x => basicName(x.name)); type = 'Account streaming history'; }
         const playlistFiles = files.filter(x => playlistFilename(x.name));
-        if (!historyFiles.length && !playlistFiles.length) throw new Error('No Spotify listening-history or playlist JSON files were found. Expected Streaming_History_Audio_*.json, StreamingHistory_music_*.json or Playlist1.json.');
+        if (!historyFiles.length && !playlistFiles.length) throw new Error('No Spotify listening history or playlist JSON files were found. Expected Streaming_History_Audio_*.json, StreamingHistory_music_*.json or Playlist1.json.');
         const candidates = [...historyFiles.map(entry => ({entry, kind: 'history'})),
           ...playlistFiles.map(entry => ({entry, kind: 'playlist'}))];
         let totalSize = 0;
@@ -1718,8 +1718,8 @@
       ${related.length ? `<article class="panel search-detail-section"><div class="panel-heading"><div><div class="kicker">GO DEEPER</div><h2>${category === 'albums' ? 'Most played album tracks' : 'Most played tracks featuring this artist'}</h2></div></div><div class="rank-list">${related.map((row, i) => rankRow(row, i, 'tracks', 'plays')).join('')}</div></article>` : ''}
       ${searchDemoConnections(category, item)}
       ${searchRealPlaylistConnections(category, item)}
-      ${category === 'tracks' && !state.report?.isDemo ? `<p class="search-muted">Spotify's standard listening-history export does not identify which playlist a track was played from. Saved playlist memberships come from Account Data only.</p>` : ''}
-      <p class="search-muted">Counts reflect streams of at least 30 seconds, grouped by UTC month. An era connection means this was among that chapter's leading entries. Historical reports without month-level data cannot show a precise timeline.</p>`;
+      ${category === 'tracks' && !state.report?.isDemo ? `<p class="search-muted">Spotify's standard listening history export does not identify which playlist a track was played from. Saved playlist memberships come from Account Data only.</p>` : ''}
+      <p class="search-muted">Counts reflect streams of at least 30 seconds, grouped by UTC month. An era connection means this was among that chapter's leading entries. Historical reports without month level data cannot show a precise timeline.</p>`;
   }
 
   async function refreshHistoryCount() {
@@ -2861,7 +2861,7 @@
     };
     return `<section class="sc-import-trends" aria-label="Compare Spotify imports">
       <div class="sc-panel-head"><div><div class="kicker">YOUR LISTENING HISTORY OVER TIME</div><h2>Across your uploads</h2></div></div>
-      <p class="search-muted">Compare the latest ${runs.length} successful listening-history ${runs.length === 1 ? 'import' : 'imports'}. Each bar represents a complete imported history, not just the activity since the previous upload. The highlighted bar is the selected report.</p>
+      <p class="search-muted">Compare the latest ${runs.length} successful listening history ${runs.length === 1 ? 'import' : 'imports'}. Each bar represents a complete imported history, not just the activity since the previous upload. The highlighted bar is the selected report.</p>
       <div class="sc-import-trend-grid">${metrics.map(chart).join('')}</div>
       <p class="sc-footnote">${selectedIsOlder ? 'The selected older import replaces the oldest recent import in this comparison. ' : ''}Playlist only uploads and failed imports are excluded. Processing times can also vary with device load and browser performance.</p>
     </section>`;
