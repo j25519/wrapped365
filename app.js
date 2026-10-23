@@ -1804,6 +1804,15 @@
             if (!availablePlaylists.some(list => list.id === id) ||
                 monthIndex >= phase.start + phase.peakMonths + phase.fadeMonths) playlistPhases.delete(id);
           }
+          // Scale playlist listening to the *breadth* of curated music rather than
+          // reserving a fixed 18% of every session for even a single small playlist.
+          // The temporary phase multiplier still gives playlists real binge months;
+          // track/artist/album play counts and Eras are left completely unchanged.
+          const uniquePlaylistTracks = new Set(availablePlaylists.flatMap(list =>
+            list.tracks.filter(track => track.releasedAt < monthEnd && !storyKeys.has(storyKey(track)))
+              .map(track => track.id)));
+          const playlistBreadth = uniquePlaylistTracks.size /
+            (monthTracks.length + uniquePlaylistTracks.size || 1);
           if (availablePlaylists.length && rand() < .48) {
             const candidates = availablePlaylists.filter(list => !playlistPhases.has(list.id) &&
               (playlistCooldowns.get(list.id) || 0) <= monthIndex);
@@ -1814,6 +1823,12 @@
               playlistCooldowns.set(list.id, monthIndex + peakMonths + fadeMonths + randomInt(5, 9));
             }
           }
+          const strongestPlaylistPhase = availablePlaylists.reduce((boost, list) => {
+            const phase = playlistPhases.get(list.id);
+            return Math.max(boost, phase ? phaseBoost(phase, monthIndex, 3) : 1);
+          }, 1);
+          const playlistSessionChance = Math.min(.15,
+            (.015 + .30 * playlistBreadth) * strongestPlaylistPhase);
           const activity = yearActivity * (0.78 + rand() * .46);
           const availabilityFactor = Math.min(1, 0.50 + monthTracks.length / 320);
           const days = Math.ceil((monthEnd - monthStart) / dayMs);
@@ -1838,15 +1853,19 @@
               if (sessionStart >= monthEnd || sessionStart >= cutoff) continue;
               const mode = choose(platforms);
               const flavour = rand();
-              const albumSession = flavour < .32 && albums.length > 0;
-              const artistSession = flavour >= .32 && flavour < .55;
-              const playlistSession = flavour >= .55 && flavour < .73 && availablePlaylists.some(list => list.availableAt <= sessionStart && list.tracks.some(track => !storyKeys.has(storyKey(track))));
-              const exploring = flavour >= .83;
+              const eligiblePlaylists = availablePlaylists.filter(list =>
+                list.availableAt <= sessionStart && list.tracks.some(track => !storyKeys.has(storyKey(track))));
+              const playlistSession = eligiblePlaylists.length > 0 && rand() < playlistSessionChance;
+              const albumSession = !playlistSession && flavour < .32 && albums.length > 0;
+              const artistSession = !playlistSession && flavour >= .32 && flavour < .55;
+              const exploring = !playlistSession && flavour >= .83;
               const shuffle = playlistSession ? rand() < .70 : !albumSession && rand() < (exploring ? .82 : .55);
-              const selectedPlaylist = playlistSession ? pickPool(makePool(availablePlaylists.filter(list => list.availableAt <= sessionStart && list.tracks.some(track =>
-                !storyKeys.has(storyKey(track)))), list =>
+              const selectedPlaylist = playlistSession ? pickPool(makePool(eligiblePlaylists, list =>
                 Math.sqrt(list.tracks.length) * (playlistPhases.has(list.id) ? phaseBoost(playlistPhases.get(list.id), monthIndex, 5) : 1))) : null;
               const playlistMembers = selectedPlaylist ? selectedPlaylist.tracks.filter(track => track.releasedAt <= sessionStart && !storyKeys.has(storyKey(track))) : [];
+              // Spotify-style shuffle visits the available tracks before repeating,
+              // rather than independently drawing the same song multiple times.
+              const playlistQueue = selectedPlaylist && shuffle ? shuffled(playlistMembers) : null;
               let playlistIndex = playlistMembers.length && !shuffle && rand() < .76 ? 0 : randomInt(0, Math.max(0, playlistMembers.length - 1));
               let album = albumSession ? pickPool(albumPool) : null;
               let albumIndex = album ? (rand() < .75 ? 0 : randomInt(0, album.tracks.length - 1)) : 0;
@@ -1858,7 +1877,10 @@
               for (let i = 0; i < size; i++) {
                 let chosen = null;
                 if (selectedPlaylist && playlistMembers.length) {
-                  chosen = shuffle ? choose(playlistMembers) : playlistMembers[playlistIndex++ % playlistMembers.length];
+                  if (shuffle) {
+                    if (!playlistQueue.length) playlistQueue.push(...shuffled(playlistMembers));
+                    chosen = playlistQueue.pop();
+                  } else chosen = playlistMembers[playlistIndex++ % playlistMembers.length];
                 }
                 if (!chosen && album) {
                   if (albumIndex >= album.tracks.length) {
@@ -2285,7 +2307,7 @@
     $('unified-search').addEventListener('input', event => {
       state.search.query = event.target.value;
       state.search.selected = null;
-      state.search.limit = 32;
+      state.search.limit = 30;
       renderSearch();
     });
     $('view-search').addEventListener('click', event => {
@@ -2467,7 +2489,7 @@
     const maxYear = Math.max(1, ...years.map(row => row.plays));
     const quality = [
       soundcheckRow('Events accepted', countValue(ev.accepted)),
-      soundcheckRow('Streams under 30 seconds', countValue(ev.under30s), 'Kept for behavioural metrics, excluded from play rankings'),
+      soundcheckRow('Streams under 30 seconds', countValue(ev.under30s), 'Kept for behavioural metrics, excluded from play rankings to match Spotify'),
       soundcheckRow('Exact duplicate events removed', countValue(ev.duplicatesRemoved), 'Identical playback signatures, not repeat listening'),
       soundcheckRow('Excluded records', countValue(ev.excluded)),
       ...Object.entries({ 'Podcast / episode records': ev.exclusions.episodes, 'Missing music metadata': ev.exclusions.missingMetadata,
@@ -2492,14 +2514,14 @@
           ${soundcheckMetric('Top 20 primary artists', countValue(diversity.distinctPrimaryArtists), `Distinct artists among ${countValue(diversity.topTracksCount)} leading tracks`)}
           ${soundcheckMetric('Top 20 album titles', countValue(diversity.distinctAlbumTitles), `Across ${countValue(diversity.albumTaggedTopTracks)} album-tagged tracks · includes soundtracks`)}
           ${soundcheckMetric('Largest album cluster', `${countValue(diversity.largestAlbumCluster)}/${countValue(diversity.topTracksCount)}`, 'Most tracks sharing one album title')}
-          ${soundcheckMetric('Peak three-month share', diversity.medianPeakThreeMonthPlayShare == null ? '—' : `${diversity.medianPeakThreeMonthPlayShare}%`, 'Median share of lifetime plays within each top track’s busiest three consecutive months')}
+          ${soundcheckMetric('Peak three month share', diversity.medianPeakThreeMonthPlayShare == null ? '—' : `${diversity.medianPeakThreeMonthPlayShare}%`, 'Median share of lifetime plays within each top track’s busiest three consecutive months')}
         </div>
         <div class="sc-panels"><article class="panel"><div class="kicker">TEMPORAL FOCUS</div><h2>How tastes change</h2>
-          ${soundcheckRow('Longest top-five artist streak', `${countValue(diversity.longestTopFiveArtistStreak)} months`, 'Consecutive calendar months in any month’s five leading credited artists')}
+          ${soundcheckRow('Longest top five artist streak', `${countValue(diversity.longestTopFiveArtistStreak)} months`, 'Consecutive calendar months in any month’s five leading credited artists')}
           ${soundcheckRow('Year-to-year artist overlap', diversity.annualTopTenArtistOverlap == null ? '—' : `${diversity.annualTopTenArtistOverlap}%`, 'Average share of the prior year’s top ten credited artists returning the next year')}
           ${soundcheckRow('Consecutive year comparisons', countValue(diversity.consecutiveYearPairs))}
         </article><article class="panel"><div class="kicker">INTERPRETING THE NUMBERS</div><h2>Long-term vs short-term</h2>
-          <p class="search-muted">Low artist and album diversity suggests concentrated all-time rankings. High peak three-month share suggests bursts of listening rather than persistent popularity.</p>
+          <p class="search-muted">Low artist and album diversity suggests concentrated all-time rankings. High peak three month share suggests bursts of listening rather than persistent popularity.</p>
           <p class="search-muted">Album titles are grouped across primary artists to reveal soundtrack clusters. These metrics describe the generated history; they do not change any play counts.</p>
         </article></div>${soundcheckDiversityTrend(data, history)}</section>`;
     const demoSection = !isDemo ? '' : `<div class="sc-panels">
