@@ -188,7 +188,7 @@
     if (!state.db) return [];
     const tx = state.db.transaction('soundchecks', 'readonly');
     const saved = await dbRequest(tx, tx.objectStore('soundchecks').index('owner').getAll(state.owner));
-    return saved.map(row => row.diagnostic).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 30);
+    return saved.map(row => row.diagnostic).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 150);
   }
   async function loadReport(id) {
     if (!state.db) return null;
@@ -482,11 +482,10 @@
           creditedArtists: creditedNames([artist, ...featureCreditsFromTitle(title)]) });
         result.musicTracks++;
         if (local) result.localTracks++;
-        if (result.musicTracks > 200000) throw new Error('Playlist export exceeds the 200,000-track safety limit.');
+        if (result.musicTracks > 200000) throw new Error('Playlist export exceeds the 200,000 track safety limit.');
       }
       const exportedUri = playlistField(source.playlistUri ?? source.uri, 160);
-      // The Account Data export normally omits playlist URIs. A per-report ID
-      // preserves playlists with identical names without merging their contents.
+      // The Account Data export normally omits playlist URIs. A per-report ID preserves playlists with identical names without merging their contents.
       const id = /^spotify:playlist:[A-Za-z0-9]+$/.test(exportedUri) ? exportedUri :
         `spotify-export:playlist:${result.playlists.length + 1}`;
       const lastModifiedDate = /^\d{4}-\d{2}-\d{2}$/.test(source.lastModifiedDate || '') ? source.lastModifiedDate : '';
@@ -505,12 +504,239 @@
   const msElapsed = value => Math.round(Math.max(0, value) * 10) / 10;
   const startTrace = (type, fileBytes = null) => ({ type, started: performance.now(), stages: {}, fileBytes, files: 0, jsonBytes: 0 });
   const timeStage = (trace, name, began) => { trace.stages[name] = msElapsed((trace.stages[name] || 0) + performance.now() - began); };
-  const browserEnvironment = () => {
-    const ua = navigator.userAgent || '';
-    const browser = /Firefox\//.test(ua) ? 'Firefox' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Other';
-    const os = /Android/.test(ua) ? 'Android' : /iPad|iPhone|iPod/.test(ua) ? 'iOS / iPadOS' : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : 'Other';
-    return { browser, os, deviceClass: /Mobile|iPhone|Android.*Mobile/.test(ua) ? 'Mobile' : /iPad|Tablet|Android/.test(ua) ? 'Tablet' : 'Desktop' };
+  // Only derived, bounded version numbers are saved; never retain the raw user agent or the full User-Agent Client Hints response in a diagnostic.
+  const cleanVersion = value => {
+    const version = typeof value === 'string' ? value.replace(/_/g, '.') : '';
+    return /^\d{1,3}(?:\.\d{1,4}){0,3}$/.test(version) ? version : null;
   };
+  const userAgentVersion = (ua, pattern) => cleanVersion(ua.match(pattern)?.[1]);
+  // A device model can be supplied by Android UA strings or Client Hints.
+  // Keep only short, human readable model names, never a raw UA or build ID.
+  const cleanDeviceModel = value => {
+    if (typeof value !== 'string') return null;
+    const model = value.trim().replace(/\s+/g, ' ');
+    return model.length >= 2 && model.length <= 80 &&
+      /^[\p{L}\p{N}][\p{L}\p{N} ._()+/\-]*$/u.test(model) &&
+      !/^(?:unknown|generic|android|mobile|tablet|K)$/i.test(model) ? model : null;
+  };
+  const androidDeviceModel = ua => {
+    // Older, unreduced Android UAs may expose the model after the OS version.
+    // Locale, browser mode, and build identifiers aren't device models.
+    const details = ua.match(/\bAndroid\s+[\d._]+\s*;\s*([^)]*)\)/i)?.[1];
+    if (!details) return null;
+    const fields = details.split(';').map(part => part.trim());
+    for (let i = fields.length - 1; i >= 0; i--) {
+      const field = fields[i].replace(/\s+Build\/.*$/i, '').trim();
+      if (/^(?:K|U|wv|Mobile|Tablet|[a-z]{2}[-_][a-z]{2}|rv:[\d.]+)$/i.test(field)) continue;
+      const model = cleanDeviceModel(field);
+      if (model) return model;
+    }
+    return null;
+  };
+  // Specific browser signatures come before their Chromium/Firefox/Safari fallbacks.
+  // Some privacy browsers intentionally expose only a generic browser identity (e.g. Vanadium on GrapheneOS).
+  const SOUNDCHECK_BROWSER_TOKENS = [
+    ['Edge', /(?:EdgiOS|EdgA|Edg)\/([\d.]+)/i],
+    ['Opera GX', /(?:Opera[ _]GX|OPGX)\/([\d.]+)/i],
+    ['Opera Mini', /Opera Mini\/([\d.]+)/i],
+    ['Opera', /(?:OPiOS|OPR|Opera(?: Mobi| Tablet)?)\/([\d.]+)/i],
+    ['Samsung Internet', /SamsungBrowser\/([\d.]+)/i],
+    ['Vivaldi', /Vivaldi\/([\d.]+)/i],
+    ['Brave', /Brave\/([\d.]+)/i],
+    ['LibreWolf', /LibreWolf\/([\d.]+)/i],
+    ['Waterfox', /Waterfox\/([\d.]+)/i],
+    ['Floorp', /Floorp\/([\d.]+)/i],
+    ['Zen Browser', /(?:ZenBrowser|Zen)\/([\d.]+)/i],
+    ['Iceweasel', /Iceweasel\/([\d.]+)/i],
+    ['GNU IceCat', /IceCat\/([\d.]+)/i],
+    ['Pale Moon', /PaleMoon\/([\d.]+)/i],
+    ['Basilisk', /Basilisk\/([\d.]+)/i],
+    ['SeaMonkey', /SeaMonkey\/([\d.]+)/i],
+    ['Firefox Focus', /(?:Focus|Klar)\/([\d.]+)/i],
+    ['Fennec', /Fennec\/([\d.]+)/i],
+    ['Mull', /Mull\/([\d.]+)/i],
+    ['Cromite', /Cromite\/([\d.]+)/i],
+    ['Thorium', /Thorium\/([\d.]+)/i],
+    ['Iridium', /Iridium\/([\d.]+)/i],
+    ['SRWare Iron', /(?:Iron|SRWareIron)\/([\d.]+)/i],
+    ['Slimjet', /Slimjet\/([\d.]+)/i],
+    ['DuckDuckGo', /(?:DuckDuckGo|DuckDuckGoBrowser|Ddg)\/([\d.]+)/i],
+    ['Orion', /Orion\/([\d.]+)/i],
+    ['Arc', /(?:ArcSearch|ArcBrowser|Arc)\/([\d.]+)/i],
+    ['Yandex Browser', /YaBrowser\/([\d.]+)/i],
+    ['UC Browser', /(?:UCBrowser|UCWEB)\/([\d.]+)/i],
+    ['QQ Browser', /(?:MQQBrowser|QQBrowser)\/([\d.]+)/i],
+    ['360 Browser', /(?:360(?:SE|EE|Browser)|QHBrowser|QihooBrowser)\/([\d.]+)/i],
+    ['Sogou Explorer', /(?:SogouMobileBrowser|SogouBrowser|SE)\/([\d.]+)|\bMetaSr\b/i],
+    ['Baidu Browser', /(?:BIDUBrowser|BaiduBrowser|BaiduHD)\/([\d.]+)/i],
+    ['Quark', /Quark\/([\d.]+)/i],
+    ['Huawei Browser', /(?:HuaweiBrowser|HuaweiBrowserMobile)\/([\d.]+)/i],
+    ['MIUI Browser', /(?:MiuiBrowser|MiBrowser)\/([\d.]+)/i],
+    ['Vivo Browser', /VivoBrowser\/([\d.]+)/i],
+    ['HeyTap Browser', /(?:HeyTapBrowser|OppoBrowser)\/([\d.]+)/i],
+    ['Maxthon', /(?:Maxthon|MxBrowser)\/([\d.]+)/i],
+    ['Whale', /Whale\/([\d.]+)/i],
+    ['Cốc Cốc', /(?:coc_coc_browser|CocCoc)\/([\d.]+)/i],
+    ['Sleipnir', /Sleipnir\/([\d.]+)/i],
+    ['Lunascape', /Lunascape\/([\d.]+)/i],
+    ['Falkon', /(?:Falkon|QupZilla)\/([\d.]+)/i],
+    ['GNOME Web', /Epiphany\/([\d.]+)/i],
+    ['qutebrowser', /qutebrowser\/([\d.]+)/i],
+    ['Konqueror', /Konqueror\/([\d.]+)/i],
+    ['Midori', /Midori\/([\d.]+)/i],
+    ['NetSurf', /NetSurf\/([\d.]+)/i],
+    ['Otter Browser', /Otter\/([\d.]+)/i],
+    ['Ladybird', /Ladybird\/([\d.]+)/i],
+    ['Puffin', /Puffin\/([\d.]+)/i],
+    ['Amazon Silk', /Silk\/([\d.]+)/i],
+    ['Firefox', /(?:FxiOS|Firefox)\/([\d.]+)/i],
+    ['Chromium', /Chromium\/([\d.]+)/i],
+    ['Chrome', /(?:CriOS|Chrome)\/([\d.]+)/i],
+    ['Safari', /Version\/([\d.]+)(?=[^\n]*Safari\/)/i]
+  ];
+  // Distributions are labelled only if literally named in the UA.
+  // A generic "Linux x86_64" token never identifies Ubuntu, Arch, Fedora, etc.
+  const SOUNDCHECK_LINUX_DISTROS = [
+    ['CachyOS', /\bCachyOS\b(?:[\s/:-]+([\d._]+))?/i],
+    ['EndeavourOS', /\bEndeavourOS\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Manjaro', /\bManjaro(?:Linux)?\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Arch Linux', /\bArch(?:\s+Linux|Linux)\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Linux Mint', /\b(?:Linux[\s/-]*Mint|MintLinux)\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Pop!_OS', /\bPop[!_\s-]*OS\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Ubuntu', /\bUbuntu\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Debian', /\bDebian\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Fedora', /\bFedora\b(?:[\s/:-]+([\d._]+))?/i],
+    ['openSUSE', /\bopenSUSE\b(?:[\s/:-]+(?:Leap[\s/-]+)?([\d._]+))?/i],
+    ['SUSE Linux Enterprise', /\b(?:SUSE Linux Enterprise|SLES)\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Red Hat Enterprise Linux', /\b(?:Red Hat Enterprise Linux|RHEL)\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Rocky Linux', /\bRocky(?:\s+Linux)?\b(?:[\s/:-]+([\d._]+))?/i],
+    ['AlmaLinux', /\bAlmaLinux\b(?:[\s/:-]+([\d._]+))?/i],
+    ['CentOS', /\bCentOS\b(?:[\s/:-]+([\d._]+))?/i],
+    ['NixOS', /\bNixOS\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Gentoo', /\bGentoo\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Alpine Linux', /\bAlpine(?:\s+Linux)?\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Kali Linux', /\bKali(?:\s+Linux)?\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Raspberry Pi OS', /\b(?:Raspberry Pi OS|Raspbian)\b(?:[\s/:-]+([\d._]+))?/i],
+    ['elementary OS', /\belementary[\s_-]*OS\b(?:[\s/:-]+([\d._]+))?/i],
+    ['Zorin OS', /\bZorin(?:\s+OS)?\b(?:[\s/:-]+([\d._]+))?/i],
+    ['KDE neon', /\bKDE[\s_-]*neon\b(?:[\s/:-]+([\d._]+))?/i],
+    ['MX Linux', /\bMX[\s_-]*Linux\b(?:[\s/:-]+([\d._]+))?/i]
+  ];
+  function reportedArchitecture(ua) {
+    if (/\b(?:x86_64|amd64|x64|Win64|WOW64)\b/i.test(ua)) return 'x86_64';
+    if (/\b(?:aarch64|arm64)\b/i.test(ua)) return 'ARM64';
+    if (/\b(?:armv7l|armv7|armv8l)\b/i.test(ua)) return 'ARM32';
+    if (/\b(?:i[3-6]86|x86)\b/i.test(ua)) return 'x86';
+    if (/\bppc64le\b/i.test(ua)) return 'ppc64le';
+    if (/\bppc64\b/i.test(ua)) return 'ppc64';
+    if (/\briscv64\b/i.test(ua)) return 'riscv64';
+    if (/\bs390x\b/i.test(ua)) return 's390x';
+    return null;
+  }
+  let environmentPromise = null;
+  function browserEnvironment() {
+    if (environmentPromise) return environmentPromise;
+    environmentPromise = (async () => {
+      const ua = navigator.userAgent || '';
+      const touchMac = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+      const match = SOUNDCHECK_BROWSER_TOKENS.find(([, pattern]) => pattern.test(ua));
+      let browser = match?.[0] || 'Other';
+      let browserVersion = match ? userAgentVersion(ua, match[1]) : null;
+      const isAppleMobile = /iPhone|iPad|iPod/.test(ua) || touchMac;
+      let os = /Android/.test(ua) ? 'Android' : touchMac || /iPad/.test(ua) ? 'iPadOS' : /iPhone|iPod/.test(ua) ? 'iOS'
+        : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS X/.test(ua) ? 'macOS' : /CrOS/.test(ua) ? 'Chrome OS'
+        : /Linux/.test(ua) ? 'Linux' : 'Other';
+      let osVersion = null;
+      // Chromium's reduced UA reports "Android 10; K" on all Android versions. Neither 10 nor K describes the real device without Client Hints.
+      const reducedAndroidUA = os === 'Android' && /\bAndroid\s+10(?:\.0(?:\.0)?)?\s*;\s*K(?=\s*[;)])/i.test(ua);
+      if (os === 'Android' && !reducedAndroidUA) osVersion = userAgentVersion(ua, /Android\s+([\d._]+)/i);
+      else if (isAppleMobile) osVersion = userAgentVersion(ua, /(?:CPU(?: iPhone)? OS|iPhone OS)\s+([\d._]+)/i);
+      else if (os === 'Windows') {
+        const nt = userAgentVersion(ua, /Windows NT\s+([\d.]+)/i);
+        osVersion = ({ '6.1': '7', '6.2': '8', '6.3': '8.1' })[nt] || (nt === '10.0' ? '10 / 11' : null);
+      } else if (os === 'macOS') {
+        const detected = userAgentVersion(ua, /Mac OS X\s+([\d._]+)/i);
+        // Safari/macOS commonly freeze this UA token at 10.15.7, even on newer macOS versions; displaying it as the real OS would be misleading.
+        if (detected && !detected.startsWith('10.15')) osVersion = detected;
+      }
+      let deviceClass = /iPad|Tablet|Android(?!.*Mobile)|touch/i.test(ua) && (os === 'Android' || os === 'iPadOS') ? 'Tablet'
+        : /Mobile|iPhone|iPod|Android/.test(ua) ? 'Mobile' : 'Desktop';
+      if (touchMac) deviceClass = 'Tablet';
+      let deviceModel = os === 'Android' && !reducedAndroidUA ? androidDeviceModel(ua) : null;
+
+      const distro = os === 'Linux' ? SOUNDCHECK_LINUX_DISTROS.find(([, pattern]) => pattern.test(ua)) : null;
+      const distroMatch = distro ? ua.match(distro[1]) : null;
+      const linuxDistribution = distro?.[0] || null;
+      const linuxDistributionVersion = cleanVersion(distroMatch?.[1]);
+      // A kernel release is reported only when a UA explicitly says "Linux 3.11.0" or "Linux/6.12.1".
+      // The numeric part excludes release/build suffixes.
+      const linuxKernelVersion = os === 'Linux'
+        ? userAgentVersion(ua, /\bLinux[\s/]([\d]{1,3}(?:\.[\d]{1,4}){1,3})(?=[\s;/)]|-|$)/i) : null;
+      let architecture = reportedArchitecture(ua);
+      // Prefer engine tokens actually advertised by the browser. "like Gecko" in Chromium UAs isn't a Gecko engine indicator.
+      let engine = /\bGoanna\//i.test(ua) ? 'Goanna'
+        : /\bGecko\/\d/i.test(ua) ? 'Gecko'
+        : /\bPresto\//i.test(ua) ? 'Presto'
+        : /\b(?:Chrome|Chromium|CriOS|Edg|OPR)\/[\d.]+/i.test(ua) ? 'Blink'
+        : /\bAppleWebKit\//i.test(ua) ? 'WebKit'
+        : browser === 'Ladybird' ? 'LibWeb' : null;
+      // Chromium on iOS has to be classified by its *actual* advertised engine,
+      // not simply by the CriOS branding.
+      if (isAppleMobile && /\bAppleWebKit\//i.test(ua)) engine = 'WebKit';
+
+      // Chromium can optionally expose accurate browser/OS version and CPU
+      // architecture hints. Unknown information stays null rather than guessed.
+      try {
+        const uaData = navigator.userAgentData;
+        if (uaData?.getHighEntropyValues) {
+          const hints = await uaData.getHighEntropyValues(['platformVersion', 'fullVersionList', 'architecture', 'bitness', 'model']);
+          // Prefer the browser's actual model hint over an older UA label.
+          if (deviceClass === 'Mobile' || deviceClass === 'Tablet')
+            deviceModel = cleanDeviceModel(hints?.model) || deviceModel;
+          const platformVersion = cleanVersion(hints?.platformVersion);
+          if (platformVersion) {
+            if (os === 'Windows') osVersion = Number(platformVersion.split('.')[0]) >= 13 ? '11' : '10';
+            else if (os === 'Android' || os === 'macOS' || os === 'Chrome OS') osVersion = platformVersion;
+          }
+          const knownBrands = {
+            'Microsoft Edge': 'Edge', 'Google Chrome': 'Chrome', 'Opera': 'Opera',
+            'Chromium': 'Chromium', 'Brave': 'Brave', 'Vivaldi': 'Vivaldi'
+          };
+          const brands = Array.isArray(hints?.fullVersionList) ? hints.fullVersionList : [];
+          const exact = brands.find(item => knownBrands[item.brand] === browser);
+          // Generic Chrome/Chromium branding is common in browser forks. A
+          // specific brand reported in hints wins; otherwise keep UA identity.
+          const generic = ['Chrome', 'Chromium', 'Other'].includes(browser);
+          const specific = generic && brands.find(item => ['Microsoft Edge', 'Opera', 'Brave', 'Vivaldi'].includes(item.brand));
+          const preferred = specific || exact || (generic
+            ? brands.find(item => item.brand === 'Google Chrome' || item.brand === 'Chromium') : null);
+          if (preferred) {
+            browser = knownBrands[preferred.brand];
+            browserVersion = cleanVersion(preferred.version) || browserVersion;
+          }
+          const hintArch = String(hints?.architecture || '').toLowerCase();
+          const bits = String(hints?.bitness || '');
+          if (hintArch === 'x86') architecture = bits === '64' ? 'x86_64' : bits === '32' ? 'x86' : architecture;
+          else if (hintArch === 'arm') architecture = bits === '64' ? 'ARM64' : bits === '32' ? 'ARM32' : architecture;
+          else if (hintArch === 'arm64') architecture = 'ARM64';
+          if (os === 'Other' && uaData.platform === 'Windows') os = 'Windows';
+        }
+      } catch { /* Keep the UA fields if Client Hints are unavailable. */ }
+      // Brave usually sends a Chrome UA. Its own API can identify the browser,
+      // but Chrome's version is NOT assumed to be Brave's product version.
+      try {
+        if (typeof navigator.brave?.isBrave === 'function' && await navigator.brave.isBrave()) {
+          if (browser !== 'Brave') {
+            browser = 'Brave';
+            browserVersion = userAgentVersion(ua, /Brave\/([\d.]+)/i);
+          }
+        }
+      } catch { /* Don't block diagnostics on optional browser APIs. */ }
+      return { browser, browserVersion, engine, os, osVersion, deviceClass, deviceModel, architecture,
+        linuxDistribution, linuxDistributionVersion, linuxKernelVersion };
+    })();
+    return environmentPromise;
+  }
   function demoListeningDiversity(report) {
     const topTracks = report.periods.all.tracks.slice(0, 20);
     const albums = new Map();
@@ -580,14 +806,15 @@
     };
   }
 
-  function buildSoundcheck(report, builder, trace) {
+  async function buildSoundcheck(report, builder, trace) {
+    const environment = await browserEnvironment();
     const all = report.periods.all;
     const top = Math.max(1, Math.ceil(all.tracks.length * .1));
     const topPlays = all.tracks.slice(0, top).reduce((sum, row) => sum + row.plays, 0);
     const result = {
       schema: 1, id: uuid(), reportId: report.id, createdAt: new Date().toISOString(), status: 'completed',
       source: report.isDemo ? 'demo' : 'import', sourceType: report.type,
-      environment: { ...browserEnvironment(), version: appVersion },
+      environment: { ...environment, version: appVersion },
       performance: { totalMs: msElapsed(performance.now() - trace.started), stages: { ...trace.stages }, inputBytes: trace.fileBytes, parsedJsonBytes: trace.jsonBytes, sourceFiles: report.files },
       events: { scanned: builder.imported + builder.duplicates + builder.ignored, accepted: builder.imported,
         qualifying: all.qualified, under30s: builder.short, duplicatesRemoved: builder.duplicates, excluded: builder.ignored,
@@ -635,7 +862,7 @@
   async function failedSoundcheck(trace, category) {
     const diagnostic = { schema: 1, id: uuid(), reportId: null, createdAt: new Date().toISOString(),
       source: trace.type, status: 'failed', sourceType: trace.type === 'demo' ? 'Demo data' : 'Spotify import',
-      environment: { ...browserEnvironment(), version: appVersion },
+      environment: { ...await browserEnvironment(), version: appVersion },
       performance: { totalMs: msElapsed(performance.now() - trace.started), stages: { ...trace.stages }, inputBytes: trace.fileBytes, parsedJsonBytes: trace.jsonBytes, sourceFiles: trace.files },
       failureStage: category };
     await persistSoundcheck(diagnostic);
@@ -783,7 +1010,7 @@
         localTracks: playlistImport.localTracks, skippedEpisodes: playlistImport.skippedEpisodes,
         skippedUnknown: playlistImport.skippedUnknown };
       timeStage(trace, 'Build report', reportAt);
-      report.soundcheck = buildSoundcheck(report, builder, trace);
+      report.soundcheck = await buildSoundcheck(report, builder, trace);
       state.report = report;
       state.year = 'all';
       let saved = true;
@@ -2284,7 +2511,7 @@
           message.trackId === track.id && message.outcome === 'new-favourite') ? .85 : .48)).map(track => track.id),
         yearTotals: [...byYear.entries()]
       };
-      report.soundcheck = buildSoundcheck(report, builder, trace);
+      report.soundcheck = await buildSoundcheck(report, builder, trace);
       await persistSoundcheck(report.soundcheck);
       activateReport(report);
     } catch (error) {
@@ -2567,11 +2794,12 @@
   }
   function soundcheckDiversityTrend(selected, history) {
     const runs = history.filter(item => item.source === 'demo' && item.status === 'completed' &&
-      typeof item.demo?.diversity?.distinctPrimaryArtists === 'number').slice(0, 10).reverse();
+      typeof item.demo?.diversity?.distinctPrimaryArtists === 'number').slice(0, 8);
     if (selected?.demo?.diversity && !runs.some(item => item.id === selected.id)) {
+      if (runs.length === 8) runs.pop();
       runs.push(selected);
-      if (runs.length > 10) runs.shift();
     }
+    runs.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     if (!runs.length) return '';
     return `<article class="panel sc-diversity-trend"><div class="kicker">ACROSS REGENERATIONS</div><h2>All-time top 20 artist diversity</h2>
       <p class="search-muted">Distinct primary artists across the latest ${runs.length} demo ${runs.length === 1 ? 'generation' : 'generations'} with these diagnostics. Older runs without this measurement are excluded.</p>
@@ -2580,6 +2808,55 @@
           <span>${number(item.demo.diversity.distinctPrimaryArtists)}</span><div class="sc-trend-rail"><i style="height:${Math.min(100, 100 * item.demo.diversity.distinctPrimaryArtists / 20)}%"></i></div><small>${index + 1}</small>
         </div>`).join('')}
       </div><p class="sc-footnote">Oldest to newest · bar scale: 0–20 artists · highlighted bar: selected report</p></article>`;
+  }
+
+  function soundcheckImportTrends(selected, history) {
+    if (selected.source !== 'import') return '';
+    const isListeningImport = item => item.source === 'import' && item.status === 'completed' &&
+      Number.isFinite(item.events?.scanned) && item.events.scanned > 0;
+    const runs = history.filter(isListeningImport).slice(0, 8);
+    const selectedIsOlder = isListeningImport(selected) && !runs.some(item => item.id === selected.id);
+    if (selectedIsOlder) {
+      if (runs.length === 8) runs.pop();
+      runs.push(selected);
+    }
+    runs.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    if (!runs.length) return '';
+
+    const metrics = [
+      { title: 'Distinct tracks', detail: 'Songs in your grouped listening library',
+        value: item => item.grouping?.groupedTracks, unit: 'tracks', decimals: 0 },
+      { title: 'Active days', detail: 'UTC calendar days with qualifying playback',
+        value: item => item.listening?.activeDays, unit: 'days', decimals: 0 },
+      { title: 'Listening hours', detail: 'Total listening duration of qualifying plays',
+        value: item => item.listening?.hours, unit: 'hours', decimals: 1 },
+      { title: 'Aggregate events', detail: 'Time spent aggregating listening records',
+        value: item => item.performance?.stages?.['Aggregate events'], unit: 'ms', decimals: 1 }
+    ];
+    const formatValue = (value, decimals) => value.toLocaleString('en-GB', {
+      minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    const chart = metric => {
+      const available = runs.map(item => ({ item, value: metric.value(item) }))
+        .filter(row => Number.isFinite(row.value) && row.value >= 0);
+      if (!available.length) return '';
+      const max = Math.max(1, ...available.map(row => row.value));
+      const labels = available.map(row => formatValue(row.value, metric.decimals));
+      return `<article class="panel sc-diversity-trend sc-import-trend">
+        <div class="kicker">${escapeHtml(metric.unit.toUpperCase())} · IMPORT HISTORY</div>
+        <h3>${escapeHtml(metric.title)}</h3><p class="search-muted">${escapeHtml(metric.detail)}</p>
+        <div class="sc-trend-bars" role="img" aria-label="${escapeHtml(metric.title)} across imports, oldest to newest: ${escapeHtml(labels.join(', '))} ${escapeHtml(metric.unit)}">
+          ${available.map(({ item, value }, index) => `<div class="sc-trend-column ${item.id === selected.id ? 'selected' : ''}" title="Import ${index + 1}: ${escapeHtml(formatValue(value, metric.decimals))} ${escapeHtml(metric.unit)} · ${escapeHtml(dateLabel(item.createdAt))}">
+            <span>${escapeHtml(formatValue(value, metric.decimals))}</span><div class="sc-trend-rail"><i style="height:${(100 * value / max).toFixed(2)}%"></i></div><small>${index + 1}</small>
+          </div>`).join('')}
+        </div><p class="sc-footnote">Oldest → newest · scale: 0–${escapeHtml(formatValue(max, metric.decimals))} ${escapeHtml(metric.unit)}</p>
+      </article>`;
+    };
+    return `<section class="sc-import-trends" aria-label="Compare Spotify imports">
+      <div class="sc-panel-head"><div><div class="kicker">YOUR LISTENING HISTORY OVER TIME</div><h2>Across your uploads</h2></div></div>
+      <p class="search-muted">Compare the latest ${runs.length} successful listening-history ${runs.length === 1 ? 'import' : 'imports'}. Each bar represents a complete imported history, not just the activity since the previous upload. The highlighted bar is the selected report.</p>
+      <div class="sc-import-trend-grid">${metrics.map(chart).join('')}</div>
+      <p class="sc-footnote">${selectedIsOlder ? 'The selected older import replaces the oldest recent import in this comparison. ' : ''}Playlist only uploads and failed imports are excluded. Processing times can also vary with device load and browser performance.</p>
+    </section>`;
   }
 
   function soundcheckView(data, history = []) {
@@ -2597,7 +2874,7 @@
       ['Catalogue coverage', coverage, `${countValue(demo.playedTracks)} distinct songs heard`],
       ['Qualified plays', countValue(ev.qualifying), '30 seconds or longer'],
       ['Artists heard', countValue(grouping.uniqueArtists), `of ${countValue(demo.catalogueArtists)} catalogue artists`],
-      ['Recommendations', countValue(demo.recommendations), 'Fictional friend activity']
+      ['Recommendations', countValue(demo.recommendations), 'Friend activity']
     ] : [
       ['Source events', countValue(ev.scanned), 'Playback rows inspected'],
       ['Qualified plays', countValue(ev.qualifying), '30 seconds or longer'],
@@ -2621,7 +2898,7 @@
       soundcheckRow('Variants consolidated', countValue(grouping.consolidatedVariants), 'Release variants combined, not playback events removed'),
       soundcheckRow('Distinct credited artists', countValue(grouping.uniqueArtists)),
       soundcheckRow('Distinct albums', countValue(grouping.uniqueAlbums)),
-      soundcheckRow('Tracks with new title-inferred credits', countValue(data.enrichment.tracksWithInferredFeatures)),
+      soundcheckRow('Tracks with new title inferred credits', countValue(data.enrichment.tracksWithInferredFeatures)),
       soundcheckRow('Distinct inferred artist names', countValue(data.enrichment.distinctInferredArtists), 'Found from feat./featuring text not already explicitly credited')
     ];
     const diversity = demo?.diversity;
@@ -2646,7 +2923,7 @@
     const demoSection = !isDemo ? '' : `<div class="sc-panels">
       <article class="panel"><div class="kicker">CATALOGUE</div><h2>Simulation coverage</h2>
         ${soundcheckRow('Library catalogue entries', countValue(demo.catalogueTracks))}
-        ${soundcheckRow('Additional playlist-only tracks', countValue(demo.curatedPlaylistTracks))}
+        ${soundcheckRow('Additional playlist only tracks', countValue(demo.curatedPlaylistTracks))}
         ${soundcheckRow('Distinct songs', countValue(demo.distinctCatalogueTracks))}
         ${soundcheckRow('Eligible releases', countValue(demo.eligibleTracks))}
         ${soundcheckRow('Albums / releases', countValue(demo.catalogueAlbums))}
@@ -2662,25 +2939,26 @@
         ${soundcheckRow('Random friend playlists', countValue(demo.playlists))}
         ${Object.entries(demo.recommendationOutcomes).sort((a,b)=>b[1]-a[1]).map(([name,value])=>soundcheckRow(name.replace(/-/g,' '), countValue(value))).join('')}
       </article></div>`;
+    const coveragePanel = `<article class="panel sc-coverage"><div class="kicker">LISTENING PROFILE</div><h2>Coverage and popularity</h2>
+      <div class="sc-coverage-rows">
+        ${soundcheckRow('First qualifying play', listen.firstTs ? dateLabel(listen.firstTs) : '—')}
+        ${soundcheckRow('Latest qualifying play', listen.lastTs ? dateLabel(listen.lastTs) : '—')}
+        ${soundcheckRow('Years with activity', countValue(listen.years))}
+        ${soundcheckRow('Active days', countValue(listen.activeDays))}
+        ${soundcheckRow('Listening hours', countValue(listen.hours))}
+        ${soundcheckRow('Top 10% song play share', listen.topTenPercentPlayShare + '%', 'Concentration of qualified plays among the most played songs')}
+      </div></article>`;
     return `<div class="sc-cards">${cards.map(args => soundcheckMetric(...args)).join('')}</div>
+      ${coveragePanel}
       ${soundcheckPerformance(data)}
+      ${!isDemo ? soundcheckImportTrends(data, history) : ''}
       <div class="sc-panels">
         <article class="panel"><div class="kicker">PROCESSING QUALITY</div><h2>Playback records</h2>${quality.join('')}</article>
         <article class="panel"><div class="kicker">IDENTITIES & ENRICHMENT</div><h2>Music catalogue</h2>${groupingRows.join('')}</article>
       </div>${demoSection}${diversitySection}
-      <div class="sc-panels">
-        <article class="panel"><div class="kicker">LISTENING DISTRIBUTION</div><h2>Year by year</h2>
-          <div class="sc-bars">${years.map(row => soundcheckBar(row.year, row.plays, maxYear)).join('')}</div>
-        </article>
-        <article class="panel"><div class="kicker">LISTENING PROFILE</div><h2>Coverage and popularity</h2>
-          ${soundcheckRow('First qualifying play', listen.firstTs ? dateLabel(listen.firstTs) : '—')}
-          ${soundcheckRow('Latest qualifying play', listen.lastTs ? dateLabel(listen.lastTs) : '—')}
-          ${soundcheckRow('Years with activity', countValue(listen.years))}
-          ${soundcheckRow('Active days', countValue(listen.activeDays))}
-          ${soundcheckRow('Listening hours', countValue(listen.hours))}
-          ${soundcheckRow('Top 10% song play share', listen.topTenPercentPlayShare + '%', 'Concentration of qualified plays among the most played songs')}
-        </article>
-      </div>`;
+      <article class="panel sc-yearly"><div class="kicker">LISTENING DISTRIBUTION</div><h2>Year by year</h2>
+        <div class="sc-bars">${years.map(row => soundcheckBar(row.year, row.plays, maxYear)).join('')}</div>
+      </article>`;
   }
   function soundcheckPerformance(data) {
     const p = data.performance || { stages: {} };
@@ -2693,8 +2971,16 @@
        ${soundcheckRow('Uncompressed / parsed JSON', p.parsedJsonBytes ? (p.parsedJsonBytes / 1048576).toFixed(2) + ' MiB' : 'Not measured')}
        ${soundcheckRow('Files processed', p.sourceFiles != null ? number(p.sourceFiles) : '—')}
        ${soundcheckRow('Wrapped 365 version', data.environment?.version || 'Unknown')}
-       ${soundcheckRow('Browser', data.environment?.browser || 'Unknown')}
-       ${soundcheckRow('OS / device class', `${data.environment?.os || 'Unknown'} / ${data.environment?.deviceClass || 'Unknown'}`)}
+       ${soundcheckRow('Browser', `${data.environment?.browser || 'Unknown'}${data.environment?.browserVersion ? ' ' + data.environment.browserVersion : ''}`)}
+       ${soundcheckRow('Browser engine', data.environment?.engine || 'Not reported')}
+       ${soundcheckRow('Operating system', `${data.environment?.os || 'Unknown'}${data.environment?.osVersion ? ' ' + data.environment.osVersion : ''}`)}
+       ${data.environment?.os === 'Linux' ? soundcheckRow('Linux distribution', data.environment?.linuxDistribution ?
+         `${data.environment.linuxDistribution}${data.environment.linuxDistributionVersion ? ' ' + data.environment.linuxDistributionVersion : ''} (reported)` : 'Not reported') : ''}
+       ${data.environment?.os === 'Linux' ? soundcheckRow('Linux kernel', data.environment?.linuxKernelVersion || 'Not reported') : ''}
+       ${soundcheckRow('Reported architecture', data.environment?.architecture || 'Not reported')}
+       ${soundcheckRow('Device class', data.environment?.deviceClass || 'Unknown')}
+       ${data.environment?.deviceClass === 'Mobile' || data.environment?.deviceClass === 'Tablet' ?
+         soundcheckRow('Device model', data.environment?.deviceModel || 'Not reported') : ''}
        ${soundcheckRow('Recorded', dateLabel(data.createdAt))}</div></div>`;
   }
   function soundcheckDebugExport(diagnostic) {
@@ -2703,6 +2989,7 @@
     const isoTime = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value) && Number.isFinite(Date.parse(value)) ? new Date(value).toISOString() : null;
     const recognised = (value, choices) => choices.includes(value) ? value : 'Unknown';
     const environment = diagnostic.environment || {};
+    const exportVersion = value => cleanVersion(value) || 'Unknown';
     const stages = ['Open ZIP', 'Read JSON', 'Parse JSON', 'Parse playlists', 'Aggregate events', 'Build report', 'Save report', 'Load catalogue', 'Generate listening history', 'Generate social activity'];
     const performanceData = diagnostic.performance || {};
     const payload = {
@@ -2713,9 +3000,18 @@
       createdAt: isoTime(diagnostic.createdAt),
       environment: {
         version: typeof environment.version === 'string' && /^[a-zA-Z0-9._+\-]{1,64}$/.test(environment.version) ? environment.version : 'Unknown',
-        browser: recognised(environment.browser, ['Firefox', 'Edge', 'Opera', 'Chrome', 'Safari', 'Other']),
-        os: recognised(environment.os, ['Android', 'iOS / iPadOS', 'Windows', 'macOS', 'Linux', 'Other']),
-        deviceClass: recognised(environment.deviceClass, ['Mobile', 'Tablet', 'Desktop'])
+        browser: recognised(environment.browser, [...SOUNDCHECK_BROWSER_TOKENS.map(([name]) => name), 'Other']),
+        browserVersion: exportVersion(environment.browserVersion),
+        engine: ['Blink', 'Gecko', 'Goanna', 'WebKit', 'Presto', 'LibWeb'].includes(environment.engine) ? environment.engine : null,
+        os: recognised(environment.os, ['Android', 'iOS', 'iPadOS', 'iOS / iPadOS', 'Windows', 'macOS', 'Chrome OS', 'Linux', 'Other']),
+        osVersion: environment.os === 'Android' ? cleanVersion(environment.osVersion) :
+          environment.os === 'Windows' && environment.osVersion === '10 / 11' ? '10 / 11' : exportVersion(environment.osVersion),
+        architecture: ['x86', 'x86_64', 'ARM32', 'ARM64', 'ppc64le', 'ppc64', 'riscv64', 's390x'].includes(environment.architecture) ? environment.architecture : null,
+        linuxDistribution: environment.os === 'Linux' && SOUNDCHECK_LINUX_DISTROS.some(([name]) => name === environment.linuxDistribution) ? environment.linuxDistribution : null,
+        linuxDistributionVersion: environment.os === 'Linux' ? cleanVersion(environment.linuxDistributionVersion) : null,
+        linuxKernelVersion: environment.os === 'Linux' ? cleanVersion(environment.linuxKernelVersion) : null,
+        deviceClass: recognised(environment.deviceClass, ['Mobile', 'Tablet', 'Desktop']),
+        deviceModel: cleanDeviceModel(environment.deviceModel)
       },
       performance: {
         ...pickNumbers(performanceData, ['totalMs', 'inputBytes', 'parsedJsonBytes', 'sourceFiles']),
@@ -2757,8 +3053,8 @@
       exportSchema: 1,
       exportedAt: new Date().toISOString(),
       privacy: {
-        contains: ['Aggregated processing and listening statistics', 'Demo generation metrics (when available)', 'Listening date range and annual totals', 'Diagnostic timestamps and processing durations', 'Browser, operating system, and device type', 'Wrapped 365 version'],
-        excludes: ['IP address', 'Spotify account details or email address', 'Spotify subscription or billing data', 'Contents of Spotify messages', 'Source filenames', 'Track, artist, or album names', 'Raw playback records', 'Browser user agent string', 'Cookie, browser, or report identifiers']
+        contains: ['Wrapped 365 version and build tag', 'Aggregated processing, listening, and demo statistics', 'Diagnostic timestamps and processing durations', 'OS, version, and kernel details (where reported)', 'Browser version and engine details (where reported)', 'CPU architecture (where reported)', 'Device type and model (where reported)'],
+        excludes: ['IP addresses', 'Spotify account details, email address, phone numbers, passwords', 'Spotify subscription or billing data', 'Contents of Spotify messages', 'Source filenames', 'Track, artist, or album names', 'Raw playback records', 'Browser user agent string', 'Cookie, browser, or report identifiers']
       },
       diagnostic: payload
     };
@@ -2805,7 +3101,7 @@
     $('soundcheck-download').disabled = !selected;
     $('soundcheck-type').textContent = selected ? `${selected.source === 'demo' ? 'DEMO SIMULATION' : 'SPOTIFY IMPORT'} · ${selected.status.toUpperCase()}` : 'NO DIAGNOSTICS YET';
     $('soundcheck-dashboard').innerHTML = !selected && state.report && !state.report.soundcheck ? '<div class="panel sc-empty"><h2>No diagnostics for this report</h2><p>This report either predates Soundcheck or its diagnostic data was deleted. You can inspect other runs below or reimport the original archive to generate fresh diagnostics.</p></div>' : soundcheckView(selected, history);
-    $('soundcheck-recent').innerHTML = history.length ? history.map(item => `<button type="button" class="sc-history-item ${selected?.id === item.id ? 'selected' : ''}" data-soundcheck-id="${escapeHtml(item.id)}"><span><strong>${item.source === 'demo' ? 'Demo simulation' : 'Spotify import'}</strong><small>${dateLabel(item.createdAt)} · ${item.status === 'failed' ? `Stopped: ${escapeHtml(item.failureStage || 'processing')}` : `${number(item.events?.qualifying)} qualifying plays`}</small></span><span>${item.status === 'failed' ? '!' : '↗'}</span></button>`).join('') : '<p class="search-muted">No locally saved diagnostic runs yet. Diagnostics are collected whether Soundcheck is unlocked or not.</p>';
+    $('soundcheck-recent').innerHTML = history.length ? history.slice(0, 30).map(item => `<button type="button" class="sc-history-item ${selected?.id === item.id ? 'selected' : ''}" data-soundcheck-id="${escapeHtml(item.id)}"><span><strong>${item.source === 'demo' ? 'Demo simulation' : 'Spotify import'}</strong><small>${dateLabel(item.createdAt)} · ${item.status === 'failed' ? `Stopped: ${escapeHtml(item.failureStage || 'processing')}` : `${number(item.events?.qualifying)} qualifying plays`}</small></span><span>${item.status === 'failed' ? '!' : '↗'}</span></button>`).join('') : '<p class="search-muted">No locally saved diagnostic runs yet. Diagnostics are only ever collected, processed, and stored locally.</p>';
   }
   function setSoundcheckUnlocked(unlocked) {
     state.soundcheckUnlocked = unlocked;

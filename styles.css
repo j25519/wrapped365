@@ -314,3 +314,22 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
 .playlist-track-meta span{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .playlist-track-length,.playlist-track-plays{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
 @media(max-width:600px){.playlist-metrics{gap:6px}.playlist-metrics>div{padding:10px}.playlist-metrics strong{font-size:16px}.playlist-metrics span{font-size:10px}.playlist-track-row{grid-template-columns:20px minmax(0,1fr) 65px;gap:8px}.playlist-track-length{display:none}}
+
+/* Soundcheck: a compact listening profile and upload-to-upload comparisons. */
+.sc-coverage,.sc-yearly{margin-bottom:16px}
+.sc-coverage h2,.sc-yearly h2{font-size:19px;margin:7px 0 14px}
+.sc-coverage-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+.sc-import-trends{margin:5px 0 18px}
+.sc-import-trends>.sc-panel-head h2{font-size:20px;margin:7px 0 0}
+.sc-import-trends>.search-muted{margin:8px 0 16px}
+.sc-import-trend-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.sc-import-trend{min-width:0}
+.sc-import-trend h3{font-size:18px;letter-spacing:-.4px;margin:7px 0 6px}
+.sc-import-trend .search-muted{min-height:2.5em;margin:0}
+.sc-import-trend .sc-trend-bars{gap:6px;height:150px;margin-top:20px}
+.sc-import-trend .sc-trend-column>span{font-size:10px;white-space:nowrap}
+.sc-import-trend .sc-trend-column>small{font-size:10px}
+.sc-import-trend .sc-footnote{margin:11px 0 0}
+.sc-import-trends>.sc-footnote{margin-top:12px}
+@media(max-width:1050px){.sc-import-trend-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.sc-coverage-rows{grid-template-columns:1fr}.sc-import-trend{padding:17px}.sc-import-trend .sc-trend-bars{gap:3px}}
