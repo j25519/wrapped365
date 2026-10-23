@@ -2,6 +2,902 @@
 # the non-deterministic makeDemo() function picks random tracks from this list to create data when the user clicks "Explore demo"
 # i'm also using it for development purposes so i'm using tracks from many different eras to test deep analytics
 tracks:
+  - title: "Come Together"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 259
+  - title: "Something"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 182
+  - title: "Maxwell's Silver Hammer"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 207
+  - title: "Oh! Darling"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 207
+  - title: "Octopus's Garden"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 170
+  - title: "I Want You (She's So Heavy)"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 467
+  - title: "Here Comes The Sun"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 185
+  - title: "Because"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 165
+  - title: "You Never Give Me Your Money"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 242
+  - title: "Sun King"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 146
+  - title: "Mean Mr Mustard"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 66
+  - title: "Polythene Pam"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 72
+  - title: "She Came In Through The Bathroom Window"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 118
+  - title: "Golden Slumbers"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 91
+  - title: "Carry That Weight"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 96
+  - title: "The End"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 141
+  - title: "Her Majesty"
+    artist: "The Beatles"
+    album: "Abbey Road"
+    released: "1969-09-26"
+    seconds: 25
+  - title: "Taxman"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 158
+  - title: "Eleanor Rigby"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 126
+  - title: "I'm Only Sleeping"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 180
+  - title: "Love You To"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 179
+  - title: "Here, There And Everywhere"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 144
+  - title: "Yellow Submarine"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 158
+  - title: "She Said She Said"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 156
+  - title: "Good Day Sunshine"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 129
+  - title: "And Your Bird Can Sing"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 120
+  - title: "For No One"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 119
+  - title: "Doctor Robert"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 134
+  - title: "I Want To Tell You"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 147
+  - title: "Got To Get You Into My Life"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 149
+  - title: "Tomorrow Never Knows"
+    artist: "The Beatles"
+    album: "Revolver"
+    released: "1966-08-05"
+    seconds: 179
+  - title: "Sgt. Pepper's Lonely Hearts Club Band"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 122
+  - title: "With A Little Help From My Friends"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 164
+  - title: "Lucy In The Sky With Diamonds"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 208
+  - title: "Getting Better"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 168
+  - title: "Fixing A Hole"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 156
+  - title: "She's Leaving Home"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 215
+  - title: "Being For The Benefit Of Mr. Kite!"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 157
+  - title: "Within You Without You"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 304
+  - title: "When I'm Sixty Four"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 157
+  - title: "Lovely Rita"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 162
+  - title: "Good Morning Good Morning"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 161
+  - title: "Sgt. Pepper's Lonely Hearts Club Band (Reprise)"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 79
+  - title: "A Day In The Life"
+    artist: "The Beatles"
+    album: "Sgt. Pepper's Lonely Hearts Club Band"
+    released: "1967-06-01"
+    seconds: 337
+  - title: "Back In The U.S.S.R."
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 163
+  - title: "Dear Prudence"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 235
+  - title: "Glass Onion"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 137
+  - title: "Ob-La-Di, Ob-La-Da"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 188
+  - title: "Wild Honey Pie"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 52
+  - title: "The Continuing Story Of Bungalow Bill"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 194
+  - title: "While My Guitar Gently Weeps"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 285
+  - title: "Happiness Is A Warm Gun"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 164
+  - title: "Martha My Dear"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 148
+  - title: "I'm So Tired"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 123
+  - title: "Blackbird"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 138
+  - title: "Piggies"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 124
+  - title: "Rocky Raccoon"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 213
+  - title: "Don't Pass Me By"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 230
+  - title: "Why Don't We Do It In The Road?"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 101
+  - title: "I Will"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 105
+  - title: "Julia"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 176
+  - title: "Birthday"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 163
+  - title: "Yer Blues"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 240
+  - title: "Mother Nature's Son"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 168
+  - title: "Everybody's Got Something To Hide Except Me And My Monkey"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 144
+  - title: "Sexy Sadie"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 195
+  - title: "Helter Skelter"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 269
+  - title: "Long, Long, Long"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 186
+  - title: "Revolution 1"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 255
+  - title: "Honey Pie"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 161
+  - title: "Savoy Truffle"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 174
+  - title: "Cry Baby Cry"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 182
+  - title: "Revolution 9"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 502
+  - title: "Good Night"
+    artist: "The Beatles"
+    album: "The Beatles"
+    released: "1968-11-22"
+    seconds: 193
+  - title: "Serve the Servants"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 217
+  - title: "Scentless Apprentice"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 228
+  - title: "Heart-Shaped Box"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 281
+  - title: "Rape Me"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 170
+  - title: "Frances Farmer Will Have Her Revenge on Seattle"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 250
+  - title: "Dumb"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 151
+  - title: "Very Ape"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 115
+  - title: "Milk It"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 234
+  - title: "Pennyroyal Tea"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 218
+  - title: "Radio Friendly Unit Shifter"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 291
+  - title: "Tourette's"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 95
+  - title: "All Apologies"
+    artist: "Nirvana"
+    album: "In Utero"
+    released: "1993-09-21"
+    seconds: 230
+  - title: "Doll"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 83
+  - title: "Monkey Wrench"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 231
+  - title: "Hey, Johnny Park!"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 248
+  - title: "My Poor Brain"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 213
+  - title: "Wind Up"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 150
+  - title: "Up in Arms"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 135
+  - title: "My Hero"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 260
+  - title: "See You"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 146
+  - title: "Enough Space"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 156
+  - title: "February Stars"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 289
+  - title: "Everlong"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 250
+  - title: "Walking After You"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 303
+  - title: "New Way Home"
+    artist: "Foo Fighters"
+    album: "The Colour and the Shape"
+    released: "1997-05-20"
+    seconds: 340
+  - title: "Eraser"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 227
+  - title: "Castle on the Hill"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 261
+  - title: "Dive"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 238
+  - title: "Shape of You"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 233
+  - title: "Perfect"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 263
+  - title: "Galway Girl"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 170
+  - title: "Happier"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 207
+  - title: "New Man"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 189
+  - title: "Hearts Don't Break Around Here"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 248
+  - title: "What Do I Know?"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 237
+  - title: "How Would You Feel (Paean)"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 280
+  - title: "Supermarket Flowers"
+    artist: "Ed Sheeran"
+    album: "÷"
+    released: "2017-03-03"
+    seconds: 221
+  - title: "One"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 252
+  - title: "I'm a Mess"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 244
+  - title: "Sing"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 235
+  - title: "Don't"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 219
+  - title: "Nina"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 225
+  - title: "Photograph"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 258
+  - title: "Bloodstream"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 300
+  - title: "Tenerife Sea"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 241
+  - title: "Runaway"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 205
+  - title: "The Man"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 250
+  - title: "Thinking Out Loud"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 281
+  - title: "Afire Love"
+    artist: "Ed Sheeran"
+    album: "x"
+    released: "2014-06-20"
+    seconds: 314
+
+  - title: "Equally Damaged"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 40
+  - title: "In Particular"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 365
+  - title: "Melody of Certain Three"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 233
+  - title: "Hated Because of Great Qualities"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 282
+  - title: "Loved Despite of Great Faults"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 252
+  - title: "Ballad of Lemons"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 114
+  - title: "This Is Not"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 290
+  - title: "A Cure"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 323
+  - title: "For the Damaged"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 182
+  - title: "Mother"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 128
+  - title: "For the Damaged Coda"
+    artist: "Blonde Redhead"
+    album: "Melody of Certain Damaged Lemons"
+    released: "2000-06-06"
+    seconds: 157
+  - title: "Requiem in D Minor, K. 626: I. Introitus. Requiem"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 301
+  - title: "Requiem in D Minor, K. 626: II. Kyrie"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 136
+  - title: "Requiem in D Minor, K. 626: IIIa. Sequentia. Dies Irae"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 115
+  - title: "Requiem in D Minor, K. 626: IIIb. Sequentia. Tuba Mirum"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 226
+  - title: "Requiem in D Minor, K. 626: IIIc. Sequentia. Rex Tremendae"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 136
+  - title: "Requiem in D Minor, K. 626: IIId. Sequentia. Recordare"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 347
+  - title: "Requiem in D Minor, K. 626: IIIe. Sequentia. Confutatis"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 142
+  - title: "Requiem in D Minor, K. 626: IIIf. Sequentia. Lacrimosa"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 213
+  - title: "Requiem in D Minor, K. 626: IVa. Offertorium. Domine Jesu"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 207
+  - title: "Requiem in D Minor, K. 626: IVb. Offertorium. Hostias"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 215
+  - title: "Requiem in D Minor, K. 626: V. Sanctus"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 99
+  - title: "Requiem in D Minor, K. 626: VI. Benedictus"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 340
+  - title: "Requiem in D Minor, K. 626: VII. Agnus Dei"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 210
+  - title: "Requiem in D Minor, K. 626: VIII. Communio. Lux Aeterna"
+    artist: "Wolfgang Amadeus Mozart"
+    album: "Mozart: Requiem"
+    released: "1991-02-22"
+    seconds: 313
+  - title: "For the Last Time"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part XX: The Infinity Saga"
+    released: "2017-09-11"
+    seconds: 156
+  - title: "I Hung Myself for a Persona"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part XX: The Infinity Saga"
+    released: "2017-09-11"
+    seconds: 133
+  - title: "Now I'm Up to My Neck with Offers"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part XX: The Infinity Saga"
+    released: "2017-09-11"
+    seconds: 167
+  - title: "King Tulip"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 185
+  - title: "Bring out Your Dead"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 106
+  - title: "Nicotine Patches"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 156
+  - title: "10,000 Degrees"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 189
+  - title: "122 Days"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 184
+  - title: "Phanton Menace"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 141
+  - title: "Krewe Du Vieux (Comedy & Tragedy)"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 104
+  - title: "WAR TIME ALL THE TIME"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 145
+  - title: "Coma"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 137
+  - title: "Long Gone (Save Me from This Hell)"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 138
+  - title: "Meet Mr. NICEGUY"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 146
+  - title: "Carrollton"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 203
+  - title: "Fuck the Industry"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 235
+  - title: "I No Longer Fear the Razor Guarding My Heel (IV)"
+    artist: "$uicideboy$"
+    album: "I Want to Die in New Orleans"
+    released: "2018-09-07"
+    seconds: 474
+  - title: "Bazooka"
+    artist: "Miami XO"
+    album: "Bazooka"
+    released: "2026-01-01"
+    seconds: 108
+  - title: "Pump It Up"
+    artist: "Endor"
+    album: "Pump It Up"
+    released: "2019-09-13"
+    seconds: 150
+  - title: "All Dogs Go to Heaven"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 153
+  - title: "I Wanna Be Romanticized"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 133
+  - title: "One Last Look at the Damage"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 97
+  - title: "[whispers indistinctly]"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 164
+  - title: "MEGA ZEPH"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 101
+  - title: "Putrid Pride"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 106
+  - title: "That Just Isn't Empirically Possible"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 123
+  - title: "What the Fuck Is Happening"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 106
+  - title: "Bizarro"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 214
+  - title: "Scope Set"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 93
+  - title: "Fuck Your Culture"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 102
+  - title: "...And to Those I Love, Thanks for Sticking Around"
+    artist: "$uicideboy$"
+    album: "Stop Staring at the Shadows"
+    released: "2020-02-14"
+    seconds: 168
   - title: "German Whip (feat. Big H & JME)"
     artist: "Meridian Dan"
     album: "German Whip"
@@ -12117,3 +13013,438 @@ tracks:
     album: "Infinity On High"
     released: "2007-02-06"
     seconds: 246
+  - title: "Genesis"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 162
+  - title: "Matte Black"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 238
+  - title: "Fucking Your Culture"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 195
+  - title: "1000 Blunts"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 175
+  - title: "In Constant Sorrow"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 158
+  - title: "Escape From BABYLON"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 141
+  - title: "Ashes of Luxury"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 97
+  - title: "Resistance Is Useless"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 142
+  - title: "Eulogy"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 227
+  - title: "No Matter Which Direction I'm Going In, I Never Chase These Hoes"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 154
+  - title: "$uicideboy$ Were Better In 2015"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 143
+  - title: "Unlucky Me"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 155
+  - title: "THE_EVIL_THAT_MEN_DO"
+    artist: "$uicideboy$"
+    album: "Sing Me a Lullaby, My Sweet Temptation"
+    released: "2022-07-29"
+    seconds: 173
+  - title: "Where's Your God?"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 156
+  - title: "VIVIVI (feat. RVMIRXZ)"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 312
+  - title: "Noxygen"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 136
+  - title: "Grey Boys"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 156
+  - title: "Crucify Me Wearing Tommy"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 157
+  - title: "Back From The Dead"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 121
+  - title: "333333 [RARE* '96 BOOTLEG CA$$ETTE RIP TRE$ $EI$] - Bonus Track"
+    artist: "$uicideboy$"
+    album: "KILL YOURSELF Part VII: The Fuck God Saga"
+    released: "2014-12-22"
+    seconds: 81
+  - title: "I Miss My Dead Friends"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 106
+  - title: "That Time We Went to Wal Mart in Memphis to Steal Some Shit Before We Met Up With TA to Shoot His Video (feat. Ghost)"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 135
+  - title: "LTE"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 133
+  - title: "Gloss of Blood"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 104
+  - title: "La Croix"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 130
+  - title: "All My Life I've Wanted a Chevy"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 110
+  - title: "I Ended Up Driving the Camaro off the Causeway Bridge"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 135
+  - title: "April Mourning"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 88
+  - title: "Cerberus (feat. Masta Drag)"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 206
+  - title: "In Order to Cast a Shadow You Must First Light a Fire"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 118
+  - title: "Handzum $uicide (feat. Rozz Dyliams)"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 154
+  - title: "Sold My Soul to Satan Waiting in Line at the Mall"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 138
+  - title: "Fuck Boy Blood Bath"
+    artist: "$uicideboy$"
+    album: "YUNGDEATHLILLIFE"
+    released: "2015-05-08"
+    seconds: 120
+  - title: "7th or St. Tammany"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 63
+  - title: "Dead Batteries"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 143
+  - title: "I'll Pay for It (If I Want It)"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 158
+  - title: "That's Very Minimalist of You"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 106
+  - title: "Romulus"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 122
+  - title: "Vices (feat. JGRXXN)"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 247
+  - title: "Straw Chairs"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 98
+  - title: "40 Oz. & Sober"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 180
+  - title: "Drugs/Hoes/Money/Etc."
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 144
+  - title: "St. Bernard"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 92
+  - title: "Leave Your Things Behind"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 160
+  - title: "Rag Round My Skull"
+    artist: "$uicideboy$"
+    album: "7th or St. Tammany"
+    released: "2015-04-02"
+    seconds: 141
+  - title: "Intro"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 129
+  - title: "January 28th"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 242
+  - title: "Wet Dreamz"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 239
+  - title: "03' Adolescence"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 264
+  - title: "A Tale of 2 Citiez"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 269
+  - title: "Fire Squad"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 288
+  - title: "St. Tropez"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 257
+  - title: "G.O.M.D."
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 301
+  - title: "No Role Modelz"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 292
+  - title: "Hello"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 219
+  - title: "Apparently"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 293
+  - title: "Love Yourz"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 211
+  - title: "Note to Self"
+    artist: "J. Cole"
+    album: "2014 Forest Hills Drive"
+    released: "2014-12-09"
+    seconds: 875
+  - title: "Angel (feat. Horace Andy)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 381
+  - title: "Risingson"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 299
+  - title: "Teardrop (feat. Elizabeth Fraser)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 331
+  - title: "Inertia Creeps"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 357
+  - title: "Exchange"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 251
+  - title: "Dissolved Girl (feat. Sara Jay)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 367
+  - title: "Man Next Door (feat. Horace Andy)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 356
+  - title: "Black Milk (feat. Elizabeth Fraser)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 382
+  - title: "Mezzanine"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 357
+  - title: "Group Four (feat. Elizabeth Fraser)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 492
+  - title: "(Exchange) (feat. Horace Andy)"
+    artist: "Massive Attack"
+    album: "Mezzanine"
+    released: "1998-04-20"
+    seconds: 250
+  - title: "Ashes"
+    artist: "Céline Dion"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 199
+  - title: "Welcome to the Party (feat. Zhavia Ward)"
+    artist: "Diplo, French Montana & Lil Pump"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 181
+  - title: "Nobody Speak (feat. Run The Jewels)"
+    artist: "DJ Shadow"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 196
+  - title: "In Your Eyes"
+    artist: "Peter Gabriel"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 329
+  - title: "Take On Me (MTV Unplugged - Summer Solstice)"
+    artist: "a-ha"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 254
+  - title: "If I Could Turn Back Time"
+    artist: "Cher"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 241
+  - title: "9 to 5"
+    artist: "Dolly Parton"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 165
+  - title: "All Out of Love"
+    artist: "Air Supply"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 243
+  - title: "We Belong"
+    artist: "Pat Benatar"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 222
+  - title: "Tomorrow"
+    artist: "Alicia Morton"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 150
+  - title: "Mutant Convoy"
+    artist: "Tyler Bates"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 239
+  - title: "Bangarang (feat. Sirah)"
+    artist: "Skrillex"
+    album: "Deadpool 2 (Original Motion Picture Soundtrack)"
+    released: "2018-05-18"
+    seconds: 214
+  - title: "Bells Of DOOM"
+    artist: "MF DOOM & The Prof."
+    album: "The Prof Meets The SUPER VILLAIN"
+    released: "2002-10-01"
+    seconds: 152
+  - title: "My Favorite Ladies"
+    artist: "MF DOOM & The Prof."
+    album: "The Prof Meets The SUPER VILLAIN"
+    released: "2002-10-01"
+    seconds: 166
+  - title: "All Outta Ale"
+    artist: "MF DOOM & The Prof."
+    album: "The Prof Meets The SUPER VILLAIN"
+    released: "2002-10-01"
+    seconds: 206
+  - title: "My Favorite Ladies (Latinas Remix)"
+    artist: "MF DOOM & The Prof."
+    album: "The Prof Meets The SUPER VILLAIN"
+    released: "2002-10-01"
+    seconds: 160
+  - title: "Bells Of DOOM (Instrumental)"
+    artist: "MF DOOM & The Prof."
+    album: "The Prof Meets The SUPER VILLAIN"
+    released: "2002-10-01"
+    seconds: 153
+  - title: "My Favorite Ladies (Instrumental)"
+    artist: "MF DOOM & The Prof."
+    album: "The Prof Meets The SUPER VILLAIN"
+    released: "2002-10-01"
+    seconds: 164
