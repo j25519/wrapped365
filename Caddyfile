@@ -6,5 +6,7 @@
         Referrer-Policy no-referrer
         Content-Security-Policy "default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
     }
+    @html path / /index.html
+    header @html Cache-Control "no-cache"
     file_server
 }

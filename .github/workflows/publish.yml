@@ -19,6 +19,25 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v7
 
+      - name: Fingerprint static assets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          js_hash="$(sha256sum app.js | cut -c1-12)"
+          css_hash="$(sha256sum styles.css | cut -c1-12)"
+
+          sed -i -E \
+            -e "s@(src=\"\./app\.js)(\?v=[^\"]*)?(\")@\1?v=${js_hash}\3@g" \
+            -e "s@(href=\"\./styles\.css)(\?v=[^\"]*)?(\")@\1?v=${css_hash}\3@g" \
+            index.html
+
+          grep -Fq "./app.js?v=${js_hash}" index.html
+          grep -Fq "./styles.css?v=${css_hash}" index.html
+
+          echo "JavaScript fingerprint: ${js_hash}"
+          echo "Stylesheet fingerprint: ${css_hash}"
+
       - name: Check JavaScript syntax
         run: node --check app.js
 
@@ -71,6 +90,12 @@ jobs:
           fi
 
           grep -q 'Wrapped 365' /tmp/wrapped365-index.html
+          # Verify the container serves correctly fingerprinted assets
+          js_hash="$(sha256sum app.js | cut -c1-12)"
+          css_hash="$(sha256sum styles.css | cut -c1-12)"
+          grep -Fq "./app.js?v=${js_hash}" /tmp/wrapped365-index.html
+          grep -Fq "./styles.css?v=${css_hash}" /tmp/wrapped365-index.html
+          echo 'Asset fingerprint verification passed.'
           test "$(curl --fail --silent http://127.0.0.1:6967/VERSION)" = "$(cat VERSION)"
           test "$(docker exec wrapped365-smoke id -u)" = '10001'
           test "$(docker exec wrapped365-smoke id -g)" = '10001'
@@ -88,6 +113,25 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@v7
+
+      - name: Fingerprint static assets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          js_hash="$(sha256sum app.js | cut -c1-12)"
+          css_hash="$(sha256sum styles.css | cut -c1-12)"
+
+          sed -i -E \
+            -e "s@(src=\"\./app\.js)(\?v=[^\"]*)?(\")@\1?v=${js_hash}\3@g" \
+            -e "s@(href=\"\./styles\.css)(\?v=[^\"]*)?(\")@\1?v=${css_hash}\3@g" \
+            index.html
+
+          grep -Fq "./app.js?v=${js_hash}" index.html
+          grep -Fq "./styles.css?v=${css_hash}" index.html
+
+          echo "JavaScript fingerprint: ${js_hash}"
+          echo "Stylesheet fingerprint: ${css_hash}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
