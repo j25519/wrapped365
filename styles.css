@@ -333,3 +333,24 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
 .sc-import-trends>.sc-footnote{margin-top:12px}
 @media(max-width:1050px){.sc-import-trend-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.sc-coverage-rows{grid-template-columns:1fr}.sc-import-trend{padding:17px}.sc-import-trend .sc-trend-bars{gap:3px}}
+
+
+/* Home hero chips: matching inline SVGs instead of character glyphs. */
+.hero-chips > span{display:inline-flex;align-items:center;gap:7px}
+.hero-chips svg{display:block;width:14px;height:14px;flex:none}
+
+/* Keep the vertical navigation scrollable on tablets, foldables, and short desktop viewports.
+   The phone layout (700px and below) retains its existing horizontal navigation scrolling. */
+@media(min-width:701px){
+  .sidebar .navigation{
+    min-height:0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scrollbar-color:var(--accent-border) transparent;
+    padding-bottom:10px;
+  }
+  .sidebar .navigation .nav-link{flex-shrink:0}
+}
