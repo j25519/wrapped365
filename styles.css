@@ -343,6 +343,7 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
    The phone layout (700px and below) retains its existing horizontal navigation scrolling. */
 @media(min-width:701px){
   .sidebar .navigation{
+    flex:1 1 auto;
     min-height:0;
     overflow-x:hidden;
     overflow-y:auto;
@@ -350,7 +351,18 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
     -webkit-overflow-scrolling:touch;
     scrollbar-width:thin;
     scrollbar-color:var(--accent-border) transparent;
-    padding-bottom:10px;
+    touch-action:pan-y;
+    padding-bottom:20px;
   }
   .sidebar .navigation .nav-link{flex-shrink:0}
+}
+
+/* Compact the icon-only tablet sidebar without pinning any menu item.
+   Future sections remain in normal order and can scroll into view. */
+@media(min-width:701px) and (max-width:900px){
+  .sidebar{padding-top:18px;padding-bottom:14px}
+  .sidebar .navigation{margin-top:18px;gap:3px}
+  .sidebar .navigation .nav-link{padding:11px 8px;min-height:44px}
+  .sidebar .navigation .nav-link .icon{font-size:21px}
+  .sidebar .navigation .nav-separator{margin:11px 4px}
 }
