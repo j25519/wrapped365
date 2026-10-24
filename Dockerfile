@@ -24,4 +24,4 @@ COPY index.html styles.css app.js demo-tracks.yaml demo-playlists.yaml jszip.min
 USER 10001:10001
 EXPOSE 6967
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget -q -O /dev/null http://127.0.0.1:6967/ || exit 1
+    CMD wget --no-check-certificate -q -O /dev/null https://localhost:6967/ || exit 1

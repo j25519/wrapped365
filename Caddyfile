@@ -1,4 +1,9 @@
-:6967 {
+{
+    auto_https disable_redirects
+    skip_install_trust
+}
+
+https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967 {
     # comment out or remove the line below if using a reverse proxy
     tls internal
     root * /srv/wrapped365
