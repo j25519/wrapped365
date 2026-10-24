@@ -11,6 +11,15 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
+    environment:
+      XDG_CONFIG_HOME: /config
+      XDG_DATA_HOME: /data
+    volumes:
+      - caddy_config:/config
+      - caddy_data:/data
     tmpfs:
       - /tmp:rw,nosuid,noexec,size=16m,mode=1777
-    # No data volumes: browser-only processing and persistence.
+
+volumes:
+  caddy_config:
+  caddy_data:

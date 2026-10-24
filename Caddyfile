@@ -1,4 +1,5 @@
 :6967 {
+    # comment out or remove the line below if using a reverse proxy
     tls internal
     root * /srv/wrapped365
     encode zstd gzip
