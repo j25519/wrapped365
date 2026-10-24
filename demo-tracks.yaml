@@ -12668,6 +12668,21 @@ tracks:
     album: "?"
     released: "2018-03-16"
     seconds: 99
+  - title: "$WERVIN"
+    artist: "purge!"
+    album: "$WERVIN"
+    released: "2024-10-18"
+    seconds: 155
+  - title: "freeway"
+    artist: "below!"
+    album: "freeway"
+    released: "2026-01-16"
+    seconds: 151
+  - title: "GTR"
+    artist: "below!"
+    album: "GTR"
+    released: "2026-06-26"
+    seconds: 152
   - title: "Nike Ticks"
     artist: "YNG Martyr"
     album: "Nike Ticks"
