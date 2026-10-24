@@ -1,6 +1,8 @@
+# One Compose stack, independently published frontend and API images.
+# Copy .env.example to .env and set strong secrets before starting.
 services:
   wrapped365:
-    image: ghcr.io/j25519/wrapped365:latest
+    image: ghcr.io/j25519/wrapped365:beta
     container_name: wrapped365
     restart: unless-stopped
     ports:
@@ -20,7 +22,89 @@ services:
       - caddy_data:/data
     tmpfs:
       - /tmp:rw,nosuid,noexec,size=16m,mode=1777
+    networks:
+      - wrapped365-edge
+    depends_on:
+      mdb58-api:
+        condition: service_started
+
+  mdb58-api:
+    image: ghcr.io/j25519/wrapped365-mdb58:beta
+    container_name: wrapped365-mdb58-api
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,noexec,size=32m,mode=1777
+    environment:
+      DATABASE_URL: postgresql://mdb58:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@mdb58-db:5432/mdb58
+      MDB58_INVITE_PEPPER: ${MDB58_INVITE_PEPPER:?Set MDB58_INVITE_PEPPER in .env}
+      MDB58_ALLOWED_ORIGIN: ${MDB58_ALLOWED_ORIGIN:?Set exact HTTPS origin including port in .env}
+      MDB58_CLAMAV_REQUIRED: ${MDB58_CLAMAV_REQUIRED:-true}
+      MDB58_CLAMAV_HOST: mdb58-clamav
+    depends_on:
+      mdb58-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/mdb58/api/v1/health', timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    networks:
+      - wrapped365-edge
+      - mdb58-private
+
+  mdb58-db:
+    image: postgres:17-alpine
+    container_name: wrapped365-mdb58-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mdb58
+      POSTGRES_DB: mdb58
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - mdb58_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mdb58 -d mdb58"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - mdb58-private
+
+  # JSON only, strict schema API; antivirus is defence in depth, disabled by default.
+  # MDB58_CLAMAV_REQUIRED=true fails closed if the scanner isn't ready.
+  # Run docker compose --profile antivirus up -d to enable it.
+  mdb58-clamav:
+    image: clamav/clamav:stable
+    container_name: wrapped365-mdb58-clamav
+    restart: unless-stopped
+    volumes:
+      - mdb58_clamav_signatures:/var/lib/clamav
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - mdb58-private
+      - mdb58-updates
+    profiles:
+      - antivirus
+
+networks:
+  wrapped365-edge: {}
+  mdb58-private:
+    internal: true
+  # Outbound signature updates for ClamAV; database never joins this network.
+  mdb58-updates: {}
 
 volumes:
   caddy_config:
   caddy_data:
+  mdb58_postgres:
+  mdb58_clamav_signatures:

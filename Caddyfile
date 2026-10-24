@@ -1,5 +1,5 @@
 {
-    # you only need this if accessing via LAN
+    # you only need these if accessing via LAN
     auto_https disable_redirects
     skip_install_trust
     default_sni {$WRAPPED365_LAN_IP:127.0.0.1}
@@ -15,6 +15,12 @@ https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967 {
         Referrer-Policy no-referrer
         Content-Security-Policy "default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
     }
+    # same-origin beta API. keep the prefix: FastAPI registers /mdb58/api/v1/...
+    # doesn't expose the API or PostgreSQL on a host port.
+    handle /mdb58/api/* {
+        reverse_proxy mdb58-api:8080
+    }
+
     @html path / /index.html
     header @html Cache-Control "no-cache"
     file_server

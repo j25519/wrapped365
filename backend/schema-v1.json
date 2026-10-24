@@ -1,0 +1,390 @@
+{
+  "$defs": {
+    "Identifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "maxLength": 50,
+          "pattern": "^[a-z][a-z0-9_.]{1,49}$",
+          "title": "Namespace",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "Identifier",
+      "type": "object"
+    },
+    "SubmissionInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[0-9a-f-]{36}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "mode": {
+          "const": "replace_complete",
+          "title": "Mode",
+          "type": "string"
+        },
+        "archive_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Archive Sha256",
+          "type": "string"
+        },
+        "first_week": {
+          "format": "date",
+          "title": "First Week",
+          "type": "string"
+        },
+        "last_week": {
+          "format": "date",
+          "title": "Last Week",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "mode",
+        "archive_sha256",
+        "first_week",
+        "last_week"
+      ],
+      "title": "SubmissionInfo",
+      "type": "object"
+    },
+    "Track": {
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "pattern": "^t[1-9][0-9]{0,7}$",
+          "title": "Ref",
+          "type": "string"
+        },
+        "identifiers": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Identifiers",
+          "type": "array"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "artists": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 30,
+          "minItems": 1,
+          "title": "Artists",
+          "type": "array"
+        },
+        "album": {
+          "anyOf": [
+            {
+              "maxLength": 300,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Album"
+        }
+      },
+      "required": [
+        "ref",
+        "identifiers",
+        "title",
+        "artists"
+      ],
+      "title": "Track",
+      "type": "object"
+    },
+    "WeeklySession": {
+      "additionalProperties": false,
+      "properties": {
+        "week_start": {
+          "format": "date",
+          "title": "Week Start",
+          "type": "string"
+        },
+        "session_count": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Count"
+        },
+        "session_duration_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Duration Ms"
+        },
+        "active_days": {
+          "anyOf": [
+            {
+              "maximum": 7,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Active Days"
+        }
+      },
+      "required": [
+        "week_start",
+        "session_count",
+        "session_duration_ms",
+        "active_days"
+      ],
+      "title": "WeeklySession",
+      "type": "object"
+    },
+    "WeeklyTrack": {
+      "additionalProperties": false,
+      "properties": {
+        "track_ref": {
+          "title": "Track Ref",
+          "type": "string"
+        },
+        "week_start": {
+          "format": "date",
+          "title": "Week Start",
+          "type": "string"
+        },
+        "events": {
+          "maximum": 100000,
+          "minimum": 1,
+          "title": "Events",
+          "type": "integer"
+        },
+        "duration_known": {
+          "minimum": 0,
+          "title": "Duration Known",
+          "type": "integer"
+        },
+        "qualifying_plays": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Qualifying Plays"
+        },
+        "played_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Played Ms"
+        },
+        "skip_known": {
+          "minimum": 0,
+          "title": "Skip Known",
+          "type": "integer"
+        },
+        "skips": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Skips"
+        },
+        "shuffle_known": {
+          "minimum": 0,
+          "title": "Shuffle Known",
+          "type": "integer"
+        },
+        "shuffled": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Shuffled"
+        },
+        "immediate_repeats": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Immediate Repeats"
+        },
+        "time_known": {
+          "minimum": 0,
+          "title": "Time Known",
+          "type": "integer"
+        },
+        "utc_hour_buckets": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Utc Hour Buckets"
+        },
+        "weekday_events": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Weekday Events"
+        },
+        "weekend_events": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Weekend Events"
+        }
+      },
+      "required": [
+        "track_ref",
+        "week_start",
+        "events",
+        "duration_known",
+        "qualifying_plays",
+        "skip_known",
+        "skips",
+        "shuffle_known",
+        "shuffled",
+        "immediate_repeats",
+        "time_known",
+        "utc_hour_buckets",
+        "weekday_events",
+        "weekend_events"
+      ],
+      "title": "WeeklyTrack",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "aggregation_version": {
+      "const": "cplus-1",
+      "title": "Aggregation Version",
+      "type": "string"
+    },
+    "source": {
+      "const": "spotify_extended_history",
+      "title": "Source",
+      "type": "string"
+    },
+    "submission": {
+      "$ref": "#/$defs/SubmissionInfo"
+    },
+    "tracks": {
+      "items": {
+        "$ref": "#/$defs/Track"
+      },
+      "maxItems": 200000,
+      "minItems": 1,
+      "title": "Tracks",
+      "type": "array"
+    },
+    "weekly_tracks": {
+      "items": {
+        "$ref": "#/$defs/WeeklyTrack"
+      },
+      "maxItems": 1500000,
+      "minItems": 1,
+      "title": "Weekly Tracks",
+      "type": "array"
+    },
+    "weekly_sessions": {
+      "items": {
+        "$ref": "#/$defs/WeeklySession"
+      },
+      "maxItems": 3000,
+      "title": "Weekly Sessions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "aggregation_version",
+    "source",
+    "submission",
+    "tracks",
+    "weekly_tracks",
+    "weekly_sessions"
+  ],
+  "title": "Contribution",
+  "type": "object"
+}

@@ -9,3 +9,6 @@
 *.md
 !LICENSE-JSZIP.txt
 compose.yaml
+backend/
+tests/
+MDB58-DEPLOY.md
