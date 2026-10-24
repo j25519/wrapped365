@@ -68,9 +68,9 @@
     const ui=document.createElement('section');
     ui.id='mdb58-optin';ui.className='mdb58-optin hidden';ui.setAttribute('aria-label','MDB58 private beta contribution');
     ui.innerHTML=`<div class="mdb58-optin-main"><div class="mdb58-check-row">
-       <label class="mdb58-label" for="mdb58-contribute"><input id="mdb58-contribute" type="checkbox" autocomplete="off"><span>Contribute weekly listening insights to <strong>MDB58</strong></span></label>
+       <label class="mdb58-label" for="mdb58-contribute"><input id="mdb58-contribute" type="checkbox" autocomplete="off"><span>Contribute listening insights to <strong>MDB58</strong></span></label>
        <button class="mdb58-help" id="mdb58-help" type="button" aria-label="About MDB58 contributions" aria-haspopup="dialog" aria-controls="mdb58-dialog">?</button></div>
-       <p>Optional, pseudonymous music discovery research. Your normal Wrapped 365 report stays local.</p></div>
+       <p>Optional privacy respecting music discovery research. Your normal Wrapped 365 report stays local.</p></div>
        <span class="mdb58-preview">Private beta</span>`;
     dropzone.insertAdjacentElement('afterend',ui);
     const notice=document.createElement('p'); notice.id='mdb58-status'; notice.className='mdb58-status hidden';
