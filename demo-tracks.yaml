@@ -372,6 +372,136 @@ tracks:
     album: "The Beatles"
     released: "1968-11-22"
     seconds: 193
+  - title: "I Saw Her Standing There"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 173
+  - title: "Misery"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 108
+  - title: "Anna (Go to Him)"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 177
+  - title: "Chains"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 145
+  - title: "Boys"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 146
+  - title: "Ask Me Why"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 146
+  - title: "Please Please Me"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 120
+  - title: "Love Me Do"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 141
+  - title: "P.S. I Love You"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 124
+  - title: "Baby It's You"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 160
+  - title: "Do You Want to Know a Secret"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 117
+  - title: "A Taste of Honey"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 123
+  - title: "There's a Place"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 110
+  - title: "Twist and Shout"
+    artist: "The Beatles"
+    album: "Please Please Me"
+    released: "1963-03-22"
+    seconds: 155
+  - title: "Two of Us"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 216
+  - title: "Dig a Pony"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 235
+  - title: "Across the Universe"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 228
+  - title: "I Me Mine"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 145
+  - title: "Dig It"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 50
+  - title: "Let It Be"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 243
+  - title: "Maggie Mae"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 40
+  - title: "I've Got a Feeling"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 217
+  - title: "One After 909"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 173
+  - title: "The Long and Winding Road"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 218
+  - title: "For You Blue"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 152
+  - title: "Get Back"
+    artist: "The Beatles"
+    album: "Let It Be"
+    released: "1970-05-08"
+    seconds: 189
   - title: "Serve the Servants"
     artist: "Nirvana"
     album: "In Utero"
@@ -1585,6 +1715,121 @@ tracks:
     album: "Sorry 4 What"
     released: "2022-09-30"
     seconds: 245
+  - title: "Revenge of Fargo"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 198
+  - title: "Crodie From The 9 // Guy In My City"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 236
+  - title: "Who ?"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 259
+  - title: "Jalen Brunson"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 184
+  - title: "Heartbreak From Cell 210"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 128
+  - title: "Deen & AB // SGA"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 240
+  - title: "Gyal Gimmie"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 143
+  - title: "Hasty Market // Toronto (feat. HollywoodSos)"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 402
+  - title: "Penthouse Blue"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 253
+  - title: "Many Men Pt. 2 (feat. VV$ KEN)"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 185
+  - title: "GYMR"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 180
+  - title: "9Side Bodmon"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 145
+  - title: "The Over Song"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 222
+  - title: "Swangin'"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 197
+  - title: "Favorite Eater"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 238
+  - title: "Clouded // TJ's Interlude (feat. Tvee Sizzle)"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 224
+  - title: "Kody"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 248
+  - title: "Streets Want You Back"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 136
+  - title: "Dancers Remorse (Sin City)"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 225
+  - title: "Scarborough to Dubai"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 160
+  - title: "First Day Out (R&B version)"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 189
+  - title: "Wrong Moves"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 97
+  - title: "I Know Everything"
+    artist: "Tory Lanez"
+    album: "Made You Think I Was Gone ...But"
+    released: "2026-07-17"
+    seconds: 168
   - title: "Ran To Atlanta (feat. Future & Molly Santana)"
     artist: "Drake"
     album: "ICEMAN"
@@ -7444,6 +7689,371 @@ tracks:
     album: "So Slow"
     released: "2024-11-22"
     seconds: 147
+  - title: "FLIRT (feat. Cutty Vibez)"
+    artist: "Slevpy808"
+    album: "FLIRT"
+    released: "2024-09-20"
+    seconds: 155
+  - title: "I KNOW (feat. $at.urn)"
+    artist: "Slevpy808"
+    album: "I KNOW"
+    released: "2025-03-07"
+    seconds: 118
+  - title: "Comin Round ⛧"
+    artist: "Slevpy808"
+    album: "Comin Round ⛧"
+    released: "2023-04-14"
+    seconds: 156
+  - title: "Cross My Heart (feat. CLXUDA & Richy Santo)"
+    artist: "Slevpy808"
+    album: "Cross My Heart"
+    released: "2021-10-07"
+    seconds: 138
+  - title: "Your Eyes <3"
+    artist: "Slevpy808"
+    album: "Your Eyes <3"
+    released: "2023-06-16"
+    seconds: 142
+  - title: "HELLO (feat. $at.urn)"
+    artist: "Slevpy808"
+    album: "HELLO"
+    released: "2024-03-23"
+    seconds: 100
+  - title: "Cash Flick⟡"
+    artist: "Slevpy808"
+    album: "Cash Flick⟡"
+    released: "2026-06-19"
+    seconds: 92
+  - title: "$tacks (feat. CLXUDA & ILYAdrian)"
+    artist: "Slevpy808"
+    album: "$tacks"
+    released: "2022-02-25"
+    seconds: 153
+  - title: "CRUSH! (feat. $at.urn)"
+    artist: "Slevpy808"
+    album: "CRUSH!"
+    released: "2022-11-11"
+    seconds: 142
+  - title: "GHO$T (feat. DeeKay & ILYAdrian)"
+    artist: "Slevpy808"
+    album: "GHO$T"
+    released: "2022-06-24"
+    seconds: 187
+  - title: "Butterfly Tat (feat. Savage Ga$p)"
+    artist: "Resentvul"
+    album: "Butterfly Tat (feat. Savage Ga$p)"
+    released: "2025-07-30"
+    seconds: 184
+  - title: "Drag Race"
+    artist: "Resentvul"
+    album: "Drag Race"
+    released: "2026-05-22"
+    seconds: 106
+  - title: "Goth Girls"
+    artist: "Resentvul"
+    album: "Goth Girls"
+    released: "2026-07-17"
+    seconds: 105
+  - title: "MODKIT"
+    artist: "Resentvul"
+    album: "MODKIT"
+    released: "2026-01-09"
+    seconds: 94
+  - title: "Shock Collar"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 129
+  - title: "Above and Below"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 105
+  - title: "Curbstomp"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 106
+  - title: "Murder Scene"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 110
+  - title: "Murder Mind"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 100
+  - title: "Fade"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 106
+  - title: "9teen"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 122
+  - title: "Pitch Black"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 131
+  - title: "Save Me"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 108
+  - title: "Red Rum"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 117
+  - title: "Breathe"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 92
+  - title: "Bloody Nose"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 99
+  - title: "Comatose"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 96
+  - title: "Fight Night"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 120
+  - title: "GOLDEN FVNGS"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 128
+  - title: "Razorback"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 112
+  - title: "The Bear"
+    artist: "Resentvul"
+    album: "Resentir"
+    released: "2025-05-06"
+    seconds: 118
+  - title: "DIE HIGH"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 105
+  - title: "TANK"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 132
+  - title: "CATCH ONE"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 140
+  - title: "YAWK"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 104
+  - title: "DUST IT"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 148
+  - title: "TURBO"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 133
+  - title: "TYSON"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 124
+  - title: "HA! (with NORTMIRAGE)"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 151
+  - title: "PRESSURE"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 111
+  - title: "Kathryn V"
+    artist: "$atori Zoom"
+    album: "OPERATION: NEMESIS"
+    released: "2023-06-02"
+    seconds: 162
+  - title: "Kathryn VI"
+    artist: "$atori Zoom"
+    album: "Kathryn VI"
+    released: "2026-05-22"
+    seconds: 221
+  - title: "BUSTER"
+    artist: "$atori Zoom"
+    album: "BUSTER"
+    released: "2019-09-11"
+    seconds: 141
+  - title: "REDLINE"
+    artist: "$atori Zoom"
+    album: "REDLINE"
+    released: "2026-08-21"
+    seconds: 132
+  - title: "HANDS UP (with DeeKay & CLXUDA)"
+    artist: "Cutty Vibez"
+    album: "HANDS UP"
+    released: "2026-05-08"
+    seconds: 187
+  - title: "THE DEVIL"
+    artist: "Cutty Vibez"
+    album: "THE DEVIL"
+    released: "2026-09-27"
+    seconds: 110
+  - title: "YOU"
+    artist: "Cutty Vibez"
+    album: "YOU"
+    released: "2026-10-09"
+    seconds: 137
+  - title: "ACT UP (with Jaswed)"
+    artist: "Cutty Vibez"
+    album: "ACT UP"
+    released: "2025-01-31"
+    seconds: 177
+  - title: "PLASTIC MEMORIES (with XATASHI & GREYDAWN)"
+    artist: "Cutty Vibez"
+    album: "PLASTIC MEMORIES"
+    released: "2025-03-14"
+    seconds: 182
+  - title: "RAP CHECKS (with Jaswed & axaero)"
+    artist: "Cutty Vibez"
+    album: "RAP CHECKS"
+    released: "2026-07-31"
+    seconds: 184
+  - title: "TASTE"
+    artist: "Cutty Vibez"
+    album: "TASTE"
+    released: "2025-02-28"
+    seconds: 115
+  - title: "WAIT A MINUTE (feat. Slevpy808)"
+    artist: "Cutty Vibez"
+    album: "WAIT A MINUTE (feat. Slevpy808)"
+    released: "2024-05-10"
+    seconds: 152
+  - title: "WHAT WE COULD OF BEEN"
+    artist: "Cutty Vibez"
+    album: "WHAT WE COULD OF BEEN"
+    released: "2024-04-12"
+    seconds: 141
+  - title: "PRETTY LITTLE LIARS (with Qrystral)"
+    artist: "Cutty Vibez"
+    album: "PRETTY LITTLE LIARS"
+    released: "2025-01-17"
+    seconds: 114
+  - title: "Listen Up"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 155
+  - title: "Dum, Dumb, and Dumber (with Young Thug & Future)"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 227
+  - title: "F U 2x"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 117
+  - title: "I Promise"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 183
+  - title: "Redbone (with GloRilla)"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 132
+  - title: "By Myself (feat. Rod Wave & Rylo Rodriguez)"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 197
+  - title: "Due 4A Win"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 126
+  - title: "Stiff Gang"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 171
+  - title: "So Sorry"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 200
+  - title: "Stuff (feat. Travis Scott)"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 180
+  - title: "Say Twin"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 165
+  - title: "Free Promo"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 180
+  - title: "Outfit (with 21 Savage)"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 177
+  - title: "Drugs Talkin"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 135
+  - title: "Streets Colder"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 127
+  - title: "99 (with Future)"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 112
+  - title: "Idol"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 108
+  - title: "Running This Shit"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 143
+  - title: "My Shawty"
+    artist: "Lil Baby"
+    album: "WHAM (Extended Version)"
+    released: "2025-01-10"
+    seconds: 152
   - title: "Professional"
     artist: "The Weeknd"
     album: "Kiss Land"
@@ -8238,6 +8848,91 @@ tracks:
     album: "JACKBOYS"
     released: "2019-12-27"
     seconds: 181
+  - title: "JB2 RADIO"
+    artist: "JACKBOYS"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 31
+  - title: "CHAMPAIN & VACAY (with Don Toliver)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 184
+  - title: "2000 EXCURSION (with Sheck Wes & Don Toliver)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 222
+  - title: "KICK OUT"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 170
+  - title: "DUMBO"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 238
+  - title: "MM3"
+    artist: "SoFaygo"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 174
+  - title: "VELOUR (with Sheck Wes)"
+    artist: "Don Toliver"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 144
+  - title: "CONTEST (with SoFaygo)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 272
+  - title: "ILMB (feat. Travis Scott)"
+    artist: "Sheck Wes"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 184
+  - title: "WHERE WAS YOU (with Playboi Carti & Future)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 272
+  - title: "NO COMMENTS"
+    artist: "Don Toliver"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 129
+  - title: "BEEP BEEP (with SahBabii)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 234
+  - title: "PBT (with Tyla & Vybz Kartel)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 250
+  - title: "SHYNE (with GloRilla)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 193
+  - title: "OUTSIDE (with YoungBoy Never Broke Again)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 183
+  - title: "CANT STOP (with Future & Wallie the Sensei)"
+    artist: "Don Toliver"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 132
+  - title: "FLORIDA FLOW (with Kodak Black)"
+    artist: "Travis Scott"
+    album: "JACKBOYS 2"
+    released: "2025-07-13"
+    seconds: 328
   - title: "Can You Feel My Heart"
     artist: "Bring Me The Horizon"
     album: "Sempiternal"
@@ -10538,6 +11233,116 @@ tracks:
     album: "2093"
     released: "2024-02-16"
     seconds: 156
+  - title: "GEEK TIMË"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 170
+  - title: "STFU"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 104
+  - title: "THEY TELL MË"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 173
+  - title: "HEARD OF MË"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 153
+  - title: "SPEEDBALL"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 137
+  - title: "U DONT KNOW LYFE"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 193
+  - title: "ORCHESTRATË"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 173
+  - title: "BË QUIET (feat. Kodak Black)"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 174
+  - title: "THE COSTËS"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 153
+  - title: "GO2WORK (feat. Summrs)"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 203
+  - title: "GONE 4 A MIN"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 135
+  - title: "FOREVER AGAIN"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 199
+  - title: "ON 1"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 184
+  - title: "FLYTROOP"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 166
+  - title: "ELIMINATË"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 179
+  - title: "LYING 5 FUN"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 234
+  - title: "NEW HIGH (feat. Don Toliver)"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 161
+  - title: "SO WHAT"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 144
+  - title: "LYFESTYLE (feat. Lil Durk)"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 174
+  - title: "GOD TALKIN SHHH"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 195
+  - title: "LYFE PARTY"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 160
+  - title: "FATË (BONUS)"
+    artist: "Yeat"
+    album: "LYFESTYLE"
+    released: "2024-10-18"
+    seconds: 198
   - title: "Ramblin' Gamblin' Man"
     artist: "Bob Seger"
     album: "Ramblin' Gamblin' Man"
@@ -11863,6 +12668,81 @@ tracks:
     album: "?"
     released: "2018-03-16"
     seconds: 99
+  - title: "Nike Ticks"
+    artist: "YNG Martyr"
+    album: "Nike Ticks"
+    released: "2019-10-11"
+    seconds: 102
+  - title: "50k"
+    artist: "YNG Martyr"
+    album: "50k"
+    released: "2023-12-08"
+    seconds: 129
+  - title: "LV STEPPERS"
+    artist: "YNG Martyr"
+    album: "LV STEPPERS"
+    released: "2024-10-04"
+    seconds: 114
+  - title: "CHALANT"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 166
+  - title: "UH HUH"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 146
+  - title: "BPD"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 133
+  - title: "SINCE YOU BEEN GONE"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 107
+  - title: "BODYCOUNT (feat. 1900Rugrat)"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 145
+  - title: "MONEY"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 116
+  - title: "THANK GOD (feat. RI WAVEY)"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 149
+  - title: "GEEKD"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 130
+  - title: "WIT YA"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 147
+  - title: "MILKSHAKES"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 129
+  - title: "ADMIT IT"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 149
+  - title: "REAL GEEK"
+    artist: "YNG Martyr"
+    album: "CHALANT"
+    released: "2026-03-27"
+    seconds: 164
   - title: "!!!!!!!"
     artist: "Billie Eilish"
     album: "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?"
@@ -13898,3 +14778,58 @@ tracks:
     album: "Discovery"
     released: "2001-03-12"
     seconds: 600
+  - title: "Boots of Chinese Plastic"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 151
+  - title: "The Nothing Maker"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 238
+  - title: "Don't Lose Faith in Me"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 165
+  - title: "Don't Cut Your Hair"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 134
+  - title: "Love's a Mystery"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 181
+  - title: "The Last Ride"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 220
+  - title: "Almost Perfect"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 288
+  - title: "You Didn't Have To"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 189
+  - title: "Rosalee"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 254
+  - title: "Break Up the Concrete"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 161
+  - title: "One Thing Never Changed"
+    artist: "Pretenders"
+    album: "Break Up the Concrete"
+    released: "2008-10-07"
+    seconds: 224
