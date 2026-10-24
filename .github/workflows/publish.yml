@@ -78,7 +78,7 @@ jobs:
               echo "Wrapped 365 exited during startup (state: $state)" >&2
               exit 1
             fi
-            if curl --fail --silent http://127.0.0.1:6967/ -o /tmp/wrapped365-index.html; then
+            if curl --fail --silent https://127.0.0.1:6967/ -o /tmp/wrapped365-index.html; then
               ready=true
               break
             fi
@@ -96,7 +96,7 @@ jobs:
           grep -Fq "./app.js?v=${js_hash}" /tmp/wrapped365-index.html
           grep -Fq "./styles.css?v=${css_hash}" /tmp/wrapped365-index.html
           echo 'Asset fingerprint verification passed.'
-          test "$(curl --fail --silent http://127.0.0.1:6967/VERSION)" = "$(cat VERSION)"
+          test "$(curl --fail --silent https://127.0.0.1:6967/VERSION)" = "$(cat VERSION)"
           test "$(docker exec wrapped365-smoke id -u)" = '10001'
           test "$(docker exec wrapped365-smoke id -g)" = '10001'
           test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' wrapped365-smoke)" = 'true'
