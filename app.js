@@ -908,6 +908,7 @@
     if (state.loading) return;
     const isZip = /\.zip$/i.test(file.name), isJson = /\.json$/i.test(file.name);
     if (!isZip && !isJson) { showError('Choose a Spotify .zip archive or a .json history/playlist file.'); return; }
+    const mdb58Import = window.MDB58?.beginImport?.();
     const trace = startTrace('import', file.size);
     let phase = 'Opening archive';
     state.loading = true;
@@ -1034,13 +1035,15 @@
         try { await saveReport(report); } catch (error) { console.warn('Final diagnostic metrics could not be written:', error); }
       }
       await persistSoundcheck(report.soundcheck);
-      setProgress('Your report is ready.', saved ? 'Saved in your browser. Nothing was uploaded.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
+      setProgress('Your report is ready.', saved ? 'Saved in your browser. MDB58 contributions are optional and not live yet.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
       report.unsaved = !saved;
       await refreshHistoryCount();
       activateReport(report);
+      window.MDB58?.completeImport?.(mdb58Import);
       // A playlist only Account Data export has no listening statistics to show.
       if (!builder.imported && playlistImport.playlists.length) openView('playlists', false);
     } catch (error) {
+      window.MDB58?.cancelImport?.(mdb58Import);
       console.error('Local import error:', error);
       await failedSoundcheck(trace, phase);
       showError(error instanceof Error ? error.message : 'Could not read this archive.');

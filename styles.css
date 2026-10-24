@@ -366,3 +366,93 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
   .sidebar .navigation .nav-link .icon{font-size:21px}
   .sidebar .navigation .nav-separator{margin:11px 4px}
 }
+
+/* MDB58 consent interface — intentionally isolated from Wrapped 365 styles.css. */
+.mdb58-optin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  flex-wrap: wrap;
+  margin: 13px 0 22px;
+  padding: 17px 20px;
+  background: var(--surface, #111713);
+  border: 1px solid var(--line, #28342b);
+  border-radius: 14px;
+}
+.mdb58-optin-main { flex: 1 1 290px; min-width: 0; }
+.mdb58-check-row { display: flex; align-items: center; gap: 9px; }
+.mdb58-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  cursor: pointer;
+  color: var(--text, #f5f8f5);
+  font-size: 13px;
+  font-weight: 620;
+  line-height: 1.55;
+}
+.mdb58-label strong { color: var(--accent, #1ed760); font-weight: 800; }
+.mdb58-label input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent, #1ed760);
+  cursor: pointer;
+}
+.mdb58-help {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--line, #28342b);
+  border-radius: 50%;
+  background: var(--surface2, #171e19);
+  color: var(--muted, #91a098);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.mdb58-help:hover, .mdb58-help:focus-visible {
+  border-color: var(--accent, #1ed760);
+  color: var(--accent, #1ed760);
+}
+.mdb58-label input:focus-visible, .mdb58-help:focus-visible {
+  outline: 2px solid var(--accent, #1ed760);
+  outline-offset: 3px;
+}
+.mdb58-optin p {
+  margin: 5px 0 0 29px;
+  color: var(--muted, #91a098);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.mdb58-preview {
+  flex: none;
+  color: var(--muted, #91a098);
+  background: var(--surface2, #171e19);
+  border: 1px solid var(--line, #28342b);
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+/* Reuses the same dialog-body, kicker, dialog-close and button styles as How this works. */
+#mdb58-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; max-height: calc(100dvh - 24px); overflow-y: auto; }
+#mdb58-dialog .dialog-body { max-width: 580px; }
+#mdb58-dialog .mdb58-dialog-note {
+  margin: 15px 0 20px;
+  color: var(--muted, #91a098);
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .mdb58-optin { padding: 15px; align-items: flex-start; gap: 12px; }
+  .mdb58-optin-main { flex-basis: 100%; }
+  .mdb58-preview { margin-left: 29px; }
+  #mdb58-dialog .dialog-body { padding: 24px 19px; }
+}
