@@ -1,6 +1,8 @@
 {
+    # you only need this if accessing via LAN
     auto_https disable_redirects
     skip_install_trust
+    default_sni {$WRAPPED365_LAN_IP:127.0.0.1}
 }
 
 https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967 {
