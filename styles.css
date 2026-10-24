@@ -456,3 +456,17 @@ html.theme-animating::after{content:"";position:fixed;inset:0;z-index:100;pointe
   .mdb58-preview { margin-left: 29px; }
   #mdb58-dialog .dialog-body { padding: 24px 19px; }
 }
+
+/* MDB58 beta functionality is hidden by default and only enabled by API confirmation. */
+.mdb58-beta-panel,.mdb58-removal{margin-top:20px}
+.mdb58-beta-panel p,.mdb58-removal p{color:var(--muted);font-size:12px;max-width:650px}
+.mdb58-beta-panel h2,.mdb58-removal h2{font-size:20px;margin:9px 0}
+.mdb58-feedback,.mdb58-status{font-size:12px;line-height:1.6;color:var(--accent-soft);margin:12px 0}
+.mdb58-error,.mdb58-feedback[role="alert"]{color:#ffb1a2}
+.mdb58-field-label{display:block;font-size:12px;color:var(--text);margin-bottom:9px;font-weight:700}
+.mdb58-field{display:block;width:100%;padding:13px 15px;margin-bottom:10px;color:var(--text);background:var(--surface2);border:1px solid var(--line);border-radius:10px}
+.mdb58-field:focus-visible{outline:2px solid var(--accent)}
+.mdb58-dialog-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+#mdb58-invite-dialog,#mdb58-remove-dialog{max-height:calc(100dvh - 24px);overflow:auto}
+.mdb58-removal .btn-danger{gap:8px}
+@media(max-width:500px){.mdb58-dialog-actions .btn{width:100%}}

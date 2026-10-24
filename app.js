@@ -908,7 +908,7 @@
     if (state.loading) return;
     const isZip = /\.zip$/i.test(file.name), isJson = /\.json$/i.test(file.name);
     if (!isZip && !isJson) { showError('Choose a Spotify .zip archive or a .json history/playlist file.'); return; }
-    const mdb58Import = window.MDB58?.beginImport?.();
+    const mdb58Import = window.MDB58?.beginImport?.(file);
     const trace = startTrace('import', file.size);
     let phase = 'Opening archive';
     state.loading = true;
@@ -972,6 +972,13 @@
             phase = 'Aggregate listening data';
             const began = performance.now();
             await ingest(builder, parsed);
+            // Pass the already parsed source rows to MDB58. It calculates its own privacy scoped aggregates; the original events never leave this page.
+            // Failure in an optional integration must not break local reports.
+            try { await window.MDB58?.receiveListeningHistory?.(parsed, mdb58Import, type === 'Extended Streaming History'); }
+            catch (mdbError) {
+              console.warn('MDB58 could not collect listening data:', mdbError);
+              window.MDB58?.cancelImport?.(mdb58Import);
+            }
             timeStage(trace, 'Aggregate events', began);
           }
           parsed = null;
@@ -1003,6 +1010,11 @@
           phase = 'Aggregate listening data';
           const began = performance.now();
           await ingest(builder, parsed);
+          try { await window.MDB58?.receiveListeningHistory?.(parsed, mdb58Import, extendedName(file.name)); }
+          catch (mdbError) {
+            console.warn('MDB58 could not collect listening data:', mdbError);
+            window.MDB58?.cancelImport?.(mdb58Import);
+          }
           timeStage(trace, 'Aggregate events', began);
         }
       }
@@ -1035,7 +1047,7 @@
         try { await saveReport(report); } catch (error) { console.warn('Final diagnostic metrics could not be written:', error); }
       }
       await persistSoundcheck(report.soundcheck);
-      setProgress('Your report is ready.', saved ? 'Saved in your browser. MDB58 contributions are optional and not live yet.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
+      setProgress('Your report is ready.', saved ? 'Saved in your browser. MDB58 sharing runs separately, only if you opted in.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
       report.unsaved = !saved;
       await refreshHistoryCount();
       activateReport(report);
