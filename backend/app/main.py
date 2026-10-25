@@ -107,8 +107,7 @@ def me(request: Request, response: Response):
         row = db.execute('''SELECT a.contributor_id,c.consent_version FROM auth_sessions a
            JOIN contributors c ON c.id=a.contributor_id WHERE a.token_digest=%s AND a.expires_at>now() AND c.deleted_at IS NULL''', (digest(token),)).fetchone()
         if not row: return {'activated': False, 'contributed': False}
-        active = db.execute('''SELECT cs.source, cs.submission_id,
-                  s.archive_sha256 AS archive_sha256, cs.content_sha256
+        active = db.execute('''SELECT source, submission_id, s.archive_sha256 AS archive_sha256, content_sha256
            FROM contribution_snapshots cs JOIN submissions s ON s.id=cs.submission_id
            WHERE cs.contributor_id=%s AND cs.active''', (row['contributor_id'],)).fetchall()
         # CSRF is deliberately NOT returned; held only in current tab after activate.
@@ -327,3 +326,10 @@ class RequestSizeLimit:
         return await self.app(scope,replay,send)
 
 app.add_middleware(RequestSizeLimit)
+
+# Admin routes and static assets are isolated from contributor endpoints.
+# Admin authentication is a separate bearer token kept only in the tab's RAM.
+from fastapi.staticfiles import StaticFiles
+from .admin import router as admin_router, ASSETS as admin_assets
+app.include_router(admin_router)
+app.mount('/mdb58/admin/assets', StaticFiles(directory=str(admin_assets)), name='mdb58-admin-assets')

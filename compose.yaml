@@ -46,6 +46,8 @@ services:
       MDB58_ALLOWED_ORIGIN: ${MDB58_ALLOWED_ORIGIN:?Set exact HTTPS origin including port in .env}
       MDB58_CLAMAV_REQUIRED: ${MDB58_CLAMAV_REQUIRED:-true}
       MDB58_CLAMAV_HOST: mdb58-clamav
+      # Needed only until first-time admin password has been set.
+      MDB58_ADMIN_SETUP_TOKEN: ${MDB58_ADMIN_SETUP_TOKEN:-}
     depends_on:
       mdb58-db:
         condition: service_healthy

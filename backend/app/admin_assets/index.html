@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080b0a">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>MDB58 — Control Room</title>
+  <link rel="stylesheet" href="/mdb58/admin/assets/admin.css">
+  <script src="/mdb58/admin/assets/admin.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="wordmark"><span class="wordmark-icon" aria-hidden="true"><i></i><i></i><i></i></span><span>MDB<span class="accent">58</span></span><span class="wordmark-divider"></span><span class="wordmark-sub">CONTROL ROOM</span></div>
+      <div class="auth-symbol" aria-hidden="true">⬡</div>
+      <div class="eyebrow" id="auth-eyebrow">SECURE ACCESS</div>
+      <h1 id="auth-heading">Loading administration…</h1>
+      <p class="muted" id="auth-description">Checking whether the administrator has been configured.</p>
+      <form id="setup-form" class="auth-form hidden" autocomplete="off">
+        <label for="setup-key">One-time setup key</label>
+        <input id="setup-key" type="password" autocomplete="off" minlength="32" maxlength="256" required placeholder="Key from your Asus .env">
+        <label for="setup-password">Create admin password</label>
+        <input id="setup-password" type="password" autocomplete="new-password" minlength="14" maxlength="256" required placeholder="At least 14 characters">
+        <label for="setup-confirm">Confirm password</label>
+        <input id="setup-confirm" type="password" autocomplete="new-password" minlength="14" maxlength="256" required placeholder="Re-enter your password">
+        <div class="fine-print">Your password is salted and hashed with Argon2id. MDB58 never stores your password or setup key in browser storage.</div>
+        <button type="submit" id="setup-submit" class="btn btn-primary">Create administrator <span aria-hidden="true">→</span></button>
+      </form>
+      <form id="login-form" class="auth-form hidden">
+        <label for="login-password">Admin password</label>
+        <input id="login-password" type="password" autocomplete="current-password" required placeholder="Enter your admin password">
+        <button type="submit" id="login-submit" class="btn btn-primary">Unlock dashboard <span aria-hidden="true">→</span></button>
+      </form>
+      <p id="auth-error" class="error hidden" role="alert"></p>
+      <div class="auth-bottom"><span class="live-dot"></span> Private database · Local deployment · No external analytics</div>
+    </div>
+  </div>
+
+  <div id="dashboard" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="wordmark sidebar-brand"><span class="wordmark-icon" aria-hidden="true"><i></i><i></i><i></i></span><span>MDB<span class="accent">58</span></span></div>
+      <div class="sidebar-caption">DISCOVERY ENGINE / ADMIN</div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="sidebar-nav" aria-label="Dashboard navigation">
+        <a href="#overview" class="nav-item selected" data-nav="overview"><span class="nav-ico">◫</span> Overview</a>
+        <a href="#activity" class="nav-item" data-nav="activity"><span class="nav-ico">≋</span> Upload activity</a>
+        <a href="#system" class="nav-item" data-nav="system"><span class="nav-ico">⬡</span> Database health</a>
+      </nav>
+      <div class="sidebar-footer"><div class="sidebar-privacy"><span class="live-dot"></span><div><strong>Private by design</strong><small>Contributor data never leaves the database through this dashboard.</small></div></div><span>MDB58 · ADMINISTRATION</span></div>
+    </aside>
+    <div class="main-wrap">
+      <header class="topbar">
+        <div class="breadcrumb"><span>MDB58</span><span class="slash">/</span><strong>Control Room</strong></div>
+        <div class="topbar-actions"><span class="status-pill"><span class="live-dot"></span> API connected</span><button type="button" id="refresh" class="icon-btn" title="Refresh metrics" aria-label="Refresh metrics">↻</button><button type="button" id="logout" class="btn btn-quiet">Lock dashboard</button></div>
+      </header>
+      <main>
+        <section id="overview" class="page-hero">
+          <div class="eyebrow">THE ENGINE ROOM <span class="spark">✳</span></div>
+          <h1>All systems<span class="accent">.</span></h1>
+          <p class="muted">A private view of the contributions powering MDB58. Only aggregated statistics are displayed.</p>
+          <div class="hero-tags"><span>LIVE DATABASE</span><span>WEEKLY C+ AGGREGATES</span><span>INVITATION-ONLY BETA</span></div>
+        </section>
+        <div class="section-heading"><div><span class="eyebrow">AT A GLANCE</span><h2>Contribution overview</h2></div><span class="subtle" id="last-refreshed">Waiting for data</span></div>
+        <section class="metric-grid" aria-label="Contribution overview statistics">
+          <article class="metric"><span class="metric-icon">♟</span><div class="metric-value" id="stat-contributors">—</div><div class="metric-label">Active contributors</div><div class="metric-detail" id="stat-activated">— invitations activated</div></article>
+          <article class="metric"><span class="metric-icon">♫</span><div class="metric-value" id="stat-tracks">—</div><div class="metric-label">Contributed tracks</div><div class="metric-detail">Distinct source tracks in active snapshots</div></article>
+          <article class="metric"><span class="metric-icon">◷</span><div class="metric-value" id="stat-plays">—</div><div class="metric-label">Recorded music events</div><div class="metric-detail" id="stat-qualifying">— qualifying plays</div></article>
+          <article class="metric"><span class="metric-icon">▥</span><div class="metric-value" id="stat-rows">—</div><div class="metric-label">Weekly track records</div><div class="metric-detail">C+ aggregates stored in PostgreSQL</div></article>
+        </section>
+        <section class="panel-grid" aria-label="Listening statistics and activity">
+          <article class="panel panel-wide">
+            <div class="panel-head"><div><span class="eyebrow">LISTENING TIMELINE</span><h2>Recent weekly activity</h2></div><span class="legend"><span class="legend-swatch"></span> Music events</span></div>
+            <div id="activity-chart" class="activity-chart" role="img" aria-label="Weekly music events bar chart"><div class="empty-state">No contributions yet.</div></div>
+            <p class="chart-foot">Aggregated events from active snapshots · Latest 12 observed weeks · UTC week starts</p>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">CATALOGUE</span><h2>Music indexed</h2></div></div>
+            <div class="info-rows"><div><span>MDB58 recordings</span><strong id="stat-recordings">—</strong></div><div><span>Provider track entries</span><strong id="stat-catalog">—</strong></div><div><span>Active source snapshots</span><strong id="stat-snapshots">—</strong></div><div><span>Listening hours</span><strong id="stat-hours">—</strong></div><div><span>Known skip rate</span><strong id="stat-skips">—</strong></div></div>
+          </article>
+        </section>
+        <section id="activity" class="section-anchor">
+          <div class="section-heading"><div><span class="eyebrow">CONTRIBUTION PIPELINE</span><h2>Upload activity</h2></div></div>
+          <div class="panel-grid">
+            <article class="panel">
+              <div class="panel-head"><div><span class="eyebrow">SUBMISSION STATES</span><h2>Ingestion status</h2></div></div>
+              <div id="state-list" class="state-list"><div class="empty-state">No submissions yet.</div></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><div><span class="eyebrow">ACTIVE DATA SOURCES</span><h2>Contribution origins</h2></div></div>
+              <div id="source-list" class="state-list"><div class="empty-state">No active sources yet.</div></div>
+            </article>
+          </div>
+          <article class="panel recent-panel">
+            <div class="panel-head"><div><span class="eyebrow">INGESTION HISTORY</span><h2>Recent submissions</h2></div><span class="subtle">Most recent 12 · No contributor identifiers</span></div>
+            <div class="table-scroll"><table><thead><tr><th>Status</th><th>Data source</th><th>Active snapshot</th><th>Submitted</th><th>Last updated</th></tr></thead><tbody id="recent-body"><tr><td colspan="5" class="empty-state">No submissions yet.</td></tr></tbody></table></div>
+          </article>
+        </section>
+        <section id="system" class="section-anchor">
+          <div class="section-heading"><div><span class="eyebrow">SYSTEM INFORMATION</span><h2>Database health</h2></div></div>
+          <article class="panel system-grid"><div><span class="subtle">DATABASE ENGINE</span><strong>PostgreSQL</strong><small>Private Docker network</small></div><div><span class="subtle">SCHEMA REVISION</span><strong id="stat-schema">—</strong><small>Alembic migration</small></div><div><span class="subtle">DATABASE SIZE</span><strong id="stat-size">—</strong><small>Includes tables and indexes</small></div><div><span class="subtle">LAST QUERY</span><strong id="stat-query">—</strong><small>Statistics are never cached to disk</small></div></article>
+        </section>
+        <footer><strong>MDB<span class="accent">58</span></strong><span>Independent, private music intelligence · Administrator access only</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
