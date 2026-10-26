@@ -5,7 +5,7 @@
     default_sni {$WRAPPED365_LAN_IP:127.0.0.1}
 }
 
-https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967 {
+https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967, asus-box.local:6967 {
     # Comment out or remove the line below if using a reverse proxy
     tls internal
     root * /srv/wrapped365
