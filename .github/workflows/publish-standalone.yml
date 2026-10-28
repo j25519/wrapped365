@@ -1,0 +1,217 @@
+name: Wrapped 365 - Standalone
+
+on:
+  push:
+    branches: [main, test, test2]
+  pull_request:
+    branches: [main, test, test2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: standalone-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  standalone:
+    name: Test and publish standalone (amd64/arm64)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Prepare isolated standalone build context
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # PRs are validation-only. Use the target branch's edition naming.
+          branch="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_EVENT_NAME}" == 'pull_request' ]]; then
+            branch="${GITHUB_BASE_REF}"
+          fi
+          case "$branch" in
+            main|test|test2) ;;
+            *) echo "Unsupported branch: $branch" >&2; exit 1 ;;
+          esac
+
+          # Keep VERSION as the base version. Remove an existing channel
+          # suffix before composing a unique edition/channel tag.
+          version="$(tr -d '\r\n' < VERSION)"
+          version="${version#v}"
+          version="${version%-stable}"
+          version="${version%-beta}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected VERSION in the form 0.3.0[-beta|-stable]; got: $version" >&2
+            exit 1
+          fi
+          case "$branch" in
+            main)  release="$version-standalone" ;;
+            test)  release="$version-beta-standalone" ;;
+            test2) release="$version-test2-standalone" ;;
+          esac
+
+          # Only explicitly included frontend assets enter this build context.
+          # In particular: no MDB58.js, backend/, tests/, or Python files.
+          context="${RUNNER_TEMP}/wrapped365-standalone"
+          mkdir -p "$context"
+          for asset in Dockerfile Caddyfile index.html styles.css app.js \
+            jszip.min.js favicon.svg LICENSE-JSZIP.txt; do
+            test -f "$asset" || { echo "Missing $asset" >&2; exit 1; }
+            cp "$asset" "$context/"
+          done
+          for asset in demo-tracks.yaml demo-playlists.yaml; do
+            test -f "$asset" || { echo "Missing $asset" >&2; exit 1; }
+            cp "$asset" "$context/"
+          done
+          printf '%s\n' "$release" > "$context/VERSION"
+
+          # Use the branch's own non-root Caddy Dockerfile but copy only the
+          # staged assets, so the full branch's mandatory MDB58.js COPY is gone.
+          sed -i -E 's@^COPY[[:space:]]+index\.html[[:space:]].*[[:space:]]\./$@COPY index.html styles.css app.js demo-tracks.yaml demo-playlists.yaml jszip.min.js favicon.svg LICENSE-JSZIP.txt VERSION ./@' "$context/Dockerfile"
+          grep -Fxq 'COPY index.html styles.css app.js demo-tracks.yaml demo-playlists.yaml jszip.min.js favicon.svg LICENSE-JSZIP.txt VERSION ./' "$context/Dockerfile" || {
+            echo 'Frontend COPY instruction changed; review standalone packaging.' >&2
+            exit 1
+          }
+
+          # The full edition loads MDB58.js explicitly. Never emit a broken
+          # script request (or ship that file) in a standalone build.
+          sed -i '/^[[:space:]]*<script src="\.\/MDB58\.js[^\"]*" defer><\/script>[[:space:]]*$/d' "$context/index.html"
+          if grep -Fq 'MDB58.js' "$context/index.html"; then
+            echo 'index.html still refers to MDB58.js' >&2
+            exit 1
+          fi
+
+          # Preserve each branch's HTTP or TLS configuration and security
+          # headers, but remove the full-only reverse proxy handlers.
+          sed -i '/^[[:space:]]*handle \/mdb58\/admin\* {/,/^[[:space:]]*}/d' "$context/Caddyfile"
+          sed -i '/^[[:space:]]*handle \/mdb58\/api\/\* {/,/^[[:space:]]*}/d' "$context/Caddyfile"
+          if grep -Eq 'reverse_proxy[[:space:]]+mdb58-api' "$context/Caddyfile"; then
+            echo 'Standalone Caddyfile still depends on the MDB58 backend' >&2
+            exit 1
+          fi
+
+          # Content fingerprints, generated on the packaged files themselves.
+          js_hash="$(sha256sum "$context/app.js" | cut -c1-12)"
+          css_hash="$(sha256sum "$context/styles.css" | cut -c1-12)"
+          sed -i -E \
+            -e "s@(src=\"\./app\.js)(\?v=[^\"]*)?(\")@\1?v=${js_hash}\3@g" \
+            -e "s@(href=\"\./styles\.css)(\?v=[^\"]*)?(\")@\1?v=${css_hash}\3@g" \
+            "$context/index.html"
+          grep -Fq "./app.js?v=${js_hash}" "$context/index.html"
+          grep -Fq "./styles.css?v=${css_hash}" "$context/index.html"
+
+          # Keep the historic mutable aliases until Compose is migrated.
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          {
+            echo 'tags<<EOF'
+            echo "${image}:v${release}"
+            echo "${image}:sha-${GITHUB_SHA:0:12}-standalone"
+            case "$branch" in
+              main)  echo "${image}:latest"; echo "${image}:latest-standalone" ;;
+              test)  echo "${image}:beta-standalone" ;;
+              test2) echo "${image}:beta2"; echo "${image}:beta2-standalone" ;;
+            esac
+            echo 'EOF'
+            echo "release=${release}"
+            echo "branch=${branch}"
+            echo "js_hash=${js_hash}"
+            echo "css_hash=${css_hash}"
+          } >> "$GITHUB_OUTPUT"
+          echo "Prepared standalone v${release} from ${branch}"
+
+      - name: JavaScript syntax check
+        run: node --check "${{ runner.temp }}/wrapped365-standalone/app.js"
+
+      - name: Build standalone smoke-test image
+        run: docker build --tag wrapped365-standalone:ci "${{ runner.temp }}/wrapped365-standalone"
+
+      - name: Verify standalone isolation, HTTP/TLS, and non-root runtime
+        shell: bash
+        env:
+          RELEASE: ${{ steps.prepare.outputs.release }}
+          JS_HASH: ${{ steps.prepare.outputs.js_hash }}
+          CSS_HASH: ${{ steps.prepare.outputs.css_hash }}
+        run: |
+          set -euo pipefail
+          context="${RUNNER_TEMP}/wrapped365-standalone"
+          cleanup() {
+            exit_code=$?
+            if (( exit_code != 0 )); then
+              echo '::group::Standalone container diagnostics'
+              docker ps --all --filter name=wrapped365-standalone-smoke || true
+              docker inspect --format 'Status={{.State.Status}} ExitCode={{.State.ExitCode}} Error={{.State.Error}}' wrapped365-standalone-smoke || true
+              docker logs wrapped365-standalone-smoke || true
+              echo '::endgroup::'
+            fi
+            docker rm --force wrapped365-standalone-smoke >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          if grep -Eq 'tls internal|^https://' "$context/Caddyfile"; then
+            base_url='https://localhost:6967'
+          else
+            base_url='http://localhost:6967'
+          fi
+          docker run --detach --name wrapped365-standalone-smoke \
+            --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
+            --publish 127.0.0.1:6967:6967 wrapped365-standalone:ci
+
+          ready=false
+          for attempt in {1..30}; do
+            state="$(docker inspect --format '{{.State.Status}}' wrapped365-standalone-smoke)"
+            if [[ "$state" != 'running' ]]; then
+              echo "Container exited during startup: ${state}" >&2
+              exit 1
+            fi
+            if curl --fail --silent --insecure "$base_url/" -o /tmp/wrapped365-standalone-index.html; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          [[ "$ready" == true ]] || { echo 'Standalone failed readiness check' >&2; exit 1; }
+          grep -Fq 'Wrapped 365' /tmp/wrapped365-standalone-index.html
+          grep -Fq "./app.js?v=${JS_HASH}" /tmp/wrapped365-standalone-index.html
+          grep -Fq "./styles.css?v=${CSS_HASH}" /tmp/wrapped365-standalone-index.html
+          ! grep -Fq 'MDB58.js' /tmp/wrapped365-standalone-index.html
+          test "$(curl --fail --silent --insecure "$base_url/VERSION")" = "$RELEASE"
+          test "$(curl --silent --insecure --output /dev/null --write-out '%{http_code}' "$base_url/MDB58.js")" = '404'
+          test "$(docker exec wrapped365-standalone-smoke id -u)" = '10001'
+          test "$(docker exec wrapped365-standalone-smoke id -g)" = '10001'
+          test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' wrapped365-standalone-smoke)" = 'true'
+          echo "Standalone v${RELEASE}: assets, isolation, version, and runtime verified."
+
+      - name: Set up QEMU
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish standalone (amd64/arm64)
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ runner.temp }}/wrapped365-standalone
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.prepare.outputs.tags }}
+          cache-from: type=gha,scope=wrapped365-standalone
+          cache-to: type=gha,scope=wrapped365-standalone,mode=max

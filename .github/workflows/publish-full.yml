@@ -1,0 +1,210 @@
+name: Wrapped 365 - Full (MDB58)
+
+# FULL IS TEMPORARILY TEST-ONLY. When MDB58 reaches main, add main to
+# both branch lists below and extend the job's branch guard and tag logic.
+on:
+  push:
+    branches: [test]
+  pull_request:
+    branches: [test]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: full-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full:
+    name: Test and publish full stack (amd64/arm64)
+    # Also blocks someone manually dispatching the workflow on main/test2.
+    if: github.ref == 'refs/heads/test' || (github.event_name == 'pull_request' && github.base_ref == 'test')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Prepare full frontend and version tag
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f MDB58.js
+          test -f backend/Dockerfile
+          test -f backend/requirements.txt
+          grep -Fq 'MDB58.js' index.html
+          grep -Eq 'reverse_proxy[[:space:]]+mdb58-api' Caddyfile
+
+          version="$(tr -d '\r\n' < VERSION)"
+          version="${version#v}"
+          version="${version%-beta}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected beta VERSION such as 0.3.0-beta; got: $version" >&2
+            exit 1
+          fi
+          release="${version}-beta-full"
+          printf '%s\n' "$release" > VERSION
+
+          js_hash="$(sha256sum app.js | cut -c1-12)"
+          mdb_hash="$(sha256sum MDB58.js | cut -c1-12)"
+          css_hash="$(sha256sum styles.css | cut -c1-12)"
+          sed -i -E \
+            -e "s@(src=\"\./app\.js)(\?v=[^\"]*)?(\")@\1?v=${js_hash}\3@g" \
+            -e "s@(src=\"\./MDB58\.js)(\?v=[^\"]*)?(\")@\1?v=${mdb_hash}\3@g" \
+            -e "s@(href=\"\./styles\.css)(\?v=[^\"]*)?(\")@\1?v=${css_hash}\3@g" \
+            index.html
+          grep -Fq "./app.js?v=${js_hash}" index.html
+          grep -Fq "./MDB58.js?v=${mdb_hash}" index.html
+          grep -Fq "./styles.css?v=${css_hash}" index.html
+
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          {
+            echo "release=$release"
+            echo "js_hash=$js_hash"
+            echo "mdb_hash=$mdb_hash"
+            echo "css_hash=$css_hash"
+            echo 'frontend_tags<<EOF'
+            echo "${image}:v${release}"
+            echo "${image}:beta-full"
+            echo "${image}:beta"  # Legacy full frontend Compose tag.
+            echo "${image}:sha-${GITHUB_SHA:0:12}-full"
+            echo 'EOF'
+            echo 'backend_tags<<EOF'
+            echo "${image}-mdb58:v${release}"
+            echo "${image}-mdb58:beta-full"
+            echo "${image}-mdb58:beta"  # Legacy full API Compose tag.
+            echo "${image}-mdb58:sha-${GITHUB_SHA:0:12}-full"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "Prepared full v${release}"
+
+      - name: JavaScript and MDB58 integration checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check app.js
+          node --check MDB58.js
+          node tests/test_hook.cjs
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Test Python API contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r backend/requirements.txt pytest
+          PYTHONPATH=backend python -m pytest -q backend/tests/test_contract.py
+          python -m compileall -q backend/app backend/alembic
+
+      - name: Build frontend and API smoke-test images
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build --tag wrapped365-full:ci .
+          docker build --tag wrapped365-mdb58:ci ./backend
+
+      - name: Verify API imports and non-root identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(docker image inspect --format '{{.Config.User}}' wrapped365-mdb58:ci)" = '10001:10001'
+          docker run --rm --entrypoint python wrapped365-mdb58:ci -c 'import fastapi, psycopg, app.main; print("MDB58 imports OK")'
+
+      - name: Verify full frontend TLS, assets, version, and non-root runtime
+        shell: bash
+        env:
+          RELEASE: ${{ steps.prepare.outputs.release }}
+          JS_HASH: ${{ steps.prepare.outputs.js_hash }}
+          MDB_HASH: ${{ steps.prepare.outputs.mdb_hash }}
+          CSS_HASH: ${{ steps.prepare.outputs.css_hash }}
+        run: |
+          set -euo pipefail
+          cleanup() {
+            exit_code=$?
+            if (( exit_code != 0 )); then
+              echo '::group::Full frontend container diagnostics'
+              docker ps --all --filter name=wrapped365-full-smoke || true
+              docker inspect --format 'Status={{.State.Status}} ExitCode={{.State.ExitCode}} Error={{.State.Error}}' wrapped365-full-smoke || true
+              docker logs wrapped365-full-smoke || true
+              echo '::endgroup::'
+            fi
+            docker rm --force wrapped365-full-smoke >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          docker run --detach --name wrapped365-full-smoke \
+            --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
+            --publish 127.0.0.1:6967:6967 wrapped365-full:ci
+          ready=false
+          for attempt in {1..30}; do
+            state="$(docker inspect --format '{{.State.Status}}' wrapped365-full-smoke)"
+            if [[ "$state" != 'running' ]]; then
+              echo "Full frontend exited during startup: ${state}" >&2
+              exit 1
+            fi
+            if curl --fail --silent --insecure https://localhost:6967/ -o /tmp/wrapped365-full-index.html; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          [[ "$ready" == true ]] || { echo 'Full frontend failed TLS readiness' >&2; exit 1; }
+          grep -Fq 'Wrapped 365' /tmp/wrapped365-full-index.html
+          grep -Fq "./app.js?v=${JS_HASH}" /tmp/wrapped365-full-index.html
+          grep -Fq "./MDB58.js?v=${MDB_HASH}" /tmp/wrapped365-full-index.html
+          grep -Fq "./styles.css?v=${CSS_HASH}" /tmp/wrapped365-full-index.html
+          test "$(curl --fail --silent --insecure https://localhost:6967/VERSION)" = "$RELEASE"
+          test "$(curl --silent --insecure --output /dev/null --write-out '%{http_code}' https://localhost:6967/MDB58.js)" = '200'
+          test "$(docker exec wrapped365-full-smoke id -u)" = '10001'
+          test "$(docker exec wrapped365-full-smoke id -g)" = '10001'
+          test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' wrapped365-full-smoke)" = 'true'
+          echo "Full frontend v${RELEASE}: TLS, assets, version, and runtime verified."
+
+      - name: Set up QEMU
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish full frontend (amd64/arm64)
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.prepare.outputs.frontend_tags }}
+          cache-from: type=gha,scope=wrapped365-full
+          cache-to: type=gha,scope=wrapped365-full,mode=max
+
+      - name: Publish MDB58 Python API (amd64/arm64)
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v7
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.prepare.outputs.backend_tags }}
+          cache-from: type=gha,scope=mdb58-backend
+          cache-to: type=gha,scope=mdb58-backend,mode=max
