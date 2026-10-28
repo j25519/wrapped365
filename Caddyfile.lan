@@ -1,0 +1,12 @@
+# Direct LAN access: Caddy issues certificates from its local CA.
+# Import that CA into the browser/device trust store as needed.
+{
+    auto_https disable_redirects
+    skip_install_trust
+    default_sni {$WRAPPED365_LAN_IP:127.0.0.1}
+}
+
+https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967, https://{$WRAPPED365_LAN_HOST:asus-box.local}:6967 {
+    tls internal
+    import /etc/caddy/Caddyfile
+}

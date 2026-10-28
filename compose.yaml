@@ -1,20 +1,24 @@
-# Wrapped 365: standalone by default, MDB58 full stack opt-in.
-#
+# Wrapped 365: one .env file controls LAN or reverse-proxy networking.
 # Standalone beta: docker compose up -d
 # Full beta:       WRAPPED365_IMAGE_TAG=beta-full docker compose --profile mdb58 up -d
 # Full + ClamAV:   WRAPPED365_IMAGE_TAG=beta-full docker compose --profile mdb58 --profile antivirus up -d
-#
-# For test2 standalone, set WRAPPED365_IMAGE_TAG=beta2-standalone.
-# For main standalone, set WRAPPED365_IMAGE_TAG=latest-standalone.
-# Select the matching frontend image whenever enabling the mdb58 profile.
-# Set WRAPPED365_LAN_IP in .env for LAN HTTPS.
+# Select a full frontend image when enabling the MDB58 profile.
+# Set WRAPPED365_NETWORK_MODE=proxy and WRAPPED365_HOST_BIND=127.0.0.1
+# on a VPS when an outer reverse proxy runs directly on the same host.
 services:
   wrapped365:
     image: ghcr.io/j25519/wrapped365:${WRAPPED365_IMAGE_TAG:-beta-standalone}
     container_name: wrapped365
     restart: unless-stopped
     ports:
-      - "6967:6967"
+      - "${WRAPPED365_HOST_BIND:-127.0.0.1}:6967:6967"
+    # Caddy's mode-specific configuration is baked into BOTH frontend editions.
+    command:
+      - run
+      - --config
+      - /etc/caddy/Caddyfile.${WRAPPED365_NETWORK_MODE:-lan}
+      - --adapter
+      - caddyfile
     user: "10001:10001"
     read_only: true
     cap_drop:
@@ -24,7 +28,9 @@ services:
     environment:
       XDG_CONFIG_HOME: /config
       XDG_DATA_HOME: /data
+      WRAPPED365_NETWORK_MODE: ${WRAPPED365_NETWORK_MODE:-lan}
       WRAPPED365_LAN_IP: ${WRAPPED365_LAN_IP:-127.0.0.1}
+      WRAPPED365_LAN_HOST: ${WRAPPED365_LAN_HOST:-asus-box.local}
     volumes:
       - caddy_config:/config
       - caddy_data:/data
@@ -54,7 +60,8 @@ services:
       # full-stack startup, not prevent standalone Compose parsing.
       DATABASE_URL: postgresql://mdb58:${POSTGRES_PASSWORD:-}@mdb58-db:5432/mdb58
       MDB58_INVITE_PEPPER: ${MDB58_INVITE_PEPPER:-}
-      MDB58_ALLOWED_ORIGIN: ${MDB58_ALLOWED_ORIGIN:-}
+      # Derived from the same .env public origin used to deploy Wrapped 365.
+      MDB58_ALLOWED_ORIGIN: ${WRAPPED365_PUBLIC_ORIGIN:-}
       MDB58_CLAMAV_REQUIRED: ${MDB58_CLAMAV_REQUIRED:-true}
       MDB58_CLAMAV_HOST: mdb58-clamav
       MDB58_ADMIN_SETUP_TOKEN: ${MDB58_ADMIN_SETUP_TOKEN:-}

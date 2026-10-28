@@ -1,32 +1,21 @@
-{
-    # You only need these if accessing via LAN
-    auto_https disable_redirects
-    skip_install_trust
-    default_sni {$WRAPPED365_LAN_IP:127.0.0.1}
+# Shared site configuration imported by Caddyfile.lan and Caddyfile.proxy.
+# The standalone GitHub Actions workflow removes the MDB58 handles before packaging.
+root * /srv/wrapped365
+encode zstd gzip
+header {
+    X-Content-Type-Options nosniff
+    Referrer-Policy no-referrer
+    Content-Security-Policy "default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 }
 
-https://localhost:6967, https://{$WRAPPED365_LAN_IP:127.0.0.1}:6967, asus-box.local:6967 {
-    # Comment out or remove the line below if using a reverse proxy
-    tls internal
-    root * /srv/wrapped365
-    encode zstd gzip
-    header {
-        X-Content-Type-Options nosniff
-        Referrer-Policy no-referrer
-        Content-Security-Policy "default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
-    }
-    # Same-origin beta API. Keep the prefix: FastAPI registers /mdb58/api/v1/...
-    # Requests never expose the API or PostgreSQL on a host port.
-    # Password-gated Python admin dashboard, no database ports exposed.
-    handle /mdb58/admin* {
-        reverse_proxy mdb58-api:8080
-    }
-
-    handle /mdb58/api/* {
-        reverse_proxy mdb58-api:8080
-    }
-
-    @html path / /index.html
-    header @html Cache-Control "no-cache"
-    file_server
+# Same-origin routes for the full edition only (removed from standalone image).
+handle /mdb58/admin* {
+    reverse_proxy mdb58-api:8080
 }
+handle /mdb58/api/* {
+    reverse_proxy mdb58-api:8080
+}
+
+@html path / /index.html
+header @html Cache-Control "no-cache"
+file_server

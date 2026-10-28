@@ -1,0 +1,5 @@
+# Internal HTTP only. Public HTTPS and Cloudflare Access live on the outer edge.
+# NEVER publish this port to the internet; use 127.0.0.1 or an internal network.
+:6967 {
+    import /etc/caddy/Caddyfile
+}
