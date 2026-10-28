@@ -14,6 +14,7 @@ services:
       - "${WRAPPED365_HOST_BIND:-127.0.0.1}:6967:6967"
     # Caddy's mode-specific configuration is baked into BOTH frontend editions.
     command:
+      - caddy
       - run
       - --config
       - /etc/caddy/Caddyfile.${WRAPPED365_NETWORK_MODE:-lan}

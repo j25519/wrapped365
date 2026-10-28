@@ -21,7 +21,7 @@ RUN --mount=type=bind,source=.,target=/source,readonly \
     if [ -f /source/MDB58.js ]; then cp /source/MDB58.js /srv/wrapped365/MDB58.js; fi
 USER 10001:10001
 EXPOSE 6967
-CMD ["run", "--config", "/etc/caddy/Caddyfile.lan", "--adapter", "caddyfile"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile.lan", "--adapter", "caddyfile"]
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD if [ "$WRAPPED365_NETWORK_MODE" = "proxy" ]; then \
         wget -q -O /dev/null http://127.0.0.1:6967/; \

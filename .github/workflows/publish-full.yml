@@ -155,7 +155,7 @@ jobs:
               --env "WRAPPED365_NETWORK_MODE=$mode" \
               --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
               --publish 127.0.0.1:6967:6967 wrapped365-full:ci \
-              run --config "/etc/caddy/Caddyfile.${mode}" --adapter caddyfile
+              caddy run --config "/etc/caddy/Caddyfile.${mode}" --adapter caddyfile
             ready=false
             for attempt in {1..30}; do
               state="$(docker inspect --format '{{.State.Status}}' "$current_container")"
