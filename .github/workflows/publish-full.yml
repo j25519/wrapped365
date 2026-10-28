@@ -102,7 +102,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install -r backend/requirements.txt pytest
+          python -m pip install -r backend/requirements.txt pytest httpx2
           PYTHONPATH=backend python -m pytest -q backend/tests
           python -m compileall -q backend/app backend/alembic
 
