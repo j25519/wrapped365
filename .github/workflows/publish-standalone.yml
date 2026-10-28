@@ -61,7 +61,7 @@ jobs:
           # In particular: no MDB58.js, backend/, tests/, or Python files.
           context="${RUNNER_TEMP}/wrapped365-standalone"
           mkdir -p "$context"
-          for asset in Dockerfile Caddyfile index.html styles.css app.js \
+          for asset in Dockerfile Caddyfile Caddyfile.lan Caddyfile.proxy index.html styles.css app.js \
             jszip.min.js favicon.svg LICENSE-JSZIP.txt; do
             test -f "$asset" || { echo "Missing $asset" >&2; exit 1; }
             cp "$asset" "$context/"
@@ -130,9 +130,9 @@ jobs:
         run: node --check "${{ runner.temp }}/wrapped365-standalone/app.js"
 
       - name: Build standalone smoke-test image
-        run: docker build --tag wrapped365-standalone:ci "${{ runner.temp }}/wrapped365-standalone"
+        run: DOCKER_BUILDKIT=1 docker build --tag wrapped365-standalone:ci "${{ runner.temp }}/wrapped365-standalone"
 
-      - name: Verify standalone isolation, HTTP/TLS, and non-root runtime
+      - name: Verify standalone in BOTH network modes (HTTPS LAN and HTTP proxy)
         shell: bash
         env:
           RELEASE: ${{ steps.prepare.outputs.release }}
@@ -140,54 +140,58 @@ jobs:
           CSS_HASH: ${{ steps.prepare.outputs.css_hash }}
         run: |
           set -euo pipefail
-          context="${RUNNER_TEMP}/wrapped365-standalone"
+          current_container=''
           cleanup() {
             exit_code=$?
-            if (( exit_code != 0 )); then
-              echo '::group::Standalone container diagnostics'
-              docker ps --all --filter name=wrapped365-standalone-smoke || true
-              docker inspect --format 'Status={{.State.Status}} ExitCode={{.State.ExitCode}} Error={{.State.Error}}' wrapped365-standalone-smoke || true
-              docker logs wrapped365-standalone-smoke || true
-              echo '::endgroup::'
+            if [[ -n "$current_container" ]]; then
+              if (( exit_code != 0 )); then
+                echo "::group::Standalone diagnostics: $current_container"
+                docker inspect "$current_container" || true
+                docker logs "$current_container" || true
+                echo '::endgroup::'
+              fi
+              docker rm --force "$current_container" >/dev/null 2>&1 || true
             fi
-            docker rm --force wrapped365-standalone-smoke >/dev/null 2>&1 || true
           }
           trap cleanup EXIT
-
-          if grep -Eq 'tls internal|^https://' "$context/Caddyfile"; then
-            base_url='https://localhost:6967'
-          else
-            base_url='http://localhost:6967'
-          fi
-          docker run --detach --name wrapped365-standalone-smoke \
-            --read-only --cap-drop ALL --security-opt no-new-privileges \
-            --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
-            --publish 127.0.0.1:6967:6967 wrapped365-standalone:ci
-
-          ready=false
-          for attempt in {1..30}; do
-            state="$(docker inspect --format '{{.State.Status}}' wrapped365-standalone-smoke)"
-            if [[ "$state" != 'running' ]]; then
-              echo "Container exited during startup: ${state}" >&2
-              exit 1
+          for mode in lan proxy; do
+            current_container="wrapped365-standalone-smoke-${mode}"
+            if [[ "$mode" == lan ]]; then
+              base_url='https://localhost:6967'
+            else
+              base_url='http://localhost:6967'
             fi
-            if curl --fail --silent --insecure "$base_url/" -o /tmp/wrapped365-standalone-index.html; then
-              ready=true
-              break
-            fi
-            sleep 1
+            docker run --detach --name "$current_container" \
+              --read-only --cap-drop ALL --security-opt no-new-privileges \
+              --env "WRAPPED365_NETWORK_MODE=$mode" \
+              --tmpfs /tmp:rw,nosuid,noexec,size=16m,mode=1777 \
+              --publish 127.0.0.1:6967:6967 wrapped365-standalone:ci \
+              run --config "/etc/caddy/Caddyfile.${mode}" --adapter caddyfile
+            ready=false
+            for attempt in {1..30}; do
+              state="$(docker inspect --format '{{.State.Status}}' "$current_container")"
+              [[ "$state" == 'running' ]] || { echo "$mode container exited: $state" >&2; exit 1; }
+              if curl --fail --silent --insecure "$base_url/" -o /tmp/wrapped365-standalone-index.html; then
+                ready=true
+                break
+              fi
+              sleep 1
+            done
+            [[ "$ready" == true ]] || { echo "Standalone $mode failed readiness" >&2; exit 1; }
+            grep -Fq 'Wrapped 365' /tmp/wrapped365-standalone-index.html
+            grep -Fq "./app.js?v=${JS_HASH}" /tmp/wrapped365-standalone-index.html
+            grep -Fq "./styles.css?v=${CSS_HASH}" /tmp/wrapped365-standalone-index.html
+            ! grep -Fq 'MDB58.js' /tmp/wrapped365-standalone-index.html
+            test "$(curl --fail --silent --insecure "$base_url/VERSION")" = "$RELEASE"
+            test "$(curl --silent --insecure --output /dev/null --write-out '%{http_code}' "$base_url/MDB58.js")" = '404'
+            curl --silent --insecure --head "$base_url/" | grep -iq '^content-security-policy:'
+            test "$(docker exec "$current_container" id -u)" = '10001'
+            test "$(docker exec "$current_container" id -g)" = '10001'
+            test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' "$current_container")" = 'true'
+            docker rm --force "$current_container" >/dev/null
+            current_container=''
           done
-          [[ "$ready" == true ]] || { echo 'Standalone failed readiness check' >&2; exit 1; }
-          grep -Fq 'Wrapped 365' /tmp/wrapped365-standalone-index.html
-          grep -Fq "./app.js?v=${JS_HASH}" /tmp/wrapped365-standalone-index.html
-          grep -Fq "./styles.css?v=${CSS_HASH}" /tmp/wrapped365-standalone-index.html
-          ! grep -Fq 'MDB58.js' /tmp/wrapped365-standalone-index.html
-          test "$(curl --fail --silent --insecure "$base_url/VERSION")" = "$RELEASE"
-          test "$(curl --silent --insecure --output /dev/null --write-out '%{http_code}' "$base_url/MDB58.js")" = '404'
-          test "$(docker exec wrapped365-standalone-smoke id -u)" = '10001'
-          test "$(docker exec wrapped365-standalone-smoke id -g)" = '10001'
-          test "$(docker inspect --format '{{.HostConfig.ReadonlyRootfs}}' wrapped365-standalone-smoke)" = 'true'
-          echo "Standalone v${RELEASE}: assets, isolation, version, and runtime verified."
+          echo "Standalone v${RELEASE}: LAN TLS, reverse-proxy HTTP, isolation, and security verified."
 
       - name: Set up QEMU
         if: github.event_name != 'pull_request'
