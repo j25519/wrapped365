@@ -1,8 +1,16 @@
-# One Compose stack, independently published frontend and API images.
-# Copy .env.example to .env and set strong secrets before starting.
+# Wrapped 365: standalone by default, MDB58 full stack opt-in.
+#
+# Standalone beta: docker compose up -d
+# Full beta:       WRAPPED365_IMAGE_TAG=beta-full docker compose --profile mdb58 up -d
+# Full + ClamAV:   WRAPPED365_IMAGE_TAG=beta-full docker compose --profile mdb58 --profile antivirus up -d
+#
+# For test2 standalone, set WRAPPED365_IMAGE_TAG=beta2-standalone.
+# For main standalone, set WRAPPED365_IMAGE_TAG=latest-standalone.
+# Select the matching frontend image whenever enabling the mdb58 profile.
+# Set WRAPPED365_LAN_IP in .env for LAN HTTPS.
 services:
   wrapped365:
-    image: ghcr.io/j25519/wrapped365:beta
+    image: ghcr.io/j25519/wrapped365:${WRAPPED365_IMAGE_TAG:-beta-standalone}
     container_name: wrapped365
     restart: unless-stopped
     ports:
@@ -16,7 +24,7 @@ services:
     environment:
       XDG_CONFIG_HOME: /config
       XDG_DATA_HOME: /data
-      WRAPPED365_LAN_IP: ${WRAPPED365_LAN_IP:?Expecting LAN IP update Caddyfile if using reverse proxy}
+      WRAPPED365_LAN_IP: ${WRAPPED365_LAN_IP:-127.0.0.1}
     volumes:
       - caddy_config:/config
       - caddy_data:/data
@@ -24,12 +32,12 @@ services:
       - /tmp:rw,nosuid,noexec,size=16m,mode=1777
     networks:
       - wrapped365-edge
-    depends_on:
-      mdb58-api:
-        condition: service_started
+    # The frontend must work on its own. No depends_on: mdb58-api here.
 
   mdb58-api:
-    image: ghcr.io/j25519/wrapped365-mdb58:beta
+    profiles:
+      - mdb58
+    image: ghcr.io/j25519/wrapped365-mdb58:${MDB58_IMAGE_TAG:-beta-full}
     container_name: wrapped365-mdb58-api
     restart: unless-stopped
     user: "10001:10001"
@@ -41,12 +49,14 @@ services:
     tmpfs:
       - /tmp:rw,nosuid,noexec,size=32m,mode=1777
     environment:
-      DATABASE_URL: postgresql://mdb58:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@mdb58-db:5432/mdb58
-      MDB58_INVITE_PEPPER: ${MDB58_INVITE_PEPPER:?Set MDB58_INVITE_PEPPER in .env}
-      MDB58_ALLOWED_ORIGIN: ${MDB58_ALLOWED_ORIGIN:?Set exact HTTPS origin including port in .env}
+      # Use optional interpolation here: Compose evaluates it before
+      # filtering inactive profiles. Missing values must fail during
+      # full-stack startup, not prevent standalone Compose parsing.
+      DATABASE_URL: postgresql://mdb58:${POSTGRES_PASSWORD:-}@mdb58-db:5432/mdb58
+      MDB58_INVITE_PEPPER: ${MDB58_INVITE_PEPPER:-}
+      MDB58_ALLOWED_ORIGIN: ${MDB58_ALLOWED_ORIGIN:-}
       MDB58_CLAMAV_REQUIRED: ${MDB58_CLAMAV_REQUIRED:-true}
       MDB58_CLAMAV_HOST: mdb58-clamav
-      # Needed only until first-time admin password has been set.
       MDB58_ADMIN_SETUP_TOKEN: ${MDB58_ADMIN_SETUP_TOKEN:-}
     depends_on:
       mdb58-db:
@@ -62,13 +72,15 @@ services:
       - mdb58-private
 
   mdb58-db:
+    profiles:
+      - mdb58
     image: postgres:17-alpine
     container_name: wrapped365-mdb58-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: mdb58
       POSTGRES_DB: mdb58
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
     volumes:
       - mdb58_postgres:/var/lib/postgresql/data
     healthcheck:
@@ -81,10 +93,12 @@ services:
     networks:
       - mdb58-private
 
-  # JSON only, strict schema API; antivirus is defence in depth, disabled by default.
-  # MDB58_CLAMAV_REQUIRED=true fails closed if the scanner isn't ready.
-  # Run docker compose --profile antivirus up -d to enable it.
+  # Optional ClamAV: enable alongside mdb58 with --profile antivirus.
+  # Leave MDB58_CLAMAV_REQUIRED=true for fail-closed operation, or
+  # set false explicitly if you do not want the scanner running.
   mdb58-clamav:
+    profiles:
+      - antivirus
     image: clamav/clamav:stable
     container_name: wrapped365-mdb58-clamav
     restart: unless-stopped
@@ -95,8 +109,6 @@ services:
     networks:
       - mdb58-private
       - mdb58-updates
-    profiles:
-      - antivirus
 
 networks:
   wrapped365-edge: {}
