@@ -1047,7 +1047,7 @@
         try { await saveReport(report); } catch (error) { console.warn('Final diagnostic metrics could not be written:', error); }
       }
       await persistSoundcheck(report.soundcheck);
-      setProgress('Your report is ready.', saved ? 'Saved in your browser. MDB58 sharing runs separately, only if you opted in.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
+      setProgress('Your report is ready.', saved ? 'Saved in your browser.' : 'Opened, but browser storage is unavailable; this report will not survive a reload.', 1);
       report.unsaved = !saved;
       await refreshHistoryCount();
       activateReport(report);
