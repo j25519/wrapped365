@@ -19,6 +19,8 @@ from psycopg.types.json import Jsonb
 from .db import connect
 from .models import ActivateRequest, StartRequest, ChunkRequest, Contribution
 from .canonical import content_digest
+from .catalogue.resolver import resolve_track, CatalogueConflict
+from .recommendations.aggregates import apply_snapshot
 
 API = '/mdb58/api/v1'
 SESSION_COOKIE = 'mdb58_session'
@@ -182,50 +184,6 @@ def scan_clamav(blob: bytes):
     if b'OK' not in reply or b'FOUND' in reply: invalid('Content scan unsuccessful',422)
 
 
-def resolve_track(db, track):
-    # Per-identifier advisory locks prevent race-driven duplicate catalogue rows.
-    provider = [i for i in track.identifiers if i.namespace != 'musicbrainz.recording']
-    recording_ids = [i for i in track.identifiers if i.namespace == 'musicbrainz.recording']
-    for ident in sorted(track.identifiers, key=lambda x:(x.namespace,x.value)):
-        db.execute('SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))', (ident.namespace + ':' + ident.value,))
-    found=set()
-    for ident in provider:
-        row=db.execute('SELECT source_track_id FROM external_identifiers WHERE namespace=%s AND external_id=%s', (ident.namespace,ident.value)).fetchone()
-        if row: found.add(row['source_track_id'])
-    if len(found)>1: invalid('Conflicting source identities; requires manual review',422)
-    if found:
-        tid=next(iter(found))
-        known_rec=db.execute('SELECT recording_id FROM source_tracks WHERE id=%s',(tid,)).fetchone()['recording_id']
-        for ident in recording_ids:
-            mapped=db.execute('SELECT recording_id FROM recording_identifiers WHERE namespace=%s AND external_id=%s',
-                              (ident.namespace,ident.value)).fetchone()
-            if mapped and mapped['recording_id']!=known_rec:
-                # Conflicting evidence is recorded but never silently merged.
-                db.execute('INSERT INTO recording_links(source_track_id,target_recording_id,method,active) VALUES (%s,%s,%s,false)',
-                           (tid,mapped['recording_id'],'conflict:submitted_musicbrainz_id'))
-            elif not mapped:
-                db.execute('INSERT INTO recording_identifiers(recording_id,namespace,external_id) VALUES (%s,%s,%s)',
-                           (known_rec,ident.namespace,ident.value))
-        for ident in provider:
-            db.execute('INSERT INTO external_identifiers(source_track_id,namespace,external_id) VALUES (%s,%s,%s) ON CONFLICT(namespace,external_id) DO NOTHING', (tid,ident.namespace,ident.value))
-        return tid
-    canonical=set()
-    for ident in recording_ids:
-        row=db.execute('SELECT recording_id FROM recording_identifiers WHERE namespace=%s AND external_id=%s',(ident.namespace,ident.value)).fetchone()
-        if row: canonical.add(row['recording_id'])
-    if len(canonical)>1: invalid('Conflicting recording identities',422)
-    rec=next(iter(canonical)) if canonical else db.execute('INSERT INTO recordings DEFAULT VALUES RETURNING id').fetchone()['id']
-    tid=db.execute('INSERT INTO source_tracks(recording_id,title,primary_artist,album) VALUES (%s,%s,%s,%s) RETURNING id',
-                   (rec,track.title,track.artists[0],track.album)).fetchone()['id']
-    for i,artist in enumerate(track.artists):
-        db.execute('INSERT INTO artist_credits VALUES (%s,%s,%s)',(tid,i,artist))
-    for ident in provider:
-        db.execute('INSERT INTO external_identifiers(source_track_id,namespace,external_id) VALUES (%s,%s,%s)',(tid,ident.namespace,ident.value))
-    for ident in recording_ids:
-        db.execute('INSERT INTO recording_identifiers(recording_id,namespace,external_id) VALUES (%s,%s,%s) ON CONFLICT(namespace,external_id) DO NOTHING',(rec,ident.namespace,ident.value))
-    return tid
-
-
 @app.post(API + '/contributions/{sid}/commit')
 def commit(sid: uuid.UUID, owner: Annotated[int, Depends(contributor)]):
     with connect() as db:
@@ -259,7 +217,12 @@ def commit(sid: uuid.UUID, owner: Annotated[int, Depends(contributor)]):
                 if payload.submission.first_week > old['first_week'] or payload.submission.last_week < old['last_week']:
                     invalid('Snapshot has reduced coverage; keep existing contribution',409)
             # Resolve exact source identities, never fuzzy-merge records or trust artist/title for identity.
-            references={t.ref:resolve_track(db,t) for t in payload.tracks}
+            references={}
+            for t in payload.tracks:
+                try:
+                    references[t.ref] = resolve_track(db, t, source=payload.source)
+                except CatalogueConflict as exc:
+                    invalid(str(exc), 422)
             new_id=db.execute('''INSERT INTO contribution_snapshots
               (contributor_id,source,submission_id,content_sha256,aggregation_version,first_week,last_week)
               VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id''',
@@ -271,6 +234,8 @@ def commit(sid: uuid.UUID, owner: Annotated[int, Depends(contributor)]):
             for s in payload.weekly_sessions:
                 db.execute('INSERT INTO weekly_session_stats VALUES (%s,%s,%s,%s,%s)',
                            (new_id,s.week_start,s.session_count,s.session_duration_ms,s.active_days))
+            # Update historical aggregates atomically before deleting the previous snapshot.
+            apply_snapshot(db, owner, payload.source, new_id, content_hash)
             # Old aggregate snapshots and their submissions are removed after the new snapshot is durable.
             if current:
                 db.execute('UPDATE contribution_snapshots SET active=false WHERE id=%s',(current['id'],))

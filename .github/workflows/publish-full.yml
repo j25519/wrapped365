@@ -103,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install -r backend/requirements.txt pytest
-          PYTHONPATH=backend python -m pytest -q backend/tests/test_contract.py
+          PYTHONPATH=backend python -m pytest -q backend/tests
           python -m compileall -q backend/app backend/alembic
 
       - name: Build frontend and API smoke-test images

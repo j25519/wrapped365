@@ -1,0 +1,20 @@
+# Optional, entirely separate database for MDB58 fixture generation.
+# Nothing here uses the production mdb58_postgres volume or service network.
+services:
+  mdb58-synthetic-db:
+    image: postgres:17-alpine
+    container_name: wrapped365-mdb58-synthetic-db
+    environment:
+      POSTGRES_USER: mdb58_dev
+      POSTGRES_PASSWORD: synthetic_local_only
+      POSTGRES_DB: mdb58_synthetic
+    ports:
+      - '127.0.0.1:55433:5432'
+    volumes:
+      - mdb58_synthetic_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U mdb58_dev -d mdb58_synthetic']
+      interval: 5s
+      retries: 12
+volumes:
+  mdb58_synthetic_postgres:
